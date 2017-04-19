@@ -1,0 +1,18 @@
+
+package com.uib.web.peptideshaker.presenter;
+
+import com.uib.web.peptideshaker.presenter.core.SmallSideBtn;
+import com.vaadin.ui.VerticalLayout;
+
+/**
+ *This interface represents the minimum requirement for presenter components to be used as a view in web PeptideShaker application
+ * @author Yehia Farag
+ */
+public interface PresenterViewable {
+    VerticalLayout getMainView();
+    SmallSideBtn getControlButton();
+    String getViewId();
+    void minimizeView();
+    void maximizeView();
+    
+}

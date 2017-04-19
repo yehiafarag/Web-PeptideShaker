@@ -1,0 +1,150 @@
+// If you edit this file you need to compile the theme. See README.md for details.
+
+// Global variable overrides. Must be declared before importing Valo.
+
+// Defines the plaintext font size, weight and family. Font size affects general component sizing.
+//$v-font-size: 16px;
+//$v-font-weight: 300;
+//$v-font-family: "Open Sans", sans-serif;
+
+// Defines the border used by all components.
+//$v-border: 1px solid (v-shade 0.7);
+//$v-border-radius: 4px;
+
+// Affects the color of some component elements, e.g Button, Panel title, etc
+//$v-background-color: hsl(210, 0%, 98%);
+// Affects the color of content areas, e.g  Panel and Window content, TextField input etc
+//$v-app-background-color: $v-background-color;
+
+// Affects the visual appearance of all components
+//$v-gradient: v-linear 8%;
+//$v-bevel-depth: 30%;
+//$v-shadow-opacity: 5%;
+
+// Defines colors for indicating status (focus, success, failure)
+//$v-focus-color: valo-focus-color(); // Calculates a suitable color automatically
+//$v-friendly-color: #2c9720;
+//$v-error-indicator-color: #ed473b;
+
+// For more information, see: https://vaadin.com/book/-/page/themes.valo.html
+// Example variants can be copy/pasted from https://vaadin.com/wiki/-/wiki/Main/Valo+Examples
+
+@import "../valo/valo.scss";
+
+@mixin webpeptideshakertheme {
+    @include valo;
+    // Insert your own theme rules here
+
+    .margin{
+        padding: 10px;
+    }
+    .autooverflow{
+        overflow: auto;
+    }
+    .mainlayout{
+        min-height: 400px;
+        min-width: 470px;
+
+    }
+    .v-link-headerlogo { 	
+        line-height:80px !important; 
+        color:black !important; 
+        font-size:30px; 
+        text-decoration:none !important;
+        margin-top: -40px;
+    }
+    .v-link-headerlogo font{
+        text-decoration: none !important;
+        font-size: 15px;
+        font-style: italic;
+        color: #cd6e1d;
+    }   
+    .galaxybtn {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        padding-left: 30px;
+        border: 1px solid #2c3143;
+        background-image: url("img/galaxyLogo.png");
+        background-size: auto 105%;
+        background-repeat: no-repeat;
+        font-weight: bold;
+        background-color: whitesmoke;
+        cursor: pointer;
+    }
+
+    .galaxybtn:hover {
+        background-color: #2c3143;
+        color: white;
+    }
+
+    .settingbtn {
+
+        background-image: url(img/cog-o.svg);
+        background-repeat: no-repeat;
+        background-size: auto 90%;
+        background-position: center;
+        border: 1px solid #2c3143;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        border-left:none;
+
+        cursor: pointer;
+    }
+
+    .settingbtn:hover {
+        background-color: #2c3143;
+        background-image: url(img/cog-o_dark.svg);
+        cursor: pointer;
+    }
+    .disconnect{
+        color:#4f9d13 !important;
+        background-color:white !important;
+    }
+    .hide {
+        opacity:0 !important;
+    }
+    .v-slot-rightsidebtncontainer {
+        margin-top: 50px;
+        max-height: 280px;
+    }
+    .lightgraylayout{
+        background-color:lightgray;
+    }
+    .rightsidebtncontainer {
+        min-width: 16px;
+        max-width: 64px;
+        max-height: 280px;
+        -webkit-transition: all 1.5s ease-in-out;
+        -moz-transition: all 1.5s ease-in-out;
+        -o-transition: all 1.5s ease-in-out;
+        transition: all 1.5s ease-in-out;
+    }
+    .smallmenubtn {
+        background-color: whitesmoke;
+        border: 1px solid lightgray;
+        border-radius: 50px;
+        max-width: 40px;
+        max-height: 40px;
+        cursor:pointer;
+        -webkit-transition: all .5s ease-in-out;
+        -moz-transition: all .5s ease-in-out;
+        -o-transition: all .5s ease-in-out;
+        transition: all .5s ease-in-out;
+    }
+    .smallmenubtn:hover {
+        background-color: lightgray;
+        border-color: gray;
+    }
+    .selectedsmallbtn{
+        background-color: lightgray;
+        border-color: gray;
+        max-width: 64px;
+        max-height: 64px;
+    }
+    .smallmenubtn img{
+        padding:20%;
+    }
+
+
+
+}
