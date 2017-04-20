@@ -59,6 +59,7 @@ public abstract class WelcomePage extends VerticalLayout implements PresenterVie
      */
     public WelcomePage() {
         WelcomePage.this.setSizeFull();
+        WelcomePage.this.setStyleName("activelayout");
         headerPanel = new VerticalLayout();
         headerPanel.setHeight(50, Unit.PIXELS);
         WelcomePage.this.addComponent(headerPanel);

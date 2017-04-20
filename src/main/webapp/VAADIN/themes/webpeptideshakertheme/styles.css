@@ -13022,7 +13022,8 @@ div.v-layout.v-horizontal.v-widget {
 	background-size: auto 105%;
 	background-repeat: no-repeat;
 	font-weight: bold;
-	background-color: whitesmoke;
+	background-color: #2c3143;
+	color: white;
 	cursor: pointer;
 }
 
@@ -13050,8 +13051,8 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .webpeptideshakertheme .disconnect {
-	color: #4f9d13 !important;
-	background-color: white !important;
+	color: white !important;
+	background-color: #4f9d13 !important;
 }
 
 .webpeptideshakertheme .hide {
@@ -13061,10 +13062,6 @@ div.v-layout.v-horizontal.v-widget {
 .webpeptideshakertheme .v-slot-rightsidebtncontainer {
 	margin-top: 50px;
 	max-height: 280px;
-}
-
-.webpeptideshakertheme .lightgraylayout {
-	background-color: lightgray;
 }
 
 .webpeptideshakertheme .rightsidebtncontainer {
@@ -13079,10 +13076,10 @@ div.v-layout.v-horizontal.v-widget {
 
 .webpeptideshakertheme .smallmenubtn {
 	background-color: whitesmoke;
-	border: 1px solid lightgray;
-	border-radius: 50px;
-	max-width: 40px;
-	max-height: 40px;
+	border: 3px solid lightgray;
+	border-radius: 10%;
+	max-width: 32px;
+	max-height: 32px;
 	cursor: pointer;
 	-webkit-transition: all 0.5s ease-in-out;
 	-moz-transition: all 0.5s ease-in-out;
@@ -13096,12 +13093,75 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .webpeptideshakertheme .selectedsmallbtn {
-	background-color: lightgray;
-	border-color: gray;
-	max-width: 64px;
-	max-height: 64px;
+	background-color: #f8f8f8;
+	border-color: #ff6f2f;
+	max-width: 40px;
+	max-height: 40px;
 }
 
 .webpeptideshakertheme .smallmenubtn img {
 	padding: 20%;
+}
+
+.webpeptideshakertheme .hidepanel {
+	width: 0px !important;
+	height: 0px !important;
+	opacity: 0 !important;
+	-webkit-transition: all 0.5s ease-in-out;
+	-moz-transition: all 0.5s ease-in-out;
+	-o-transition: all 0.5s ease-in-out;
+	transition: all 0.5s ease-in-out;
+}
+
+.webpeptideshakertheme .v-absolutelayout-wrapper-hidepanel {
+	width: 0px !important;
+	height: 0px !important;
+}
+
+.webpeptideshakertheme .activelayout {
+	background-color: white;
+	-webkit-transition: all 0.5s ease-in-out;
+	-moz-transition: all 0.5s ease-in-out;
+	-o-transition: all 0.5s ease-in-out;
+	transition: all 0.5s ease-in-out;
+}
+
+.webpeptideshakertheme .v-slot-leftsidebtncontainer {
+	margin-top: 50px;
+}
+
+.webpeptideshakertheme .leftsidebtncontainer {
+	-webkit-transition: all 1.5s ease-in-out;
+	-moz-transition: all 1.5s ease-in-out;
+	-o-transition: all 1.5s ease-in-out;
+	transition: all 1.5s ease-in-out;
+}
+
+.webpeptideshakertheme .lightgraylayout {
+	background-color: lightgray;
+}
+
+.webpeptideshakertheme .bigmenubtn {
+	background-color: whitesmoke;
+	border: 2px solid lightgray;
+	border-radius: 10%;
+	max-width: 40px;
+	max-height: 40px;
+	cursor: pointer;
+	-webkit-transition: all 0.5s ease-in-out;
+	-moz-transition: all 0.5s ease-in-out;
+	-o-transition: all 0.5s ease-in-out;
+	transition: all 0.5s ease-in-out;
+}
+
+.webpeptideshakertheme .bigmenubtn:hover {
+	background-color: lightgray;
+	border-color: gray;
+}
+
+.webpeptideshakertheme .selectedbiglbtn {
+	background-color: #f8f8f8;
+	border-color: #ff6f2f;
+	max-width: 64px;
+	max-height: 64px;
 }
