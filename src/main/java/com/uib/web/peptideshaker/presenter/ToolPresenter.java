@@ -23,6 +23,7 @@ public class ToolPresenter extends VerticalLayout implements PresenterViewable, 
      */
     private SmallSideBtn toolsBtn;
     private final Set<BigSideBtn>btnsSet;
+    private AbsoluteLayout rightLayoutContainer ;
 
     /**
      * Initialize the web tool main attributes
@@ -47,53 +48,58 @@ public class ToolPresenter extends VerticalLayout implements PresenterViewable, 
         
         AbsoluteLayout leftLayoutContainer = new AbsoluteLayout();
         leftLayoutContainer.setSizeFull();
-        container.addComponent(leftLayoutContainer);
-        container.setExpandRatio(leftLayoutContainer, 5);
-        
-        AbsoluteLayout rightLayoutContainer = new AbsoluteLayout();
-        rightLayoutContainer.setSizeFull();
         leftLayoutContainer.setStyleName("leftsidebtncontainer");
-        rightLayoutContainer.addStyleName("hide");
-        container.addComponent(rightLayoutContainer);
-        container.setExpandRatio(rightLayoutContainer, 95);
+        container.addComponent(leftLayoutContainer);
+        container.setExpandRatio(leftLayoutContainer, 10);
         
-        VerticalLayout marker = new VerticalLayout();
-        marker.setWidth(2, Unit.PIXELS);
-        marker.setHeight(80, Unit.PERCENTAGE);
-        marker.setStyleName("lightgraylayout");
-        leftLayoutContainer.addComponent(marker, "left: 50%; top: 16px;");
+        rightLayoutContainer = new AbsoluteLayout();
+        rightLayoutContainer.setSizeFull();
+        rightLayoutContainer.addStyleName("hide");
+        rightLayoutContainer.addStyleName("lightbluelayout");
+        container.addComponent(rightLayoutContainer);
+        container.setExpandRatio(rightLayoutContainer, 90);
+        
+//        VerticalLayout marker = new VerticalLayout();
+//        marker.setWidth(2, Unit.PIXELS);
+//        marker.setHeight(80, Unit.PERCENTAGE);
+//        marker.setStyleName("lightgraylayout");
+//        leftLayoutContainer.addComponent(marker, "left: 50%; top: 16px;");
         
         VerticalLayout btnContainer = new VerticalLayout();
         btnContainer.setSizeFull();
         leftLayoutContainer.addComponent(btnContainer);
         
-        BigSideBtn nelsBtn = new BigSideBtn("img/NeLS.png");
+        BigSideBtn nelsBtn = new BigSideBtn("img/NeLS.png","Get Data");
         nelsBtn.setData("nels");
         btnContainer.addComponent(nelsBtn);
         btnContainer.setComponentAlignment(nelsBtn, Alignment.TOP_CENTER);
         nelsBtn.addLayoutClickListener(ToolPresenter.this);
         btnsSet.add(nelsBtn);
         
-        BigSideBtn searchGUIBtn = new BigSideBtn("img/NeLS.png");
+         BigSideBtn workFlowBtn = new BigSideBtn("img/workflow3.png","Work-Flow");
+        workFlowBtn.setData("workflow");
+        workFlowBtn.addStyleName("zeropadding");
+        btnContainer.addComponent(workFlowBtn);
+        btnContainer.setComponentAlignment(workFlowBtn, Alignment.TOP_CENTER);
+        workFlowBtn.addLayoutClickListener(ToolPresenter.this);
+        btnsSet.add(workFlowBtn);
+        
+        
+        BigSideBtn searchGUIBtn = new BigSideBtn("img/searchgui.png","SearchGUI");
         searchGUIBtn.setData("searchgui");
         btnContainer.addComponent(searchGUIBtn);
         btnContainer.setComponentAlignment(searchGUIBtn, Alignment.TOP_CENTER);
         searchGUIBtn.addLayoutClickListener(ToolPresenter.this);
         btnsSet.add(searchGUIBtn);
         
-        BigSideBtn peptideShakerBtn = new BigSideBtn("img/NeLS.png");
+        BigSideBtn peptideShakerBtn = new BigSideBtn("img/peptideshaker.png","PeptideShaker");
         peptideShakerBtn.setData("peptideshaker");
         btnContainer.addComponent(peptideShakerBtn);
         btnContainer.setComponentAlignment(peptideShakerBtn, Alignment.TOP_CENTER);
         peptideShakerBtn.addLayoutClickListener(ToolPresenter.this);
         btnsSet.add(peptideShakerBtn);
         
-        BigSideBtn workFlowBtn = new BigSideBtn("img/NeLS.png");
-        workFlowBtn.setData("workflow");
-        btnContainer.addComponent(workFlowBtn);
-        btnContainer.setComponentAlignment(workFlowBtn, Alignment.TOP_CENTER);
-        workFlowBtn.addLayoutClickListener(ToolPresenter.this);
-        btnsSet.add(workFlowBtn);
+       
 
 //        this.rightLayoutBtnsContainer = new VerticalLayout();
 //        rightLayoutBtnsContainer.setSizeFull();
@@ -130,6 +136,7 @@ public class ToolPresenter extends VerticalLayout implements PresenterViewable, 
     
     @Override
     public void layoutClick(LayoutEvents.LayoutClickEvent event) {
+        rightLayoutContainer.removeStyleName("hide");
         for(BigSideBtn bbt :btnsSet)
             bbt.setSelected(false);
         BigSideBtn comp = (BigSideBtn) event.getComponent();

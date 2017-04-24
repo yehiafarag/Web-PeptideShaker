@@ -12993,6 +12993,10 @@ div.v-layout.v-horizontal.v-widget {
 	overflow: auto;
 }
 
+.webpeptideshakertheme .v-slot-mainlayout {
+	background-color: white;
+}
+
 .webpeptideshakertheme .mainlayout {
 	min-height: 400px;
 	min-width: 470px;
@@ -13075,8 +13079,8 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .webpeptideshakertheme .smallmenubtn {
-	background-color: whitesmoke;
-	border: 3px solid lightgray;
+	background-color: white;
+	border: 1px solid lightblue;
 	border-radius: 10%;
 	max-width: 32px;
 	max-height: 32px;
@@ -13088,19 +13092,22 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .webpeptideshakertheme .smallmenubtn:hover {
-	background-color: lightgray;
-	border-color: gray;
+	border-color: #ff6f2f;
 }
 
 .webpeptideshakertheme .selectedsmallbtn {
-	background-color: #f8f8f8;
 	border-color: #ff6f2f;
 	max-width: 40px;
 	max-height: 40px;
+	border-width: 2px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+	-webkit-box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+	-moz-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+	border-color: #ff6f2f;
 }
 
 .webpeptideshakertheme .smallmenubtn img {
-	padding: 20%;
+	padding: 15%;
 }
 
 .webpeptideshakertheme .hidepanel {
@@ -13118,7 +13125,7 @@ div.v-layout.v-horizontal.v-widget {
 	height: 0px !important;
 }
 
-.webpeptideshakertheme .activelayout {
+.webpeptideshakertheme coool .activelayout {
 	background-color: white;
 	-webkit-transition: all 0.5s ease-in-out;
 	-moz-transition: all 0.5s ease-in-out;
@@ -13138,15 +13145,11 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .webpeptideshakertheme .lightgraylayout {
-	background-color: lightgray;
+	background-color: #def7ff;
 }
 
 .webpeptideshakertheme .bigmenubtn {
-	background-color: whitesmoke;
-	border: 2px solid lightgray;
-	border-radius: 10%;
-	max-width: 40px;
-	max-height: 40px;
+	max-height: 80px;
 	cursor: pointer;
 	-webkit-transition: all 0.5s ease-in-out;
 	-moz-transition: all 0.5s ease-in-out;
@@ -13154,14 +13157,54 @@ div.v-layout.v-horizontal.v-widget {
 	transition: all 0.5s ease-in-out;
 }
 
-.webpeptideshakertheme .bigmenubtn:hover {
-	background-color: lightgray;
-	border-color: gray;
+.webpeptideshakertheme .bigmenubtn img {
+	border: 2px solid lightblue;
+	border-radius: 30%;
+	max-width: 50px;
+	max-height: 50px;
+	cursor: pointer;
+	padding: 15%;
+}
+
+.webpeptideshakertheme .bigbtnText {
+	max-width: 150px;
+	font-size: 12px;
+	font-weight: bold;
+	overflow: hidden;
+	text-align: center;
+	text-overflow: ellipsis;
+	background-color: white;
+	border: 2px solid lightblue;
+	border-left-color: white !important;
+	z-index: 10000000 !important;
+	border-bottom-right-radius: 5px;
+	border-top-right-radius: 5px;
+	position: relative;
+	margin-left: -3px !important;
 }
 
 .webpeptideshakertheme .selectedbiglbtn {
-	background-color: #f8f8f8;
+	margin-left: 0px !important;
+}
+
+.webpeptideshakertheme .selectedbiglbtn img {
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+	-webkit-box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+	-moz-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
 	border-color: #ff6f2f;
-	max-width: 64px;
-	max-height: 64px;
+}
+
+.webpeptideshakertheme .bigmenubtn :hover {
+	background-color: whitesmoke;
+}
+
+.webpeptideshakertheme .selectedbiglbtn .bigbtnText {
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+	-webkit-box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+	-moz-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+	border-color: #ff6f2f;
+}
+
+.webpeptideshakertheme .zeropadding img {
+	padding: 0px !important;
 }

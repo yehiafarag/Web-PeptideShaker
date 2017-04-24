@@ -145,6 +145,7 @@ public abstract class WelcomePage extends VerticalLayout implements PresenterVie
                     connectionSettingsPanel.setPopupVisible(true);
                 }
                 systemConnected(galaxyInstant);
+                connectionLabel.setVisible(true);
             }
 
             @Override
@@ -159,8 +160,9 @@ public abstract class WelcomePage extends VerticalLayout implements PresenterVie
         settingBtn.addComponent(connectionSettingsPanel);
 
         galaxyConnectionBtnContainer.addLayoutClickListener((LayoutEvents.LayoutClickEvent event) -> {
-           
-            if (event.getClickedComponent() != null && event.getClickedComponent() instanceof Label) {               
+      
+            if (event.getClickedComponent() != null && event.getClickedComponent() instanceof Label) {      
+                connectionLabel.setVisible(false);
                 if (connectionLabel.getValue().equalsIgnoreCase("Disconnect")) {
                     //disconnect from galaxy
                     connectionLabel.setValue("Connect");

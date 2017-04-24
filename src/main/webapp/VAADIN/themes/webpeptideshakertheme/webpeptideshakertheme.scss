@@ -41,6 +41,9 @@
     .autooverflow{
         overflow: auto;
     }
+    .v-slot-mainlayout{
+        background-color: white;
+    }
     .mainlayout{
         min-height: 400px;
         min-width: 470px;
@@ -99,7 +102,7 @@
     }
     .disconnect{
        	color: white !important;
-	background-color: #4f9d13 !important;
+        background-color: #4f9d13 !important;
     }
     .hide {
         opacity:0 !important;
@@ -108,7 +111,7 @@
         margin-top: 50px;
         max-height: 280px;
     }
-    
+
     .rightsidebtncontainer {
         min-width: 16px;
         max-width: 64px;
@@ -119,73 +122,80 @@
         transition: all 1.5s ease-in-out;
     }
     .smallmenubtn {
-        background-color: whitesmoke;
-       border: 3px solid lightgray;
-	border-radius: 10%;
+        background-color: white;
+        border: 1px solid lightblue;
+        border-radius: 10%;
         max-width: 32px;
         max-height: 32px;
-        cursor:pointer;
-        -webkit-transition: all .5s ease-in-out;
-        -moz-transition: all .5s ease-in-out;
-        -o-transition: all .5s ease-in-out;
-        transition: all .5s ease-in-out;
-    }
-    .smallmenubtn:hover {
-        background-color: lightgray;
-        border-color: gray;
-    }
-    .selectedsmallbtn{
-        background-color: rgb(248, 248, 248);
-	border-color: #ff6f2f;
-        max-width: 40px;
-        max-height: 40px;
-    }
-    .smallmenubtn img{
-        padding:20%;
-    }
-    .hidepanel{
-        width:0px !important;
-        height: 0px !important;
-        opacity:0 !important;
+        cursor: pointer;
         -webkit-transition: all 0.5s ease-in-out;
         -moz-transition: all 0.5s ease-in-out;
         -o-transition: all 0.5s ease-in-out;
-        transition: all 0.5s ease-in-out;        
+        transition: all 0.5s ease-in-out;
     }
-    .v-absolutelayout-wrapper-hidepanel{
+
+    .smallmenubtn:hover {
+        border-color: #ff6f2f;
+    }
+
+    .selectedsmallbtn {
+
+        border-color: #ff6f2f;
+        max-width: 40px;
+        max-height: 40px;
+        border-width:2px;
+        box-shadow:0 10px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px rgba(255, 255, 255, 1);
+        -webkit-box-shadow:0 0px 20px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px rgba(255, 255, 255, 1);
+        -moz-box-shadow:0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px rgba(255, 255, 255, 1);
+        border-color: #ff6f2f;
+
+
+    }
+
+    .smallmenubtn img {
+        padding: 15%;
+    }
+
+    .hidepanel {
+        width: 0px !important;
+        height: 0px !important;
+        opacity: 0 !important;
+        -webkit-transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+        -o-transition: all 0.5s ease-in-out;
+        transition: all 0.5s ease-in-out;
+    }
+
+    .v-absolutelayout-wrapper-hidepanel {
         width: 0px !important;
         height: 0px !important;
     }
 
-
-    .activelayout{
+    coool .activelayout {
         background-color: white;
-          -webkit-transition: all 0.5s ease-in-out;
+        -webkit-transition: all 0.5s ease-in-out;
         -moz-transition: all 0.5s ease-in-out;
         -o-transition: all 0.5s ease-in-out;
-        transition: all 0.5s ease-in-out;   
+        transition: all 0.5s ease-in-out;
     }
-    
+
     .v-slot-leftsidebtncontainer {
         margin-top: 50px;
     }
-    .leftsidebtncontainer{
+
+    .leftsidebtncontainer {
         -webkit-transition: all 1.5s ease-in-out;
         -moz-transition: all 1.5s ease-in-out;
         -o-transition: all 1.5s ease-in-out;
         transition: all 1.5s ease-in-out;
-        
-    }
-.lightgraylayout{
-        background-color:lightgray;
     }
 
-    .bigmenubtn {
-	background-color: whitesmoke;
-	border: 2px solid lightgray;
-	border-radius: 10%;
-	max-width: 40px;
-	max-height: 40px;
+    .lightgraylayout {
+        background-color: #def7ff;
+    }
+
+ .bigmenubtn {
+	max-height: 80px;
 	cursor: pointer;
 	-webkit-transition: all 0.5s ease-in-out;
 	-moz-transition: all 0.5s ease-in-out;
@@ -193,20 +203,57 @@
 	transition: all 0.5s ease-in-out;
 }
 
-.bigmenubtn:hover {
-	background-color: lightgray;
-	border-color: gray;
+ .bigmenubtn img {
+	border: 2px solid lightblue;
+	border-radius: 30%;
+	max-width: 50px;
+	max-height: 50px;
+	cursor: pointer;
+	padding: 15%;
 }
 
+ .bigbtnText {
+	max-width: 150px;
+	font-size: 12px;
+	font-weight: bold;
+	overflow: hidden;
+        text-align: center;
+	text-overflow: ellipsis;
+	background-color: white;
+	border: 2px solid lightblue;
+	border-left-color: white !important;
+	z-index: 10000000 !important;
+	border-bottom-right-radius: 5px;
+	border-top-right-radius: 5px;
+	position: relative;
+	margin-left: -3px !important;
+}
 .selectedbiglbtn {
-	background-color: rgb(248, 248, 248);
-	border-color: #ff6f2f;
-	max-width: 64px;
-	max-height: 64px;
-}
-
-.bigmenubtn img {
+	margin-left:0px!important;
 	
 }
 
+ .selectedbiglbtn img {
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+	-webkit-box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+	-moz-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+	border-color: #ff6f2f;
+}
+
+ .bigmenubtn :hover {
+	background-color: whitesmoke;
+
+}
+
+ .selectedbiglbtn .bigbtnText{
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+	-webkit-box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+	-moz-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+	border-color: #ff6f2f;
+	
+	
+}
+.zeropadding img{
+	padding:0px !important;
+}
 }
