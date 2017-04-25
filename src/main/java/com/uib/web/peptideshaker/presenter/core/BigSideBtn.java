@@ -21,17 +21,18 @@ public class BigSideBtn extends HorizontalLayout {
         icon.setSource(new ThemeResource(iconUrl));
         icon.setSizeFull();
         BigSideBtn.this.addComponent(icon);
-         BigSideBtn.this.setExpandRatio(icon,1);
+        BigSideBtn.this.setComponentAlignment(icon,Alignment.MIDDLE_CENTER);
+//         BigSideBtn.this.setExpandRatio(icon,1);
         BigSideBtn.this.setSizeFull();
         BigSideBtn.this.setStyleName("bigmenubtn");
-        BigSideBtn.this.setComponentAlignment(icon,Alignment.MIDDLE_RIGHT);
         
         
-        Label textLabel = new Label(text);
-        textLabel.setStyleName("bigbtnText");
-         BigSideBtn.this.addComponent(textLabel);
-          BigSideBtn.this.setExpandRatio(textLabel,2);
-         BigSideBtn.this.setComponentAlignment(textLabel,Alignment.MIDDLE_LEFT);
+//        
+//        Label textLabel = new Label(text);
+//        textLabel.setStyleName("bigbtnText");
+//         BigSideBtn.this.addComponent(textLabel);
+//          BigSideBtn.this.setExpandRatio(textLabel,2);
+//         BigSideBtn.this.setComponentAlignment(textLabel,Alignment.MIDDLE_LEFT);
         
         
         

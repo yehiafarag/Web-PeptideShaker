@@ -1,6 +1,7 @@
 package com.uib.web.peptideshaker;
 
 import com.github.jmchilton.blend4j.galaxy.GalaxyInstance;
+import com.uib.web.peptideshaker.presenter.PeptideShakerViewPresenter;
 import com.uib.web.peptideshaker.presenter.ToolPresenter;
 import com.uib.web.peptideshaker.presenter.WelcomePage;
 import com.vaadin.ui.VerticalLayout;
@@ -38,6 +39,10 @@ public class WebPeptideShakerApp extends VerticalLayout {
         
         ToolPresenter toolsView = new ToolPresenter();
          presentationManager.registerView(toolsView);
+         
+         PeptideShakerViewPresenter peptideShakerView = new PeptideShakerViewPresenter();
+         presentationManager.registerView(peptideShakerView);
+         
         
         
     }

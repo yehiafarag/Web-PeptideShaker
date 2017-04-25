@@ -12999,7 +12999,7 @@ div.v-layout.v-horizontal.v-widget {
 
 .webpeptideshakertheme .mainlayout {
 	min-height: 400px;
-	min-width: 470px;
+	min-width: 1000px;
 }
 
 .webpeptideshakertheme .v-link-headerlogo {
@@ -13080,10 +13080,10 @@ div.v-layout.v-horizontal.v-widget {
 
 .webpeptideshakertheme .smallmenubtn {
 	background-color: white;
-	border: 1px solid lightblue;
-	border-radius: 10%;
-	max-width: 32px;
-	max-height: 32px;
+	border: 2px solid lightgray;
+	border-radius: 5px;
+	max-width: 35px;
+	max-height: 35px;
 	cursor: pointer;
 	-webkit-transition: all 0.5s ease-in-out;
 	-moz-transition: all 0.5s ease-in-out;
@@ -13092,28 +13092,33 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .webpeptideshakertheme .smallmenubtn:hover {
-	border-color: #ff6f2f;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+	-webkit-box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+	-moz-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+	border-color: gray;
+	padding: 0px !important;
 }
 
 .webpeptideshakertheme .selectedsmallbtn {
-	border-color: #ff6f2f;
-	max-width: 40px;
-	max-height: 40px;
+	max-width: 50px;
+	max-height: 50px;
 	border-width: 2px;
 	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
 	-webkit-box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
 	-moz-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
-	border-color: #ff6f2f;
+	border-color: gray;
+	padding: 0px !important;
 }
 
 .webpeptideshakertheme .smallmenubtn img {
-	padding: 15%;
+	padding: 10%;
+	background-color: whitesmoke;
 }
 
 .webpeptideshakertheme .hidepanel {
 	width: 0px !important;
 	height: 0px !important;
-	opacity: 0 !important;
+	overflow: hidden !important;
 	-webkit-transition: all 0.5s ease-in-out;
 	-moz-transition: all 0.5s ease-in-out;
 	-o-transition: all 0.5s ease-in-out;
@@ -13122,10 +13127,9 @@ div.v-layout.v-horizontal.v-widget {
 
 .webpeptideshakertheme .v-absolutelayout-wrapper-hidepanel {
 	width: 0px !important;
-	height: 0px !important;
 }
 
-.webpeptideshakertheme coool .activelayout {
+.webpeptideshakertheme .activelayout {
 	background-color: white;
 	-webkit-transition: all 0.5s ease-in-out;
 	-moz-transition: all 0.5s ease-in-out;
@@ -13134,22 +13138,28 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .webpeptideshakertheme .v-slot-leftsidebtncontainer {
-	margin-top: 50px;
+	margin-top: 20px;
 }
 
 .webpeptideshakertheme .leftsidebtncontainer {
-	-webkit-transition: all 1.5s ease-in-out;
-	-moz-transition: all 1.5s ease-in-out;
-	-o-transition: all 1.5s ease-in-out;
-	transition: all 1.5s ease-in-out;
+	margin-left: 2px;
+	position: relative;
+	z-index: 9999999442119690000000000000.0 !important;
+	-webkit-transition: all 0.5s ease-in-out;
+	-moz-transition: all 0.5s ease-in-out;
+	-o-transition: all 0.5s ease-in-out;
+	transition: all 0.5s ease-in-out;
 }
 
 .webpeptideshakertheme .lightgraylayout {
-	background-color: #def7ff;
+	background-color: lightgray;
 }
 
 .webpeptideshakertheme .bigmenubtn {
-	max-height: 80px;
+	max-height: 125px;
+	height: auto !important;
+	padding: 10%;
+	border: 2px solid rgba(0, 0, 255, 0);
 	cursor: pointer;
 	-webkit-transition: all 0.5s ease-in-out;
 	-moz-transition: all 0.5s ease-in-out;
@@ -13158,12 +13168,12 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .webpeptideshakertheme .bigmenubtn img {
-	border: 2px solid lightblue;
-	border-radius: 30%;
-	max-width: 50px;
-	max-height: 50px;
+	width: 100% !important;
+	height: auto !important;
+	border: 2px solid lightgray;
+	border-radius: 5px;
 	cursor: pointer;
-	padding: 15%;
+	padding: 10%;
 }
 
 .webpeptideshakertheme .bigbtnText {
@@ -13174,7 +13184,7 @@ div.v-layout.v-horizontal.v-widget {
 	text-align: center;
 	text-overflow: ellipsis;
 	background-color: white;
-	border: 2px solid lightblue;
+	border: 2px solid lightgray;
 	border-left-color: white !important;
 	z-index: 10000000 !important;
 	border-bottom-right-radius: 5px;
@@ -13184,14 +13194,22 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .webpeptideshakertheme .selectedbiglbtn {
-	margin-left: 0px !important;
+	background-color: whitesmoke;
+	border: 2px solid lightgray;
+	border-right-color: whitesmoke;
+	border-radius: 5px;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	position: relative;
+	z-index: 10 !important;
+	padding: 10%;
 }
 
 .webpeptideshakertheme .selectedbiglbtn img {
 	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
 	-webkit-box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
 	-moz-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
-	border-color: #ff6f2f;
+	border-color: #ada9a9;
 }
 
 .webpeptideshakertheme .bigmenubtn :hover {
@@ -13202,9 +13220,25 @@ div.v-layout.v-horizontal.v-widget {
 	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
 	-webkit-box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
 	-moz-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
-	border-color: #ff6f2f;
+	border-color: #ada9a9;
 }
 
 .webpeptideshakertheme .zeropadding img {
 	padding: 0px !important;
+}
+
+.webpeptideshakertheme .integratedframe {
+	background-color: whitesmoke;
+	border: 2px solid lightgray;
+	border-radius: 5px;
+}
+
+.webpeptideshakertheme .viewframe {
+	padding: 10px !important;
+}
+
+.webpeptideshakertheme .viewframecontent {
+	background-color: white;
+	border: 2px solid lightgray;
+	border-radius: 5px;
 }

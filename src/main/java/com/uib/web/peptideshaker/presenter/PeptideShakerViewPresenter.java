@@ -12,12 +12,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This class represent web tool presenter which is responsible for managing the
- * view and interactivity of the tool
+ * This class represent PeptideShaker view presenter which is responsible for viewing the peptide shaker results on web
  *
  * @author Yehia Farag
  */
-public class ToolPresenter extends VerticalLayout implements PresenterViewable, LayoutEvents.LayoutClickListener {
+public class PeptideShakerViewPresenter extends VerticalLayout implements PresenterViewable, LayoutEvents.LayoutClickListener {
 
     /**
      * The galaxy server connection panel.
@@ -31,12 +30,12 @@ public class ToolPresenter extends VerticalLayout implements PresenterViewable, 
      *
      * @param searchGUITool SearchGUI web tool
      */
-    public ToolPresenter() {
-        ToolPresenter.this.setSizeFull();
-        ToolPresenter.this.setStyleName("activelayout");
-        ToolPresenter.this.toolsBtn = new SmallSideBtn("img/spectra.png");
-        ToolPresenter.this.toolsBtn.setData(ToolPresenter.this.getViewId());
-        ToolPresenter.this.minimizeView();
+    public PeptideShakerViewPresenter() {
+        PeptideShakerViewPresenter.this.setSizeFull();
+        PeptideShakerViewPresenter.this.setStyleName("activelayout");
+        PeptideShakerViewPresenter.this.toolsBtn = new SmallSideBtn("img/graph2.png");
+        PeptideShakerViewPresenter.this.toolsBtn.setData(PeptideShakerViewPresenter.this.getViewId());
+        PeptideShakerViewPresenter.this.minimizeView();
         this.btnsSet = new HashSet<>();
         this.initLayout();
         
@@ -72,7 +71,7 @@ public class ToolPresenter extends VerticalLayout implements PresenterViewable, 
         nelsBtn.setData("nels");
         btnContainer.addComponent(nelsBtn);
         btnContainer.setComponentAlignment(nelsBtn, Alignment.TOP_CENTER);
-        nelsBtn.addLayoutClickListener(ToolPresenter.this);
+        nelsBtn.addLayoutClickListener(PeptideShakerViewPresenter.this);
         btnsSet.add(nelsBtn);
         
          BigSideBtn workFlowBtn = new BigSideBtn("img/workflow3.png","Work-Flow");
@@ -80,7 +79,7 @@ public class ToolPresenter extends VerticalLayout implements PresenterViewable, 
         workFlowBtn.addStyleName("zeropadding");
         btnContainer.addComponent(workFlowBtn);
         btnContainer.setComponentAlignment(workFlowBtn, Alignment.TOP_CENTER);
-        workFlowBtn.addLayoutClickListener(ToolPresenter.this);
+        workFlowBtn.addLayoutClickListener(PeptideShakerViewPresenter.this);
         workFlowBtn.setSelected(true);
         btnsSet.add(workFlowBtn);
         
@@ -89,14 +88,14 @@ public class ToolPresenter extends VerticalLayout implements PresenterViewable, 
         searchGUIBtn.setData("searchgui");
         btnContainer.addComponent(searchGUIBtn);
         btnContainer.setComponentAlignment(searchGUIBtn, Alignment.TOP_CENTER);
-        searchGUIBtn.addLayoutClickListener(ToolPresenter.this);
+        searchGUIBtn.addLayoutClickListener(PeptideShakerViewPresenter.this);
         btnsSet.add(searchGUIBtn);
         
         BigSideBtn peptideShakerBtn = new BigSideBtn("img/peptideshaker.png","PeptideShaker");
         peptideShakerBtn.setData("peptideshaker");
         btnContainer.addComponent(peptideShakerBtn);
         btnContainer.setComponentAlignment(peptideShakerBtn, Alignment.TOP_CENTER);
-        peptideShakerBtn.addLayoutClickListener(ToolPresenter.this);
+        peptideShakerBtn.addLayoutClickListener(PeptideShakerViewPresenter.this);
         btnsSet.add(peptideShakerBtn);
         
         VerticalLayout toolViewFrame = new VerticalLayout();
@@ -131,7 +130,7 @@ public class ToolPresenter extends VerticalLayout implements PresenterViewable, 
     
     @Override
     public String getViewId() {
-        return ToolPresenter.class.getName();
+        return PeptideShakerViewPresenter.class.getName();
     }
     
     @Override
