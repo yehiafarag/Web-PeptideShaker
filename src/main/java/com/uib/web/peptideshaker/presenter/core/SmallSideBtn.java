@@ -17,7 +17,6 @@ public class SmallSideBtn extends AbsoluteLayout {
         icon.setSource(new ThemeResource(iconUrl));
         icon.setSizeFull();
         SmallSideBtn.this.addComponent(icon);
-        SmallSideBtn.this.setSizeFull();
         SmallSideBtn.this.setStyleName("smallmenubtn");
     }
 

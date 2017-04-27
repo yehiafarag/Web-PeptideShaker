@@ -108,8 +108,15 @@
         opacity:0 !important;
     }
     .v-slot-rightsidebtncontainer {
-        margin-top: 50px;
-        max-height: 280px;
+        margin-top: 30px;
+        max-height: 200px;
+        width: 50px !important;
+        margin-left:-35px;
+        background-color:white;
+        border-top:2px solid lightgray;
+        border-bottom:2px solid lightgray;
+        border-bottom:2px solid lightgray;
+        overflow:hidden;
     }
 
     .rightsidebtncontainer {
@@ -123,40 +130,40 @@
     }
     .smallmenubtn {
         background-color: white;
-	border: 2px solid lightgray;
-	border-radius: 5px;
-	max-width: 35px;
-	max-height: 35px;
-	cursor: pointer;
-	-webkit-transition: all 0.5s ease-in-out;
-	-moz-transition: all 0.5s ease-in-out;
-	-o-transition: all 0.5s ease-in-out;
-	transition: all 0.5s ease-in-out;
+        border: 2px solid lightgray;
+        border-radius: 5px;
+        width: 35px !important;
+        height: 35px !important;
+        cursor: pointer;
+        -webkit-transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+        -o-transition: all 0.5s ease-in-out;
+        transition: all 0.5s ease-in-out;
     }
 
     .smallmenubtn:hover {
-       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
-	-webkit-box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
-	-moz-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
-	border-color: gray;
-	padding:0px !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+        -webkit-box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+        -moz-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+        border-color: gray;
+        padding:0px !important;
     }
 
     .selectedsmallbtn {
 
-   	max-width: 50px;
-	max-height:50px;
-	border-width: 2px;
-	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
-	-webkit-box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
-	-moz-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
-	border-color: gray;
-	padding:0px !important;
+        width: 45px !important;
+        height: 45px !important;
+        border-width: 2px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+        -webkit-box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+        -moz-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+        border-color: gray;
+        padding: 0px !important;
     }
 
     .smallmenubtn img {
         padding: 10%;
-	background-color:whitesmoke;
+        background-color:whitesmoke;
     }
 
     .hidepanel {
@@ -182,6 +189,7 @@
 
     .v-slot-leftsidebtncontainer {
         margin-top: 20px;
+        max-width:100px !important;
     }
 
     .leftsidebtncontainer {
@@ -200,7 +208,7 @@
     }
 
     .bigmenubtn {
-        max-height: 125px;
+        max-height: 225px;
         height:auto !important;
         padding:10%;
         border: 2px solid rgba(0, 0, 255, 0);
@@ -212,6 +220,7 @@
     }
 
     .bigmenubtn img {
+        max-width:100px !important;
         width: 100% !important;
         height: auto !important;
         border: 2px solid lightgray;
@@ -243,7 +252,7 @@
         border-right-color: whitesmoke;
         border-radius: 5px;
         border-top-right-radius:0px;
-	border-bottom-right-radius:0px;
+        border-bottom-right-radius:0px;
         position: relative;
         z-index: 10 !important;
         padding:10%;
@@ -278,10 +287,64 @@
     }
     .viewframe{
         padding: 10px !important;
+
+    }
+    .v-slot-viewframe {
+        height:100% !important;
     }
     .viewframecontent{
         background-color:white;
         border:2px solid lightgray;
         border-radius: 5px;
     }
+    .v-slot-bottomsidebtncontainer{
+        opacity: 0;
+    }
+
+
+
+    /****mobile css**/
+    .horizontalcss .mainlayout {
+        min-height: 400px;
+        min-width: 99%;
+
+    }
+
+    .horizontalcss .v-slot-leftsidebtncontainer {
+        width: 1% !important;
+        background-color: white;
+        opacity:0;
+    }
+
+    .horizontalcss .v-slot-integratedframe {
+        width: 99% !important;
+        height: 90% !important;
+
+    }
+    .horizontalcss .v-slot-bottomsidebtncontainer{       
+        opacity: 1;
+    }
+.horizontalcss .bigmenubtn img {
+	height:100% !important;
+	width: 40px !important;
+	border: 2px solid lightgray;
+	border-radius: 5px;
+	cursor: pointer;
+	padding: 10% !important;
+}
+.horizontalcss zeropadding{
+	padding:10px !important;
+}
+.horizontalcss .selectedbiglbtn {
+	background-color:whitesmoke;
+	margin-top:-2px !important;
+	border-top-color:whitesmoke;
+	border-right-color:lightgrey;
+	border-bottom-right-radius:5px;
+	
+}
+ .horizontalcss.autooverflow{
+	overflow:hidden !important;
+}
+
 }

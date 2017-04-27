@@ -46,15 +46,16 @@ public class PresenterManager extends HorizontalLayout implements LayoutEvents.L
 
         leftLayoutContainer = new AbsoluteLayout();
         leftLayoutContainer.setSizeFull();
+        leftLayoutContainer.setStyleName("leftsideviewcontainer");
         PresenterManager.this.addComponent(leftLayoutContainer);
-        PresenterManager.this.setExpandRatio(leftLayoutContainer, 97);
+        PresenterManager.this.setExpandRatio(leftLayoutContainer, 100);
  
         rightLayoutContainer = new AbsoluteLayout();
         rightLayoutContainer.setSizeFull();
         rightLayoutContainer.setStyleName("rightsidebtncontainer");
         rightLayoutContainer.addStyleName("hide");         
         PresenterManager.this.addComponent(rightLayoutContainer);
-        PresenterManager.this.setExpandRatio(rightLayoutContainer, 3);
+        PresenterManager.this.setExpandRatio(rightLayoutContainer, 1);
 
         VerticalLayout marker = new VerticalLayout();
         marker.setWidth(2, Unit.PIXELS);
@@ -91,7 +92,7 @@ public class PresenterManager extends HorizontalLayout implements LayoutEvents.L
         view.getControlButton().addLayoutClickListener(PresenterManager.this);
         visualizationMap.put(view.getViewId(), view);
         rightLayoutBtnsContainer.addComponent(view.getControlButton());
-        rightLayoutBtnsContainer.setComponentAlignment(view.getControlButton(), Alignment.TOP_CENTER);
+        rightLayoutBtnsContainer.setComponentAlignment(view.getControlButton(), Alignment.MIDDLE_CENTER);
         leftLayoutContainer.addComponent(view.getMainView());
     }
 

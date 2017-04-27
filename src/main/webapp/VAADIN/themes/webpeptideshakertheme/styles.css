@@ -13064,8 +13064,15 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .webpeptideshakertheme .v-slot-rightsidebtncontainer {
-	margin-top: 50px;
-	max-height: 280px;
+	margin-top: 30px;
+	max-height: 200px;
+	width: 50px !important;
+	margin-left: -35px;
+	background-color: white;
+	border-top: 2px solid lightgray;
+	border-bottom: 2px solid lightgray;
+	border-bottom: 2px solid lightgray;
+	overflow: hidden;
 }
 
 .webpeptideshakertheme .rightsidebtncontainer {
@@ -13082,8 +13089,8 @@ div.v-layout.v-horizontal.v-widget {
 	background-color: white;
 	border: 2px solid lightgray;
 	border-radius: 5px;
-	max-width: 35px;
-	max-height: 35px;
+	width: 35px !important;
+	height: 35px !important;
 	cursor: pointer;
 	-webkit-transition: all 0.5s ease-in-out;
 	-moz-transition: all 0.5s ease-in-out;
@@ -13100,8 +13107,8 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .webpeptideshakertheme .selectedsmallbtn {
-	max-width: 50px;
-	max-height: 50px;
+	width: 45px !important;
+	height: 45px !important;
 	border-width: 2px;
 	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
 	-webkit-box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
@@ -13139,6 +13146,7 @@ div.v-layout.v-horizontal.v-widget {
 
 .webpeptideshakertheme .v-slot-leftsidebtncontainer {
 	margin-top: 20px;
+	max-width: 100px !important;
 }
 
 .webpeptideshakertheme .leftsidebtncontainer {
@@ -13156,7 +13164,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .webpeptideshakertheme .bigmenubtn {
-	max-height: 125px;
+	max-height: 225px;
 	height: auto !important;
 	padding: 10%;
 	border: 2px solid rgba(0, 0, 255, 0);
@@ -13168,6 +13176,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .webpeptideshakertheme .bigmenubtn img {
+	max-width: 100px !important;
 	width: 100% !important;
 	height: auto !important;
 	border: 2px solid lightgray;
@@ -13237,8 +13246,57 @@ div.v-layout.v-horizontal.v-widget {
 	padding: 10px !important;
 }
 
+.webpeptideshakertheme .v-slot-viewframe {
+	height: 100% !important;
+}
+
 .webpeptideshakertheme .viewframecontent {
 	background-color: white;
 	border: 2px solid lightgray;
 	border-radius: 5px;
+}
+
+.webpeptideshakertheme .v-slot-bottomsidebtncontainer {
+	opacity: 0;
+}
+
+.webpeptideshakertheme .horizontalcss .mainlayout {
+	min-height: 400px;
+	min-width: 99%;
+}
+
+.webpeptideshakertheme .horizontalcss .v-slot-leftsidebtncontainer {
+	width: 1% !important;
+	background-color: white;
+	opacity: 0;
+}
+
+.webpeptideshakertheme .horizontalcss .v-slot-integratedframe {
+	width: 99% !important;
+	height: 90% !important;
+}
+
+.webpeptideshakertheme .horizontalcss .v-slot-bottomsidebtncontainer {
+	opacity: 1;
+}
+
+.webpeptideshakertheme .horizontalcss .bigmenubtn img {
+	height: 100% !important;
+	width: 40px !important;
+	border: 2px solid lightgray;
+	border-radius: 5px;
+	cursor: pointer;
+	padding: 10% !important;
+}
+
+.webpeptideshakertheme .horizontalcss zeropadding {
+	padding: 10px !important;
+}
+
+.webpeptideshakertheme .horizontalcss .selectedbiglbtn {
+	background-color: whitesmoke;
+	margin-top: -2px !important;
+	border-top-color: whitesmoke;
+	border-right-color: lightgrey;
+	border-bottom-right-radius: 5px;
 }
