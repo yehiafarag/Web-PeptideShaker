@@ -2,6 +2,7 @@
 package com.uib.web.peptideshaker.presenter;
 
 import com.uib.web.peptideshaker.presenter.core.SmallSideBtn;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -9,8 +10,11 @@ import com.vaadin.ui.VerticalLayout;
  * @author Yehia Farag
  */
 public interface PresenterViewable {
+    
+    VerticalLayout getLeftView();
     VerticalLayout getMainView();
-    SmallSideBtn getControlButton();
+     HorizontalLayout getBottomView();
+    SmallSideBtn getRightView();
     String getViewId();
     void minimizeView();
     void maximizeView();

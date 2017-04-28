@@ -12,6 +12,7 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
@@ -117,14 +118,16 @@ public abstract class WelcomePage extends VerticalLayout implements PresenterVie
         bottomLayout.addComponent(galaxyConnectionBtnContainer);
         bottomLayout.setComponentAlignment(galaxyConnectionBtnContainer, Alignment.BOTTOM_RIGHT);
 
-        Label connectionLabel = new Label("Connect");
-        connectionLabel.setStyleName("galaxybtn");
-        connectionLabel.setDescription("Connect / Disconnect to Galaxy server");
-        connectionLabel.addStyleName(ValoTheme.LABEL_NO_MARGIN);
-        connectionLabel.setWidth(150, Unit.PIXELS);
-        connectionLabel.setHeight(25, Unit.PIXELS);
-        galaxyConnectionBtnContainer.addComponent(connectionLabel);
-        galaxyConnectionBtnContainer.setComponentAlignment(connectionLabel, Alignment.BOTTOM_RIGHT);
+        Button connectionBtn = new Button("Connect");
+        connectionBtn.setDisableOnClick(true);
+        connectionBtn.setStyleName("galaxybtn");
+        connectionBtn.addStyleName(ValoTheme.BUTTON_LINK);
+        connectionBtn.setDescription("Connect / Disconnect to Galaxy server");
+        connectionBtn.addStyleName(ValoTheme.LABEL_NO_MARGIN);
+        connectionBtn.setWidth(150, Unit.PIXELS);
+        connectionBtn.setHeight(25, Unit.PIXELS);
+        galaxyConnectionBtnContainer.addComponent(connectionBtn);
+        galaxyConnectionBtnContainer.setComponentAlignment(connectionBtn, Alignment.BOTTOM_RIGHT);
 
         VerticalLayout settingBtn = new VerticalLayout();
         settingBtn.addStyleName("settingbtn");
@@ -138,14 +141,14 @@ public abstract class WelcomePage extends VerticalLayout implements PresenterVie
             @Override
             public void connectedToGalaxy(GalaxyInstance galaxyInstant) {
                 if (galaxyInstant != null) {
-                    connectionLabel.setValue("Disconnect");
-                    connectionLabel.addStyleName("disconnect");
+                    connectionBtn.setCaption("Disconnect");
+                    connectionBtn.addStyleName("disconnect");
                     connectionStatuesLabel.setValue("Galaxy is <font color='green'>connected </font><font size='3' color='green'> &#128522;</font>");
                 } else {
                     connectionSettingsPanel.setPopupVisible(true);
                 }
                 systemConnected(galaxyInstant);
-                connectionLabel.setVisible(true);
+                connectionBtn.setEnabled(true);
             }
 
             @Override
@@ -159,23 +162,23 @@ public abstract class WelcomePage extends VerticalLayout implements PresenterVie
         connectionSettingsPanel.setHideOnMouseOut(false);
         settingBtn.addComponent(connectionSettingsPanel);
 
-        galaxyConnectionBtnContainer.addLayoutClickListener((LayoutEvents.LayoutClickEvent event) -> {
-      
-            if (event.getClickedComponent() != null && event.getClickedComponent() instanceof Label) {      
-                connectionLabel.setVisible(false);
-                if (connectionLabel.getValue().equalsIgnoreCase("Disconnect")) {
-                    //disconnect from galaxy
-                    connectionLabel.setValue("Connect");
-                    connectionLabel.removeStyleName("disconnect");
-                    connectionStatuesLabel.setValue("Galaxy is<font color='red'>  not connected </font><font size='3' color='red'> &#128528;</font>");
-                    galaxyConnectionSettingsPanel.disconnectGalaxy();
-                     systemConnected(null);
+       
 
-                } else {
-                    //connect to galaxy
-                    galaxyConnectionSettingsPanel.validateAndConnect();
-                }
+        connectionBtn.addClickListener((Button.ClickEvent event) -> {
+
+            if (connectionBtn.getCaption().equalsIgnoreCase("Disconnect")) {
+                //disconnect from galaxy
+                connectionBtn.setCaption("Connect");
+                connectionBtn.removeStyleName("disconnect");
+                connectionStatuesLabel.setValue("Galaxy is<font color='red'>  not connected </font><font size='3' color='red'> &#128528;</font>");
+                galaxyConnectionSettingsPanel.disconnectGalaxy();
+                systemConnected(null);
+
+            } else {
+                //connect to galaxy
+                galaxyConnectionSettingsPanel.validateAndConnect();
             }
+
         });
         homeBtn = new SmallSideBtn("img/home-o.png");
         homeBtn.setData(WelcomePage.this.getViewId());
@@ -222,7 +225,7 @@ public abstract class WelcomePage extends VerticalLayout implements PresenterVie
     }
 
     @Override
-    public SmallSideBtn getControlButton() {
+    public SmallSideBtn getRightView() {
         return homeBtn;
     }
 
@@ -230,5 +233,16 @@ public abstract class WelcomePage extends VerticalLayout implements PresenterVie
     public VerticalLayout getMainView() {
         return this;
     }
+
+    @Override
+    public VerticalLayout getLeftView() {
+        return new VerticalLayout();
+    }
+
+    @Override
+    public HorizontalLayout getBottomView() {
+        return new HorizontalLayout();
+    }
+    
 
 }

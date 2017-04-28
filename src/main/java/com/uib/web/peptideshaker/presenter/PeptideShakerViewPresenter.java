@@ -124,7 +124,7 @@ public class PeptideShakerViewPresenter extends VerticalLayout implements Presen
     }
     
     @Override
-    public SmallSideBtn getControlButton() {
+    public SmallSideBtn getRightView() {
         return toolsBtn;
     }
     
@@ -157,5 +157,15 @@ public class PeptideShakerViewPresenter extends VerticalLayout implements Presen
             System.out.println("at selected "+comp.getData().toString());
 //        }
     }
+
+    @Override
+    public VerticalLayout getLeftView() {
+        return new VerticalLayout();
+    }
+     @Override
+    public HorizontalLayout getBottomView() {
+        return new HorizontalLayout();
+    }
+    
     
 }

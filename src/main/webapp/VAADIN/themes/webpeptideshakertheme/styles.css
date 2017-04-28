@@ -12997,11 +12997,6 @@ div.v-layout.v-horizontal.v-widget {
 	background-color: white;
 }
 
-.webpeptideshakertheme .mainlayout {
-	min-height: 400px;
-	min-width: 1000px;
-}
-
 .webpeptideshakertheme .v-link-headerlogo {
 	line-height: 80px !important;
 	color: black !important;
@@ -13029,6 +13024,7 @@ div.v-layout.v-horizontal.v-widget {
 	background-color: #2c3143;
 	color: white;
 	cursor: pointer;
+	text-decoration: none !important;
 }
 
 .webpeptideshakertheme .galaxybtn:hover {
@@ -13045,6 +13041,8 @@ div.v-layout.v-horizontal.v-widget {
 	border-top-right-radius: 5px;
 	border-bottom-right-radius: 5px;
 	border-left: none;
+	position: relative !important;
+	z-index: 1 !important;
 	cursor: pointer;
 }
 
@@ -13183,6 +13181,8 @@ div.v-layout.v-horizontal.v-widget {
 	border-radius: 5px;
 	cursor: pointer;
 	padding: 10%;
+	position: relative;
+	z-index: 10 !important;
 }
 
 .webpeptideshakertheme .bigbtnText {
@@ -13260,9 +13260,77 @@ div.v-layout.v-horizontal.v-widget {
 	opacity: 0;
 }
 
-.webpeptideshakertheme .horizontalcss .mainlayout {
+.webpeptideshakertheme .v-label-frametitle {
+	padding-left: 10px;
+	padding-top: 10px;
+	font-size: 16px;
+	font-weight: bold;
+	font-family: "Open Sans", sans-serif;
+	color: #464646;
+}
+
+.webpeptideshakertheme .subtitle {
+	padding-left: 20px;
+	padding-top: 10px;
+	font-size: 12px;
+	font-weight: bold;
+	font-family: "Open Sans", sans-serif;
+}
+
+.webpeptideshakertheme .dropdownlist {
+	max-height: 25px;
+	padding-left: 20px;
+	max-width: 300px !important;
+}
+
+.webpeptideshakertheme .dropdownlistframe {
+	width: 300px !important;
+	background-color: red;
+}
+
+.webpeptideshakertheme .frame {
+	border: 1px solid lightgray;
+	border-radius: 5px;
+	padding: 10px !important;
 	min-height: 400px;
-	min-width: 99%;
+	min-width: 1000px;
+}
+
+.webpeptideshakertheme .leftsideviewcontainer {
+	padding-top: 20px;
+	width: 100px !important;
+	z-index: 10000000000.0 !important;
+	position: absolute !important;
+	overflow: visible;
+}
+
+.webpeptideshakertheme .v-slot-rightsidebtncontainer {
+	width: 50px !important;
+	z-index: 10000000000.0 !important;
+	position: absolute !important;
+	overflow: visible;
+	right: 10px;
+	visibility: visible !important;
+}
+
+.webpeptideshakertheme .middleviewcontainer {
+	padding-left: 98px;
+	padding-right: 15px;
+}
+
+.webpeptideshakertheme .visible {
+	visibility: visible !important;
+}
+
+.webpeptideshakertheme .v-verticallayout-integratedframe.hidepanel {
+	border-color: white;
+}
+
+.webpeptideshakertheme .v-slot-bottomsidebtncontainer {
+	min-height: 0px;
+	visibility: hidden;
+	opacity: 0;
+	position: absolute;
 }
 
 .webpeptideshakertheme .horizontalcss .v-slot-leftsidebtncontainer {
@@ -13287,6 +13355,8 @@ div.v-layout.v-horizontal.v-widget {
 	border-radius: 5px;
 	cursor: pointer;
 	padding: 10% !important;
+	z-index: 9999999848243207000000000000000.0 !important;
+	position: relative;
 }
 
 .webpeptideshakertheme .horizontalcss zeropadding {
@@ -13299,4 +13369,55 @@ div.v-layout.v-horizontal.v-widget {
 	border-top-color: whitesmoke;
 	border-right-color: lightgrey;
 	border-bottom-right-radius: 5px;
+}
+
+.webpeptideshakertheme .horizontalcss.autooverflow {
+	overflow: hidden !important;
+}
+
+.webpeptideshakertheme .horizontalcss .v-slot-rightsidebtncontainer {
+	background-color: white;
+	border-top: 2px solid white;
+	border-bottom: 2px solid white;
+	overflow: hidden;
+}
+
+.webpeptideshakertheme .horizontalcss .v-slot-rightsidebtncontainer {
+	width: 50px !important;
+	z-index: 10000000000.0 !important;
+	position: absolute !important;
+	overflow: visible;
+	right: 10px;
+}
+
+.webpeptideshakertheme .horizontalcss .middleviewcontainer {
+	padding-left: 0px;
+	padding-right: 15px;
+	padding-bottom: 60px;
+}
+
+.webpeptideshakertheme .horizontalcss .leftsideviewcontainer .v-slot-bigmenubtn {
+	visibility: hidden !important;
+}
+
+.webpeptideshakertheme .horizontalcss.frame {
+	min-height: 400px !important;
+	min-width: 495px !important;
+}
+
+.webpeptideshakertheme .horizontalcss .v-slot-bottomsidebtncontainer {
+	min-height: 60px !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	position: relative;
+	z-index: 2;
+	background-color: white !important;
+}
+
+.webpeptideshakertheme .horizontalcss .bottomsidebtncontainer {
+	margin-top: -2px;
+	min-height: 60px !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	position: relative;
 }
