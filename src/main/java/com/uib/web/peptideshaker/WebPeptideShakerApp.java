@@ -42,8 +42,8 @@ public class WebPeptideShakerApp extends VerticalLayout {
         ToolPresenter toolsView = new ToolPresenter();
          presentationManager.registerView(toolsView);
 //         
-//         PeptideShakerViewPresenter peptideShakerView = new PeptideShakerViewPresenter();
-//         presentationManager.registerView(peptideShakerView);
+         PeptideShakerViewPresenter peptideShakerView = new PeptideShakerViewPresenter();
+         presentationManager.registerView(peptideShakerView);
          
         
         

@@ -14,6 +14,7 @@ public interface PresenterViewable {
     VerticalLayout getLeftView();
     VerticalLayout getMainView();
      HorizontalLayout getBottomView();
+      SmallSideBtn getTopView(); 
     SmallSideBtn getRightView();
     String getViewId();
     void minimizeView();

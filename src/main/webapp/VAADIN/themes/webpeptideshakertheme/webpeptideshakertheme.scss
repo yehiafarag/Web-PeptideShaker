@@ -321,17 +321,58 @@
         font-weight: bold;
         font-family: "Open Sans", sans-serif;
     }
+    .v-caption-dropdownlist {
+        padding-left: 20px;
+        padding-top: 10px;
+        font-size: 12px;
+        font-weight: bold;
+        font-family: "Open Sans", sans-serif;
+    }
 
     .dropdownlist {
-
         max-height: 25px;
         padding-left: 20px;
-        max-width:300px !important;
+        min-width: 200px !important;
     }
-    .dropdownlistframe{
-        width:300px !important;
-        background-color:red
+
+    .dropdownlistframe {
+        min-width: 200px !important;
     }
+
+
+    .v-caption-optiongroup {
+        padding-left: 20px;
+        padding-top: 10px;
+        font-size: 12px;
+        font-weight: bold;
+        font-family: "Open Sans", sans-serif;
+        min-width: 200px !important;
+    }
+
+    .optiongroup {
+        padding-left: 20px;
+        min-width: 200px !important;
+
+    }
+    .optiongroup .v-select-option {
+        overflow:hidden;
+        text-overflow:ellipsis !important;
+    }
+    .v-select-optiongroup-optiongroup {
+        max-height: 200px;
+        overflow-y: auto;
+        overflow-x:hidden;
+        text-overflow:ellipsis;
+        font-size: 12px;
+        font-family: "Open Sans", sans-serif;
+    }
+
+    /*    .optiongroupframe {
+            width: 200px !important;
+    
+    
+        }*/
+
     .frame{
         border: 1px solid lightgray;
         border-radius: 5px;
@@ -369,6 +410,12 @@
         visibility:hidden;
         opacity:0;
         position:absolute;
+    }
+    .minwidth470{
+        min-width: 470px;
+    }
+    .maxwidth600{
+        max-width: 600px;
     }
     /****mobile css**/
     .horizontalcss .mainlayout {
@@ -413,25 +460,28 @@
         overflow:hidden !important;
     }
     .horizontalcss .v-slot-rightsidebtncontainer {	
-        background-color: white;
-        border-top: 2px solid white;
-        border-bottom: 2px solid white;
+        /*        background-color: white;
+                border-top: 2px solid white;
+                border-bottom: 2px solid white;
+                overflow: hidden;*/
+        width: 0px !important;
+        z-index:0 !important;
         overflow: hidden;
     }
 
 
 
-    .horizontalcss .v-slot-rightsidebtncontainer {
+/*    .horizontalcss .v-slot-rightsidebtncontainer {
         width: 50px !important;
         z-index: 10000000000.0 !important;
         position: absolute !important;
         overflow: visible;
         right: 10px;
-    }
+    }*/
 
     .horizontalcss .middleviewcontainer {
         padding-left: 0px;
-        padding-right: 15px;
+        padding-right: 0px;
         padding-bottom:60px;
     }
     .horizontalcss .leftsideviewcontainer .v-slot-bigmenubtn {
@@ -459,4 +509,48 @@
         position: relative;
         margin-left:20px;
     }
+ .horizontalcss .v-slot-topviewcontainer {
+	min-height: 60px;
+	visibility: visible !important;
+	max-width: 180px;
+	position: relative !important;
+	top: 43px !important;
+	float: right;
+	left:-20px !important;
+	z-index: 2000000000 !important;
+	background-color:white;
 }
+.v-slot-smallmenubtn{
+	min-width:50px;
+}
+.horizontalcss .v-verticallayout-middleviewcontainer{
+	top:-39px !important;
+	overflow:visible;
+	visibility:visible !important;
+	z-index:2000000 !important;
+	position:absolute !important;
+}
+.horizontalcss .logocontainer img {
+	height:140px !important;
+	overflow:visible;
+	margin-top:-20px;
+	position:fixed ;
+	z-index:10!important;
+}
+.v-verticallayout-hidepanel img{
+	visibility:hidden;
+}
+.horizontalcss .v-link-headerlogo {
+	visibility:hidden;
+}
+
+.logocontainer{
+	top:-1px !important;
+	position:absolute;
+}
+.horizontalcss .selectedsmallbtn {
+
+}
+.horizontalcss .v-slot-smallmenubtn {
+    min-width: 50px;
+}}

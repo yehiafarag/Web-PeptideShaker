@@ -17,6 +17,10 @@ import java.util.Map;
  */
 public class PresenterManager extends HorizontalLayout implements LayoutEvents.LayoutClickListener {
 
+     /**
+     * Top layout container.
+     */
+    private final HorizontalLayout topLayoutContainer;
     /**
      * Left layout container is the main layout container that contain the main
      * views.
@@ -44,6 +48,11 @@ public class PresenterManager extends HorizontalLayout implements LayoutEvents.L
      */
     private final VerticalLayout rightLayoutBtnsContainer;
     /**
+     * Top layout container is the right side buttons layout container that
+     * contain the small control buttons.
+     */
+    private final HorizontalLayout topLayoutBtnsContainer;
+    /**
      * Right layout container is the right side buttons layout container that
      * contain the small control buttons.
      */
@@ -60,6 +69,9 @@ public class PresenterManager extends HorizontalLayout implements LayoutEvents.L
         PresenterManager.this.setSizeFull();
         PresenterManager.this.setStyleName("mainlayout");
 
+        
+        
+        
         leftLayoutContainer = new AbsoluteLayout();
         leftLayoutContainer.setSizeFull();
         leftLayoutContainer.setStyleName("leftsideviewcontainer");
@@ -74,11 +86,28 @@ public class PresenterManager extends HorizontalLayout implements LayoutEvents.L
         PresenterManager.this.setExpandRatio(middleLayoutContainer, 100);
         
         
+        
+         topLayoutContainer = new HorizontalLayout();
+        topLayoutContainer.setSizeFull();
+        topLayoutContainer.setStyleName("topviewcontainer");
+        middleLayoutContainer.addComponent(topLayoutContainer);
+        middleLayoutContainer.setExpandRatio(topLayoutContainer, 0);
+        
+        
+        this.topLayoutBtnsContainer = new HorizontalLayout();
+        topLayoutBtnsContainer.setSizeFull();
+        topLayoutBtnsContainer.setSpacing(true);
+        topLayoutContainer.addComponent( this.topLayoutBtnsContainer);
+         topLayoutContainer.setComponentAlignment(this.topLayoutBtnsContainer,Alignment.TOP_RIGHT);
+        
+        
+        
         topMiddleLayoutContainer = new AbsoluteLayout();
         topMiddleLayoutContainer.setSizeFull();
 //        topMiddleLayoutContainer.setStyleName("middleviewcontainer");
         middleLayoutContainer.addComponent(topMiddleLayoutContainer);
         middleLayoutContainer.setExpandRatio(topMiddleLayoutContainer, 100);
+        topLayoutContainer.addStyleName("hide");
         
           bottomLayoutContainer = new AbsoluteLayout();
         bottomLayoutContainer.setStyleName("bottomsidebtncontainer");
@@ -117,8 +146,10 @@ public class PresenterManager extends HorizontalLayout implements LayoutEvents.L
     public void setSideButtonsVisible(boolean showSideButtons) {
         if (showSideButtons) {
             rightLayoutContainer.removeStyleName("hide");
+            topLayoutContainer.removeStyleName("hide");
         } else {
             rightLayoutContainer.addStyleName("hide");
+            topLayoutContainer.addStyleName("hide");
         }
 
     }
@@ -130,6 +161,10 @@ public class PresenterManager extends HorizontalLayout implements LayoutEvents.L
      */
     public void registerView(PresenterViewable view) {
         view.getRightView().addLayoutClickListener(PresenterManager.this);
+        view.getTopView().addLayoutClickListener(PresenterManager.this);
+        
+        topLayoutBtnsContainer.addComponent(view.getTopView());
+         topLayoutBtnsContainer.setComponentAlignment(view.getTopView(), Alignment.TOP_CENTER);
         visualizationMap.put(view.getViewId(), view);
        leftLayoutContainer.addComponent(view.getLeftView());
         topMiddleLayoutContainer.addComponent(view.getMainView());

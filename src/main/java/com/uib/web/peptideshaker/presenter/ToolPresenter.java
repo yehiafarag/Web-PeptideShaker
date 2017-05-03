@@ -7,6 +7,7 @@ import com.vaadin.event.LayoutEvents;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 import java.util.HashMap;
@@ -21,10 +22,14 @@ import java.util.Map;
 public class ToolPresenter extends VerticalLayout implements PresenterViewable, LayoutEvents.LayoutClickListener {
 
     /**
-     * The galaxy server connection panel.
+     * The tools layout side button.
      */
     private SmallSideBtn toolsBtn;
-    private final Map<BigSideBtn,VerticalLayout> btnsLayoutMap;
+    /**
+     * The tools layout top button.
+     */
+    private SmallSideBtn topToolsBtn;
+    private final Map<BigSideBtn,Component> btnsLayoutMap;
 //    private VerticalLayout rightLayoutContainer;
     private  VerticalLayout btnContainer ;
     private HorizontalLayout mobilebtnContainer;
@@ -39,6 +44,11 @@ public class ToolPresenter extends VerticalLayout implements PresenterViewable, 
         ToolPresenter.this.setStyleName("activelayout");
         ToolPresenter.this.toolsBtn = new SmallSideBtn("img/spectra.png");
         ToolPresenter.this.toolsBtn.setData(ToolPresenter.this.getViewId());
+        
+         ToolPresenter.this.topToolsBtn = new SmallSideBtn("img/spectra.png");
+        ToolPresenter.this.topToolsBtn.setData(ToolPresenter.this.getViewId());
+        
+        
         
         this.btnsLayoutMap = new HashMap<>();
         this.initLayout();
@@ -185,6 +195,7 @@ public class ToolPresenter extends VerticalLayout implements PresenterViewable, 
     @Override
     public void minimizeView() {
         toolsBtn.setSelected(false);
+        topToolsBtn.setSelected(false);
         this.addStyleName("hidepanel");
         this.btnContainer.removeStyleName("visible");
           this.mobilebtnContainer.addStyleName("hidepanel"); 
@@ -194,6 +205,7 @@ public class ToolPresenter extends VerticalLayout implements PresenterViewable, 
     @Override
     public void maximizeView() {
         toolsBtn.setSelected(true);
+         topToolsBtn.setSelected(true);
         this.btnContainer.addStyleName("visible");   
         this.mobilebtnContainer.removeStyleName("hidepanel"); 
         this.removeStyleName("hidepanel");
@@ -224,6 +236,11 @@ public class ToolPresenter extends VerticalLayout implements PresenterViewable, 
      @Override
     public HorizontalLayout getBottomView() {
         return  mobilebtnContainer;
+    }
+
+    @Override
+    public SmallSideBtn getTopView() {
+        return topToolsBtn;
     }
     
 

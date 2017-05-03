@@ -275,6 +275,7 @@ public abstract class GalaxyConnectionPanelLayout extends VerticalLayout impleme
     }
 
     private boolean tryToConnect() {
+        
 
         if (inputTabSheet.getTabPosition(inputTabSheet.getTab(inputTabSheet.getSelectedTab())) == 0) {
             userEmail.setRequired(true);

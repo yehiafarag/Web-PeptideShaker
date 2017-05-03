@@ -28,24 +28,20 @@ public class PeptidShakerUI extends UI {
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         this.setSizeFull();
-
         System.out.println("at w " + Page.getCurrent().getWebBrowser().getScreenWidth() + "  h " + Page.getCurrent().getWebBrowser().getScreenHeight() + "  " + Page.getCurrent().getWebBrowser().isTouchDevice());
         WebPeptideShakerApp webPeptideShakerApp = new WebPeptideShakerApp();
-        if (Page.getCurrent().getBrowserWindowWidth() < Page.getCurrent().getBrowserWindowHeight()) {
+        if (Page.getCurrent().getBrowserWindowWidth() < Page.getCurrent().getBrowserWindowHeight() ) {
             webPeptideShakerApp.addStyleName("horizontalcss");
             System.out.println("at page resized " + Page.getCurrent().getBrowserWindowWidth() + "  h " + Page.getCurrent().getBrowserWindowHeight());
         } else {
             webPeptideShakerApp.removeStyleName("horizontalcss");
         }
-        Page.getCurrent().addBrowserWindowResizeListener(new Page.BrowserWindowResizeListener() {
-            @Override
-            public void browserWindowResized(Page.BrowserWindowResizeEvent event) {
-                if (Page.getCurrent().getBrowserWindowWidth() < Page.getCurrent().getBrowserWindowHeight()) {
-                    webPeptideShakerApp.addStyleName("horizontalcss");
-                    System.out.println("at page resized " + Page.getCurrent().getBrowserWindowWidth() + "  h " + Page.getCurrent().getBrowserWindowHeight());
-                } else {
-                    webPeptideShakerApp.removeStyleName("horizontalcss");
-                }
+        Page.getCurrent().addBrowserWindowResizeListener((Page.BrowserWindowResizeEvent event) -> {
+            if (Page.getCurrent().getBrowserWindowWidth() < Page.getCurrent().getBrowserWindowHeight()) {
+                webPeptideShakerApp.addStyleName("horizontalcss");
+                System.out.println("at page resized " + Page.getCurrent().getBrowserWindowWidth() + "  h " + Page.getCurrent().getBrowserWindowHeight());
+            } else {
+                webPeptideShakerApp.removeStyleName("horizontalcss");
             }
         });
 

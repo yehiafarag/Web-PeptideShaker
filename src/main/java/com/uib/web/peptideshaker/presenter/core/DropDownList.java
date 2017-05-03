@@ -8,7 +8,7 @@ import com.vaadin.ui.VerticalLayout;
 
 /**
  *This class represents drop-down list component 
- * @author YEhia Farag
+ * @author Yehia Farag
  */
 public class DropDownList extends VerticalLayout{
 
@@ -20,11 +20,11 @@ public class DropDownList extends VerticalLayout{
          DropDownList.this.setSpacing(true);
           DropDownList.this.setStyleName("dropdownlistframe");
         
-        Label subTitle = new Label(title);
-        subTitle.setStyleName("subtitle");
-        DropDownList.this.addComponent(subTitle);
+//        Label subTitle = new Label(title);
+//        subTitle.setStyleName("subtitle");
+//        DropDownList.this.addComponent(subTitle);
         
-        ComboBox list = new ComboBox();
+        ComboBox list = new ComboBox(title);
         list.setStyleName("dropdownlist");
           DropDownList.this.addComponent(list);
         

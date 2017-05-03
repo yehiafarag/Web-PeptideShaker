@@ -51,9 +51,13 @@ public abstract class WelcomePage extends VerticalLayout implements PresenterVie
      */
 //    private GalaxyConnectionPanel galaxyInputPanel;
     /**
-     * The galaxy server connection panel.
+     * The side home button .
      */
     private SmallSideBtn homeBtn;
+    /**
+     * The top home button .
+     */
+    private SmallSideBtn topHomeBtn;
 
     /**
      * Constructor to initialize the layout.
@@ -90,6 +94,7 @@ public abstract class WelcomePage extends VerticalLayout implements PresenterVie
         welcomeText.setContentMode(ContentMode.HTML);
         welcomeText.setStyleName(ValoTheme.LABEL_NO_MARGIN);
         welcomeText.setValue("<font style='font-weight: bold; font-size:23px'>Welcome to PeptideShaker <font size='2'><i>(online version)</i></font></font> <br/><br/>To start using the system connect to your Galaxy Server");
+        
         bodyContent.addComponent(welcomeText);
         bodyContent.setComponentAlignment(welcomeText, Alignment.TOP_LEFT);
 
@@ -182,6 +187,9 @@ public abstract class WelcomePage extends VerticalLayout implements PresenterVie
         });
         homeBtn = new SmallSideBtn("img/home-o.png");
         homeBtn.setData(WelcomePage.this.getViewId());
+        
+        topHomeBtn = new SmallSideBtn("img/home-o.png");
+        topHomeBtn.setData(WelcomePage.this.getViewId());
 
     }
 
@@ -191,6 +199,7 @@ public abstract class WelcomePage extends VerticalLayout implements PresenterVie
     private HorizontalLayout initializeHeaderPanel() {
         HorizontalLayout headerLayoutContainer = new HorizontalLayout();
         headerLayoutContainer.setSpacing(true);
+        headerLayoutContainer.addStyleName("logocontainer");
         Image peptideShakerLogoIcon = new Image();
         peptideShakerLogoIcon.setSource(new ThemeResource("img/peptideshakericon.png"));
         peptideShakerLogoIcon.setHeight(100, Unit.PIXELS);
@@ -215,12 +224,14 @@ public abstract class WelcomePage extends VerticalLayout implements PresenterVie
     @Override
     public void minimizeView() {
         homeBtn.setSelected(false);
+        topHomeBtn.setSelected(false);
         this.addStyleName("hidepanel");
     }
 
     @Override
     public void maximizeView() {
         homeBtn.setSelected(true);
+        topHomeBtn.setSelected(true);
         this.removeStyleName("hidepanel");
     }
 
@@ -242,6 +253,11 @@ public abstract class WelcomePage extends VerticalLayout implements PresenterVie
     @Override
     public HorizontalLayout getBottomView() {
         return new HorizontalLayout();
+    }
+
+    @Override
+    public SmallSideBtn getTopView() {
+        return topHomeBtn;
     }
     
 
