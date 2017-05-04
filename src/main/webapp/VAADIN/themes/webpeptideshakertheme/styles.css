@@ -13288,7 +13288,7 @@ div.v-layout.v-horizontal.v-widget {
 .webpeptideshakertheme .dropdownlist {
 	max-height: 25px;
 	padding-left: 20px;
-	min-width: 200px !important;
+	min-width: 420px !important;
 }
 
 .webpeptideshakertheme .dropdownlistframe {
@@ -13327,8 +13327,8 @@ div.v-layout.v-horizontal.v-widget {
 	border: 1px solid lightgray;
 	border-radius: 5px;
 	padding: 10px !important;
-	min-height: 400px;
-	min-width: 1000px;
+	min-height: 600px;
+	min-width: 650px;
 }
 
 .webpeptideshakertheme .leftsideviewcontainer {
@@ -13374,6 +13374,28 @@ div.v-layout.v-horizontal.v-widget {
 
 .webpeptideshakertheme .maxwidth600 {
 	max-width: 600px;
+}
+
+.webpeptideshakertheme .bottomformlayout {
+	margin-left: 20px;
+	min-height: 50px;
+}
+
+.webpeptideshakertheme .bottomformlayout .v-popupview {
+	text-decoration: none;
+	font-weight: bold;
+	font-size: 13px !important;
+}
+
+.webpeptideshakertheme .bottomformlayout .v-popupview:hover {
+	text-decoration: underline;
+}
+
+.webpeptideshakertheme .bottomformlayout .v-button {
+	max-height: 25px;
+	margin-left: 20px;
+	font-weight: bold !important;
+	font-size: 13px !important;
 }
 
 .webpeptideshakertheme .horizontalcss .v-slot-leftsidebtncontainer {
@@ -13424,6 +13446,14 @@ div.v-layout.v-horizontal.v-widget {
 	overflow: hidden;
 }
 
+.webpeptideshakertheme .v-horizontallayout-logocontainer {
+	margin-top: 30px !important;
+	left: 20px !important;
+	overflow: visible !important;
+	position: fixed !important;
+	z-index: 2222222336.0 !important;
+}
+
 .webpeptideshakertheme .horizontalcss .middleviewcontainer {
 	padding-left: 0px;
 	padding-right: 0px;
@@ -13464,7 +13494,7 @@ div.v-layout.v-horizontal.v-widget {
 	position: relative !important;
 	top: 43px !important;
 	float: right;
-	left: -20px !important;
+	left: -40px !important;
 	z-index: 2000000000 !important;
 	background-color: white;
 }
@@ -13504,4 +13534,13 @@ div.v-layout.v-horizontal.v-widget {
 
 .webpeptideshakertheme .horizontalcss .v-slot-smallmenubtn {
 	min-width: 50px;
+}
+
+.webpeptideshakertheme .horizontalcss .v-label-frametitle {
+	padding-left: 10px;
+	padding-top: 20px;
+	font-size: 14px;
+	font-weight: bold;
+	font-family: "Open Sans", sans-serif;
+	color: #464646;
 }

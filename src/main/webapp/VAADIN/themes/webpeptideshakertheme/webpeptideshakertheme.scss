@@ -332,7 +332,7 @@
     .dropdownlist {
         max-height: 25px;
         padding-left: 20px;
-        min-width: 200px !important;
+        min-width: 420px !important;
     }
 
     .dropdownlistframe {
@@ -377,8 +377,8 @@
         border: 1px solid lightgray;
         border-radius: 5px;
         padding:10px !important;
-        min-height: 400px;
-        min-width: 1000px;
+        min-height: 600px;
+        min-width: 650px;
     }
     .leftsideviewcontainer {
         padding-top: 20px;
@@ -417,6 +417,26 @@
     .maxwidth600{
         max-width: 600px;
     }
+    
+    .bottomformlayout{
+	margin-left:20px;
+	min-height:50px;
+}
+.bottomformlayout .v-popupview {
+	text-decoration:none;
+	font-weight:bold;
+	font-size: 13px !important;
+}
+.bottomformlayout .v-popupview:hover {
+	text-decoration:underline;
+}
+.bottomformlayout .v-button{
+	max-height:25px;
+	margin-left:20px;
+	font-weight:bold !important;
+	font-size: 13px !important;
+}
+
     /****mobile css**/
     .horizontalcss .mainlayout {
 
@@ -471,14 +491,22 @@
 
 
 
-/*    .horizontalcss .v-slot-rightsidebtncontainer {
-        width: 50px !important;
-        z-index: 10000000000.0 !important;
-        position: absolute !important;
-        overflow: visible;
-        right: 10px;
-    }*/
+    /*    .horizontalcss .v-slot-rightsidebtncontainer {
+            width: 50px !important;
+            z-index: 10000000000.0 !important;
+            position: absolute !important;
+            overflow: visible;
+            right: 10px;
+        }*/
 
+    .v-horizontallayout-logocontainer{
+        margin-top:30px !important;
+        left:20px !important;
+
+        overflow:visible !important;
+        position:fixed !important;
+        z-index:2222222222 !important;
+    }
     .horizontalcss .middleviewcontainer {
         padding-left: 0px;
         padding-right: 0px;
@@ -509,48 +537,59 @@
         position: relative;
         margin-left:20px;
     }
- .horizontalcss .v-slot-topviewcontainer {
-	min-height: 60px;
-	visibility: visible !important;
-	max-width: 180px;
-	position: relative !important;
-	top: 43px !important;
-	float: right;
-	left:-20px !important;
-	z-index: 2000000000 !important;
-	background-color:white;
-}
-.v-slot-smallmenubtn{
-	min-width:50px;
-}
-.horizontalcss .v-verticallayout-middleviewcontainer{
-	top:-39px !important;
-	overflow:visible;
-	visibility:visible !important;
-	z-index:2000000 !important;
-	position:absolute !important;
-}
-.horizontalcss .logocontainer img {
-	height:140px !important;
-	overflow:visible;
-	margin-top:-20px;
-	position:fixed ;
-	z-index:10!important;
-}
-.v-verticallayout-hidepanel img{
-	visibility:hidden;
-}
-.horizontalcss .v-link-headerlogo {
-	visibility:hidden;
+    .horizontalcss .v-slot-topviewcontainer {
+        min-height: 60px;
+        visibility: visible !important;
+        max-width: 180px;
+        position: relative !important;
+        top: 43px !important;
+        float: right;
+        left:-40px !important;
+        z-index: 2000000000 !important;
+        background-color:white;
+    }
+    .v-slot-smallmenubtn{
+        min-width:50px;
+    }
+    .horizontalcss .v-verticallayout-middleviewcontainer{
+        top:-39px !important;
+        overflow:visible;
+        visibility:visible !important;
+        z-index:2000000 !important;
+        position:absolute !important;
+    }
+    .horizontalcss .logocontainer img {
+        height:140px !important;
+        overflow:visible;
+        margin-top:-20px;
+        position:fixed ;
+        z-index:10!important;
+    }
+    .v-verticallayout-hidepanel img{
+        visibility:hidden;
+    }
+    .horizontalcss .v-link-headerlogo {
+        visibility:hidden;
+    }
+
+    .logocontainer{
+        top:-1px !important;
+        position:absolute;
+    }
+    .horizontalcss .selectedsmallbtn {
+
+    }
+    .horizontalcss .v-slot-smallmenubtn {
+        min-width: 50px;
+    }
+     .horizontalcss .v-label-frametitle {
+ 	
+	padding-left: 10px;
+	padding-top: 20px;
+	font-size: 14px;
+	font-weight: bold;
+	font-family: "Open Sans", sans-serif;
+	color: #464646;
 }
 
-.logocontainer{
-	top:-1px !important;
-	position:absolute;
 }
-.horizontalcss .selectedsmallbtn {
-
-}
-.horizontalcss .v-slot-smallmenubtn {
-    min-width: 50px;
-}}

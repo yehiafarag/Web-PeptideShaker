@@ -1,13 +1,18 @@
 package com.uib.web.peptideshaker.presenter.components;
 
+import com.uib.web.peptideshaker.galaxy.DataSet;
 import com.uib.web.peptideshaker.presenter.core.DropDownList;
 import com.uib.web.peptideshaker.presenter.core.MultiSelectOptionGroup;
 import com.vaadin.server.Sizeable.Unit;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.PopupView;
 import com.vaadin.ui.VerticalLayout;
-import java.util.HashSet;
-import java.util.Set;
+import com.vaadin.ui.themes.ValoTheme;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * This class represents SearchGUI-Peptide-Shaker work-flow which include input
@@ -18,60 +23,80 @@ import java.util.Set;
 public class WorkFlowLayout extends Panel {
 
     /**
+     * Select fasta file dropdown list .
+     */
+    private final DropDownList fastaFileList;
+    /**
+     * select MGF file list.
+     */
+    private final MultiSelectOptionGroup mgfFileList;
+
+    /**
      * Constructor to initialize the main attributes.
      */
     public WorkFlowLayout() {
         WorkFlowLayout.this.setWidth(100, Unit.PERCENTAGE);
-        WorkFlowLayout.this.setHeight(100,Unit.PERCENTAGE);
-        
+        WorkFlowLayout.this.setHeight(100, Unit.PERCENTAGE);
+
         VerticalLayout content = new VerticalLayout();
         content.setHeightUndefined();
-        content.setWidth(100,Unit.PERCENTAGE);
-        this.setContent(content);
-        this.setStyleName("subframe");
-        
-        
+        content.setWidth(100, Unit.PERCENTAGE);
+        WorkFlowLayout.this.setContent(content);
+        WorkFlowLayout.this.setStyleName("subframe");
+
         content.setSpacing(true);
 
         Label titleLabel = new Label("SearchGUI-PeptideShaker-WorkFlow");
         titleLabel.setStyleName("frametitle");
         content.addComponent(titleLabel);
 
-//        GridLayout container = new GridLayout(2, 2);
-//        container.setSizeFull();
-//        container.setStyleName("minwidth470");
-//        container.addStyleName("maxwidth600");
-//        container.setColumnExpandRatio(0, 3);
-//         container.setColumnExpandRatio(1, 1);
-//          WorkFlowLayout.this.addComponent(container);
-        DropDownList fastaFileList = new DropDownList("Protein Database (FASTA)");
+        fastaFileList = new DropDownList("Protein Database (FASTA)");
         content.addComponent(fastaFileList);
 
-        MultiSelectOptionGroup mgfFileList = new MultiSelectOptionGroup("Spectrum File(s)");
+        mgfFileList = new MultiSelectOptionGroup("Spectrum File(s)");
         content.addComponent(mgfFileList);
 
-        Set<String> data = new HashSet<>();
-        data.add("KokowawaKokowawaKokowawaKokowawaKokowawaKokowawa");
-        data.add("Kokowawa1KokowawaKokowawaKokowawaKokowawaKokowawa");
-        data.add("Kokowawa2KokowawaKokowawaKokowawaKokowawaKokowawa");
-        data.add("Kokowawa3KokowawaKokowawaKokowawaKokowawaKokowawa");
-        data.add("Kokowawa4KokowawaKokowawaKokowawaKokowawaKokowawa");
-        data.add("Kokowawa5KokowawaKokowawaKokowawaKokowawaKokowawa");
-        data.add("Kokowawa6KokowawaKokowawaKokowawaKokowawaKokowawa");
-        data.add("Kokowawa7KokowawaKokowawaKokowawaKokowawaKokowawa");
-        data.add("Kokowawa8KokowawaKokowawaKokowawaKokowawaKokowawa");
-        data.add("Kokowawa9KokowawaKokowawaKokowawaKokowawaKokowawa");
-        mgfFileList.updateOptionGroupData(data);
-
         MultiSelectOptionGroup searchEngines = new MultiSelectOptionGroup("Search Engines");
-       content.addComponent(searchEngines);
+        content.addComponent(searchEngines);
 
-        Set<String> searchEngienList = new HashSet<>();
-        searchEngienList.add("X!Tandem");
-        searchEngienList.add("MS-GF+");
-        searchEngienList.add("OMSSA");
-        searchEngienList.add("Comet");
-        searchEngines.updateOptionGroupData(searchEngienList);
+        Map<String, String> searchEngienList = new LinkedHashMap<>();
+        searchEngienList.put("X!Tandem", "X!Tandem");
+        searchEngienList.put("MS-GF+", "MS-GF+");
+        searchEngienList.put("OMSSA", "OMSSA");
+        searchEngienList.put("Comet", "Comet");
+        searchEngines.updateList(searchEngienList);
+
+        HorizontalLayout bottomLayout = new HorizontalLayout();
+        bottomLayout.setStyleName("bottomformlayout");
+        bottomLayout.setSpacing(true);
+        content.addComponent(bottomLayout);
+        PopupView advancedSearchOption = new PopupView("Advanced Search", new VerticalLayout());
+        bottomLayout.addComponent(advancedSearchOption);
+
+        Button executeWorkFlow = new Button("Execute");
+        executeWorkFlow.setStyleName(ValoTheme.BUTTON_SMALL);
+        executeWorkFlow.addStyleName(ValoTheme.BUTTON_TINY);
+        bottomLayout.addComponent(executeWorkFlow);
+
+    }
+
+    /**
+     * Update the tools input forms
+     *
+     * @param fastaFilesMap fasta files map
+     * @param mgfFilesMap MGF file map
+     */
+    public void updateForm(Map<String, DataSet> fastaFilesMap, Map<String, DataSet> mgfFilesMap) {
+        Map<String, String> fastaFileIdToNameMap = new LinkedHashMap<>();
+        for (String id : fastaFilesMap.keySet()) {
+            fastaFileIdToNameMap.put(id, fastaFilesMap.get(id).getName());
+        }
+        fastaFileList.updateList(fastaFileIdToNameMap);
+        Map<String, String> mgfFileIdToNameMap = new LinkedHashMap<>();
+        for (String id : mgfFilesMap.keySet()) {
+            mgfFileIdToNameMap.put(id, mgfFilesMap.get(id).getName());
+        }
+        mgfFileList.updateList(mgfFileIdToNameMap);
 
     }
 

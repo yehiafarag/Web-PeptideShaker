@@ -30,14 +30,14 @@ public class PeptidShakerUI extends UI {
         this.setSizeFull();
         System.out.println("at w " + Page.getCurrent().getWebBrowser().getScreenWidth() + "  h " + Page.getCurrent().getWebBrowser().getScreenHeight() + "  " + Page.getCurrent().getWebBrowser().isTouchDevice());
         WebPeptideShakerApp webPeptideShakerApp = new WebPeptideShakerApp();
-        if (Page.getCurrent().getBrowserWindowWidth() < Page.getCurrent().getBrowserWindowHeight() ) {
+        if ((Page.getCurrent().getBrowserWindowWidth() < Page.getCurrent().getBrowserWindowHeight()) || (Page.getCurrent().getBrowserWindowWidth() < 650) || (Page.getCurrent().getBrowserWindowHeight() < 600)) {
             webPeptideShakerApp.addStyleName("horizontalcss");
             System.out.println("at page resized " + Page.getCurrent().getBrowserWindowWidth() + "  h " + Page.getCurrent().getBrowserWindowHeight());
         } else {
             webPeptideShakerApp.removeStyleName("horizontalcss");
         }
         Page.getCurrent().addBrowserWindowResizeListener((Page.BrowserWindowResizeEvent event) -> {
-            if (Page.getCurrent().getBrowserWindowWidth() < Page.getCurrent().getBrowserWindowHeight()) {
+            if ((Page.getCurrent().getBrowserWindowWidth() < Page.getCurrent().getBrowserWindowHeight()) || (Page.getCurrent().getBrowserWindowWidth() < 650) || (Page.getCurrent().getBrowserWindowHeight() < 600)) {
                 webPeptideShakerApp.addStyleName("horizontalcss");
                 System.out.println("at page resized " + Page.getCurrent().getBrowserWindowWidth() + "  h " + Page.getCurrent().getBrowserWindowHeight());
             } else {
