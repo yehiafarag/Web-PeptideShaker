@@ -3,7 +3,6 @@ package com.uib.web.peptideshaker.presenter.components;
 import com.github.jmchilton.blend4j.galaxy.GalaxyInstance;
 import com.github.jmchilton.blend4j.galaxy.GalaxyInstanceFactory;
 import com.vaadin.data.Property;
-import com.vaadin.event.LayoutEvents;
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ui.MarginInfo;
@@ -17,9 +16,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -170,6 +167,7 @@ public abstract class GalaxyConnectionPanelLayout extends VerticalLayout impleme
         HorizontalLayout userInputPanel = new HorizontalLayout();
         userInputPanel.setWidth(100, Unit.PERCENTAGE);
         userInputPanel.setHeight(100, Unit.PERCENTAGE);
+        userInputPanel.setData("Email & Password");
         inputTabSheet.addTab(userInputPanel, "Email & Password");
 
         userEmail = new TextField();
@@ -199,6 +197,7 @@ public abstract class GalaxyConnectionPanelLayout extends VerticalLayout impleme
         userInputPanel.setComponentAlignment(password, Alignment.TOP_CENTER);
 
         HorizontalLayout userAPIKeyPanel = new HorizontalLayout();
+        userAPIKeyPanel.setData("API Key");
         userAPIKeyPanel.setWidth(100, Unit.PERCENTAGE);
         userAPIKeyPanel.setHeight(100, Unit.PERCENTAGE);
         inputTabSheet.addTab(userAPIKeyPanel, "API Key");
@@ -277,7 +276,7 @@ public abstract class GalaxyConnectionPanelLayout extends VerticalLayout impleme
     private boolean tryToConnect() {
         
 
-        if (inputTabSheet.getTabPosition(inputTabSheet.getTab(inputTabSheet.getSelectedTab())) == 0) {
+        if (((HorizontalLayout)inputTabSheet.getSelectedTab()).getData().toString().equalsIgnoreCase("Email & Password")) {
             userEmail.setRequired(true);
             password.setRequired(true);
             galaxyLink.setRequired(true);
@@ -322,34 +321,50 @@ public abstract class GalaxyConnectionPanelLayout extends VerticalLayout impleme
                     APIKey.setRequired(!APIKey.isValid());
                     galaxyLink.setRequired(!galaxyLink.isValid());
                     galaxyInstance = null;
+                    System.out.println("at we reach 1");
                     return false;
                 }
             } catch (Exception e) {
                 APIKey.setRequired(!APIKey.isValid());
                 galaxyLink.setRequired(!galaxyLink.isValid());
                 galaxyInstance = null;
+                 System.out.println("at we reach 2");
                 return false;
 
             }
 
+            try{
+                 System.out.println("at we reach 3");
             galaxyInstance = GalaxyInstanceFactory.get(galaxyLink.getValue().toString(), APIKey.getValue());
+             System.out.println("at we reach 4");
+            }catch(Exception e)
+            {
+                e.printStackTrace();
+            }
 
         }
 
         try {
+             System.out.println("at we reach 5");
             galaxyInstance.getConfigurationClient().getRawConfiguration().keySet();
+             System.out.println("at we reach 6");
             galaxyInstance.getGalaxyUrl();
-            System.out.println("at galaxy conn " + galaxyInstance.getConfigurationClient().getRawConfiguration());
+             System.out.println("at we reach 7");
+//            System.out.println("at galaxy conn " + galaxyInstance.getConfigurationClient().getRawConfiguration());
+             System.out.println("at we reach 8");
         } catch (Exception e) {
             galaxyInstance = null;
             galaxyConnected = false;
             connectionLabel.setValue("<font color='red'>Galaxy is not connected, check input data <font size='3' color='red'>&#128530;</font></font>");
+            System.out.println("at we reach 9");
             return false;
         }
+         System.out.println("at we reach 10");
         APIKey.setRequired(false);
         userEmail.setRequired(false);
         password.setRequired(false);
         galaxyLink.setRequired(false);
+         System.out.println("at we are done----------------------- error ");
         return true;
     }
 
@@ -385,6 +400,7 @@ public abstract class GalaxyConnectionPanelLayout extends VerticalLayout impleme
             inputTabSheet.setEnabled(!galaxyConnected);
         }
 
+        System.out.println("com.uib.web.peptideshaker.presenter.components.GalaxyConnectionPanelLayout.validateAndConnect()");
         this.connectedToGalaxy(galaxyInstance);
 
     }

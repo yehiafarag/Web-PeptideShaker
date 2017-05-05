@@ -40,9 +40,34 @@ public class MultiSelectOptionGroup extends VerticalLayout {
         list.clear();
         for (String id : idToCaptionMap.keySet()) {
             list.addItem(id);
-            list.setItemCaption(id, idToCaptionMap.get(id));           
+            list.setItemCaption(id, idToCaptionMap.get(id));
         }
 
     }
 
+    /**
+     * Get selection value
+     *
+     * @return String id of the selected item
+     */
+    public Set<String> getSelectedValue() {
+        list.removeStyleName("error");
+        if (list.isValid()) {
+            return (Set<String>) list.getValue();
+        }
+        list.addStyleName("error");
+        return null;
+    }
+
+    /**
+     * Set the list is required to have a value.
+     *
+     * @param required the selection is required
+     * @param requiredMessage the error appear if no data selected
+     */
+    public void setRequired(boolean required, String requiredMessage) {
+        list.setRequired(required);
+        list.setRequiredError(requiredMessage);
+
+    }
 }

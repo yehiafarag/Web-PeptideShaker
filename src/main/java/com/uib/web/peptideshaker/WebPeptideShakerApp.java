@@ -1,12 +1,13 @@
 package com.uib.web.peptideshaker;
 
-import com.github.jmchilton.blend4j.galaxy.GalaxyInstance;
+import com.uib.web.peptideshaker.galaxy.GalaxyLayer;
 import com.uib.web.peptideshaker.galaxy.HistoryHandler;
 import com.uib.web.peptideshaker.presenter.PeptideShakerViewPresenter;
 import com.uib.web.peptideshaker.presenter.ToolPresenter;
 import com.uib.web.peptideshaker.presenter.WelcomePage;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.VerticalLayout;
+import java.util.Set;
 
 /**
  * This class represents the main Web PeptideShaker application
@@ -15,6 +16,10 @@ import com.vaadin.ui.VerticalLayout;
  */
 public class WebPeptideShakerApp extends VerticalLayout {
 
+    /**
+     * The Galaxy server layer.
+     */
+    private final GalaxyLayer Galaxy_Layer;
     /**
      * The tools view component.
      */
@@ -31,23 +36,34 @@ public class WebPeptideShakerApp extends VerticalLayout {
         PresenterManager presentationManager = new PresenterManager();
         WebPeptideShakerApp.this.addComponent(presentationManager);
 
-        WelcomePage welcomePage = new WelcomePage() {
+        Galaxy_Layer = new GalaxyLayer() {
             @Override
-            public void systemConnected(GalaxyInstance galaxyInstant) {
-                if (galaxyInstant == null) {
-                    presentationManager.setSideButtonsVisible(false);
-                } else {
+            public void systemConnected() {
+               
                     presentationManager.setSideButtonsVisible(true);
-                    connectGalaxy(galaxyInstant);
-                }
+                    connectGalaxy();
+                
 
             }
 
+            @Override
+            public void systemDisconnected() {
+                 presentationManager.setSideButtonsVisible(false);
+            }
+            
         };
+
+        WelcomePage welcomePage = new WelcomePage(Galaxy_Layer.getGalaxyConnectionPanel());
         presentationManager.registerView(welcomePage);
         presentationManager.viewLayout(welcomePage.getViewId());
 
-        toolsView = new ToolPresenter();
+        toolsView = new ToolPresenter(){
+            @Override
+            public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList) {
+                Galaxy_Layer.executeWorkFlow(fastaFileId, mgfIdsList, searchEnginesList);
+            }
+        
+        };
         presentationManager.registerView(toolsView);
 //         
         PeptideShakerViewPresenter peptideShakerView = new PeptideShakerViewPresenter();
@@ -55,9 +71,8 @@ public class WebPeptideShakerApp extends VerticalLayout {
 
     }
 
-    private void connectGalaxy(GalaxyInstance Galaxy_Instance) {
-        HistoryHandler historyHandler = new HistoryHandler(Galaxy_Instance);
-        toolsView.updateHistoryHandler(historyHandler);
+    private void connectGalaxy() {        
+        toolsView.updateHistoryHandler(Galaxy_Layer.getFastaFilesMap(),Galaxy_Layer.getMgfFilesMap());
     }
 
 }

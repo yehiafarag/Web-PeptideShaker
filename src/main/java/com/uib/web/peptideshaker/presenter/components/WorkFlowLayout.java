@@ -12,7 +12,9 @@ import com.vaadin.ui.PopupView;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * This class represents SearchGUI-Peptide-Shaker work-flow which include input
@@ -20,7 +22,7 @@ import java.util.Map;
  *
  * @author Yehia Farag
  */
-public class WorkFlowLayout extends Panel {
+public abstract class WorkFlowLayout extends Panel {
 
     /**
      * Select fasta file dropdown list .
@@ -52,12 +54,15 @@ public class WorkFlowLayout extends Panel {
 
         fastaFileList = new DropDownList("Protein Database (FASTA)");
         content.addComponent(fastaFileList);
+        fastaFileList.setRequired(true, "Select FASTA file");
 
         mgfFileList = new MultiSelectOptionGroup("Spectrum File(s)");
         content.addComponent(mgfFileList);
+        mgfFileList.setRequired(true, "Select at least 1 MGF file");
 
         MultiSelectOptionGroup searchEngines = new MultiSelectOptionGroup("Search Engines");
         content.addComponent(searchEngines);
+        searchEngines.setRequired(true, "Select at least 1 search engine");
 
         Map<String, String> searchEngienList = new LinkedHashMap<>();
         searchEngienList.put("X!Tandem", "X!Tandem");
@@ -77,6 +82,18 @@ public class WorkFlowLayout extends Panel {
         executeWorkFlow.setStyleName(ValoTheme.BUTTON_SMALL);
         executeWorkFlow.addStyleName(ValoTheme.BUTTON_TINY);
         bottomLayout.addComponent(executeWorkFlow);
+
+        executeWorkFlow.addClickListener((Button.ClickEvent event) -> {
+            String fastFileId = fastaFileList.getSelectedValue();
+            Set<String> spectrumIds = mgfFileList.getSelectedValue();
+            Set<String> searchEnginesIds = searchEngines.getSelectedValue();
+            if (fastFileId == null || spectrumIds == null || searchEnginesIds == null) {
+                return;
+            }
+            executeWorkFlow(fastFileId,spectrumIds,searchEnginesIds);
+            
+
+        });
 
     }
 
@@ -99,5 +116,14 @@ public class WorkFlowLayout extends Panel {
         mgfFileList.updateList(mgfFileIdToNameMap);
 
     }
+     /**
+     * Run Online Peptide-Shaker work-flow
+     *
+     * @param fastaFileId FASTA file dataset id
+     * @param mgfIdsList list of MGF file dataset ids
+     * @param searchEnginesList List of selected search engine names
+     * @param historyId galaxy history id that will store the results
+     */
+    public abstract void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList);
 
 }

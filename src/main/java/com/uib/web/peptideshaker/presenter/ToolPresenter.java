@@ -1,6 +1,6 @@
 package com.uib.web.peptideshaker.presenter;
 
-import com.uib.web.peptideshaker.galaxy.HistoryHandler;
+import com.uib.web.peptideshaker.galaxy.DataSet;
 import com.uib.web.peptideshaker.presenter.components.WorkFlowLayout;
 import com.uib.web.peptideshaker.presenter.core.BigSideBtn;
 import com.uib.web.peptideshaker.presenter.core.SmallSideBtn;
@@ -12,7 +12,9 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * This class represent web tool presenter which is responsible for managing the
@@ -20,7 +22,7 @@ import java.util.Map;
  *
  * @author Yehia Farag
  */
-public class ToolPresenter extends VerticalLayout implements PresenterViewable, LayoutEvents.LayoutClickListener {
+public abstract class ToolPresenter extends VerticalLayout implements PresenterViewable, LayoutEvents.LayoutClickListener {
 
     /**
      * The tools layout side button.
@@ -38,7 +40,6 @@ public class ToolPresenter extends VerticalLayout implements PresenterViewable, 
      */
     private WorkFlowLayout workflowLayout;
 
-    private HistoryHandler historyHandler;
     private final Map<BigSideBtn, Component> btnsLayoutMap;
 //    private VerticalLayout rightLayoutContainer;
     private VerticalLayout btnContainer;
@@ -65,13 +66,13 @@ public class ToolPresenter extends VerticalLayout implements PresenterViewable, 
     }
 
     /**
-     * Update the main galaxy history handler
+     * Update the work-flow input files
      *
-     * @param historyHandler history handler component
+     * @param fastaFilesMap The main Fasta File Map (ID to Name).
+     * @param mgfFilesMap The main MGF File Map (ID to Name).
      */
-    public void updateHistoryHandler(HistoryHandler historyHandler) {
-        this.historyHandler = historyHandler;      
-        workflowLayout.updateForm(historyHandler.getFastaFilesMap(), historyHandler.getMgfFilesMap());
+    public void updateHistoryHandler(Map<String, DataSet> fastaFilesMap, Map<String, DataSet> mgfFilesMap) {
+        workflowLayout.updateForm(fastaFilesMap, mgfFilesMap);
     }
 
     private void initLayout() {
@@ -83,7 +84,14 @@ public class ToolPresenter extends VerticalLayout implements PresenterViewable, 
         btnContainer.setSpacing(true);
         btnContainer.setMargin(new MarginInfo(false, false, true, false));
 
-        workflowLayout = new WorkFlowLayout();
+        workflowLayout = new WorkFlowLayout(){
+            @Override
+            public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList) {
+                 ToolPresenter.this.executeWorkFlow(fastaFileId, mgfIdsList, searchEnginesList);
+            }
+          
+        
+        };
         VerticalLayout nelsLayout = new VerticalLayout();
 
         BigSideBtn nelsBtn = new BigSideBtn("img/NeLS2.png", "Get Data");
@@ -236,5 +244,14 @@ public class ToolPresenter extends VerticalLayout implements PresenterViewable, 
     public SmallSideBtn getTopView() {
         return topToolsBtn;
     }
+     /**
+     * Run Online Peptide-Shaker work-flow
+     *
+     * @param fastaFileId FASTA file dataset id
+     * @param mgfIdsList list of MGF file dataset ids
+     * @param searchEnginesList List of selected search engine names
+     * @param historyId galaxy history id that will store the results
+     */
+    public abstract void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList);
 
 }
