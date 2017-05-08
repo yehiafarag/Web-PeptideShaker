@@ -3,6 +3,8 @@ package com.uib.web.peptideshaker.galaxy;
 import com.github.jmchilton.blend4j.galaxy.GalaxyInstance;
 import com.github.jmchilton.blend4j.galaxy.HistoriesClient;
 import com.github.jmchilton.blend4j.galaxy.beans.Dataset;
+import com.github.jmchilton.blend4j.galaxy.beans.Tool;
+import com.github.jmchilton.blend4j.galaxy.beans.ToolSection;
 import com.github.jmchilton.blend4j.galaxy.beans.Workflow;
 import com.github.jmchilton.blend4j.galaxy.beans.WorkflowInputs;
 import com.github.jmchilton.blend4j.galaxy.beans.WorkflowOutputs;
@@ -30,14 +32,14 @@ public class ToolsHandler {
      * The main Galaxy instance in the system.
      */
     private final GalaxyInstance Galaxy_Instance;
-   /**
+    /**
      * The SearchGUI tool on galaxy server.
      */
-    private final String galaxySearchGUIToolId;
-     /**
+    private String galaxySearchGUIToolId = null;
+    /**
      * The PeptideShaker tool on galaxy server.
      */
-    private final String galaxyPeptideShakerToolId;
+    private String galaxyPeptideShakerToolId = null;
 
     /**
      * Constructor to initialize the main data structure and other variables.
@@ -47,9 +49,20 @@ public class ToolsHandler {
      */
     public ToolsHandler(GalaxyInstance Galaxy_Instance) {
         this.Galaxy_Instance = Galaxy_Instance;
-        galaxyPeptideShakerToolId="";
-        galaxySearchGUIToolId="";
-        
+        try{
+        if (Galaxy_Instance.getToolsClient().showTool("toolshed.g2.bx.psu.edu%2Frepos%2Fgalaxyp%2Fpeptideshaker%2Fpeptide_shaker%2F1.11.0") != null) {
+            galaxyPeptideShakerToolId = "toolshed.g2.bx.psu.edu%2Frepos%2Fgalaxyp%2Fpeptideshaker%2Fpeptide_shaker%2F1.11.0";
+        }
+        if (Galaxy_Instance.getToolsClient().showTool("toolshed.g2.bx.psu.edu%2Frepos%2Fgalaxyp%2Fpeptideshaker%2Fsearch_gui%2F2.9.0") != null) {
+            galaxySearchGUIToolId = "toolshed.g2.bx.psu.edu%2Frepos%2Fgalaxyp%2Fpeptideshaker%2Fsearch_gui%2F2.9.0";
+        }
+        }catch(Exception e){
+            System.out.println("at tools are not available");
+        }
+    }
+    
+    public boolean isValidTools(){
+        return ((galaxyPeptideShakerToolId!=null)&& (galaxySearchGUIToolId!=null));
     }
 
     /**
@@ -113,7 +126,7 @@ public class ToolsHandler {
         }
         return json;
     }
-    
+
     /**
      * Run Online Peptide-Shaker work-flow
      *
@@ -122,14 +135,14 @@ public class ToolsHandler {
      * @param searchEnginesList List of selected search engine names
      * @param historyId galaxy history id that will store the results
      */
-    public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList,String historyId) {
+    public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList, String historyId) {
         Workflow selectedWf;
         String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
         File file;
         WorkflowInputs.WorkflowInput input2;
         if (mgfIdsList.size() > 1) {
             file = new File(basepath + "/VAADIN/Galaxy-Workflow-onlinepeptideshaker_collection.ga");
-            input2 = prepareWorkflowCollectionList(WorkflowInputs.InputSourceType.HDCA, mgfIdsList,historyId);
+            input2 = prepareWorkflowCollectionList(WorkflowInputs.InputSourceType.HDCA, mgfIdsList, historyId);
         } else {
             file = new File(basepath + "/VAADIN/Galaxy-Workflow-onlinepeptideshaker.ga");
             input2 = new WorkflowInputs.WorkflowInput(mgfIdsList.iterator().next(), WorkflowInputs.InputSourceType.HDA);
@@ -157,6 +170,7 @@ public class ToolsHandler {
 //        checkHistory();
 
     }
+
     /**
      * Prepares a work flow which takes as input a collection list.
      *
@@ -164,13 +178,14 @@ public class ToolsHandler {
      * @return A WorkflowInputs describing the work flow.
      * @throws InterruptedException
      */
-    private WorkflowInputs.WorkflowInput prepareWorkflowCollectionList(WorkflowInputs.InputSourceType inputSource, Set<String> dsIds,String historyId) {
-         
+    private WorkflowInputs.WorkflowInput prepareWorkflowCollectionList(WorkflowInputs.InputSourceType inputSource, Set<String> dsIds, String historyId) {
+
         CollectionResponse collectionResponse = constructFileCollectionList(historyId, dsIds);
         return new WorkflowInputs.WorkflowInput(collectionResponse.getId(),
                 inputSource);
 
     }
+
     /**
      * Constructs a list collection from the given files within the given
      * history.
@@ -194,6 +209,5 @@ public class ToolsHandler {
 
         return historiesClient.createDatasetCollection(historyId, collectionDescription);
     }
-
 
 }

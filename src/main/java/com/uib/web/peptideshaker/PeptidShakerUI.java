@@ -4,14 +4,13 @@ import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.server.Extension;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import javax.servlet.http.Cookie;
 
 /**
  * This UI is the application entry point. A UI may either represent a browser
@@ -46,7 +45,30 @@ public class PeptidShakerUI extends UI {
         });
 
         setContent(webPeptideShakerApp);
+        mimicNelsLogin();
     }
+    private void mimicNelsLogin() {
+        // Create a new cookie
+        initCookie("SimpleSAMLAuthToken", "_3f8e6253727ff83b8ea362b136786756a676f83af1");
+        initCookie("PHPSESSID", "d664d18c872013efad79dc820136a66e");
+        initCookie("AuthMemCookie", "_0cded1a0bdc6fa712266a317ad22e667209a4773de");
+    }
+     private void initCookie(String name, String value) {
+        // Create a new cookie
+        Cookie myCookie = new Cookie(name, value);
+// Make cookie expire in 2 minutes
+        myCookie.setMaxAge(120);
+// Set the cookie path.
+        myCookie.setPath(VaadinService.getCurrentRequest().getContextPath());
+// Save cookie
+        VaadinService.getCurrentResponse().addCookie(myCookie);
+    }
+
+    @Override
+    public void addExtension(Extension extension) {
+        super.addExtension(extension); //To change body of generated methods, choose Tools | Templates.
+    }
+    
 
     @WebServlet(urlPatterns = "/*", name = "PeptidShakerUIServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = PeptidShakerUI.class, productionMode = false)

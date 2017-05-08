@@ -2,6 +2,7 @@ package com.uib.web.peptideshaker.galaxy;
 
 import com.github.jmchilton.blend4j.galaxy.GalaxyInstance;
 import com.uib.web.peptideshaker.presenter.components.GalaxyConnectionPanelLayout;
+import com.vaadin.server.Page;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
@@ -37,6 +38,11 @@ public abstract class GalaxyLayer {
      *
      */
     private ToolsHandler toolsHandler;
+    /**
+     * Request cookies to attach to every request for galaxy used mainly for
+     * securing sessions.
+     */
+    private String cookiesRequestProperty;
 
     /**
      * Constructor to initialize Galaxy layer.
@@ -111,6 +117,7 @@ public abstract class GalaxyLayer {
 //
                     connectionBtn.setEnabled(true);
                 } catch (Exception exp) {
+                    System.out.println("at err .connectedToGalaxy()");
                     historyHandler = null;
                     toolsHandler = null;
                     systemDisconnected();
@@ -139,8 +146,8 @@ public abstract class GalaxyLayer {
                 galaxyConnectionSettingsPanel.disconnectGalaxy();
                 historyHandler = null;
                 toolsHandler = null;
-                systemDisconnected();
                 connectionBtn.setEnabled(true);
+                Page.getCurrent().reload();
 
             } else {
                 //connect to galaxy
@@ -188,6 +195,10 @@ public abstract class GalaxyLayer {
         } else {
             return new HashMap<>();
         }
+    }
+    public boolean checkToolsAvailable(){
+    
+        return toolsHandler.isValidTools();
     }
 
     /**

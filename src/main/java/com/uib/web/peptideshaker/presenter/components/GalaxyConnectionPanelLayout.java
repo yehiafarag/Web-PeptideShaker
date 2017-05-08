@@ -5,6 +5,8 @@ import com.github.jmchilton.blend4j.galaxy.GalaxyInstanceFactory;
 import com.vaadin.data.Property;
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
@@ -20,6 +22,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.servlet.http.Cookie;
 
 /**
  * This class represents the galaxy server connection panel that contains
@@ -74,6 +77,11 @@ public abstract class GalaxyConnectionPanelLayout extends VerticalLayout impleme
      * Connect to galaxy button
      */
     private Button connectBtn;
+    /**
+     * Request cookies to attach to every request for galaxy used mainly for
+     * securing sessions.
+     */
+    private String cookiesRequestProperty;
 
     /**
      * Constructor to initialize the main variable.
@@ -274,6 +282,11 @@ public abstract class GalaxyConnectionPanelLayout extends VerticalLayout impleme
     }
 
     private boolean tryToConnect() {
+         Cookie[] cookies = ((VaadinServletRequest) VaadinService.getCurrentRequest()).getCookies();
+        for (Cookie cookie : cookies) {
+            cookiesRequestProperty += ";" + cookie.getName() + "=" + cookie.getValue();
+        }
+        cookiesRequestProperty = cookiesRequestProperty.replaceFirst(";", "");
         
 
         if (((HorizontalLayout)inputTabSheet.getSelectedTab()).getData().toString().equalsIgnoreCase("Email & Password")) {
@@ -345,12 +358,12 @@ public abstract class GalaxyConnectionPanelLayout extends VerticalLayout impleme
         }
 
         try {
-             System.out.println("at we reach 5");
-            galaxyInstance.getConfigurationClient().getRawConfiguration().keySet();
+             System.out.println("at we reach 5"+  galaxyInstance.getConfigurationClient().getRawConfiguration().keySet());
+          
              System.out.println("at we reach 6");
             galaxyInstance.getGalaxyUrl();
              System.out.println("at we reach 7");
-//            System.out.println("at galaxy conn " + galaxyInstance.getConfigurationClient().getRawConfiguration());
+            System.out.println("at galaxy conn " + galaxyInstance.getApiKey());
              System.out.println("at we reach 8");
         } catch (Exception e) {
             galaxyInstance = null;

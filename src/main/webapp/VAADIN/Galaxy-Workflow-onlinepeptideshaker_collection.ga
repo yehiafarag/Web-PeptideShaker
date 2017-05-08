@@ -2,7 +2,7 @@
     "a_galaxy_workflow": "true", 
     "annotation": "", 
     "format-version": "0.1", 
-    "name": "onlinepeptideshaker_collection (imported from uploaded file)", 
+    "name": "onlinepeptideshaker_collection (imported from uploaded file) (imported from uploaded file)", 
     "steps": {
         "0": {
             "annotation": "", 
@@ -190,7 +190,7 @@
                 }
             ], 
             "position": {
-                "left": 497.25, 
+                "left": 500.25, 
                 "top": 377
             }, 
             "post_job_actions": {
@@ -248,7 +248,7 @@
                 "owner": "galaxyp", 
                 "tool_shed": "toolshed.g2.bx.psu.edu"
             }, 
-            "tool_state": "{\"__page__\": 0, \"outputs\": \"[\\\"3\\\", \\\"5\\\", \\\"7\\\", \\\"1\\\", \\\"cps\\\"]\", \"__rerun_remap_job_id__\": null, \"filtering_options\": \"{\\\"filtering_options_selector\\\": \\\"no\\\", \\\"__current_case__\\\": 0}\", \"searchgui_input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"species_type\": \"{\\\"__current_case__\\\": 0, \\\"species_type_selector\\\": \\\"no_species_type\\\"}\", \"processing_options\": \"{\\\"processing_options_selector\\\": \\\"no\\\", \\\"__current_case__\\\": 0}\"}", 
+            "tool_state": "{\"__page__\": 0, \"outputs\": \"[\\\"3\\\", \\\"5\\\", \\\"7\\\", \\\"cps\\\"]\", \"__rerun_remap_job_id__\": null, \"filtering_options\": \"{\\\"filtering_options_selector\\\": \\\"no\\\", \\\"__current_case__\\\": 0}\", \"searchgui_input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"species_type\": \"{\\\"__current_case__\\\": 0, \\\"species_type_selector\\\": \\\"no_species_type\\\"}\", \"processing_options\": \"{\\\"processing_options_selector\\\": \\\"no\\\", \\\"__current_case__\\\": 0}\"}", 
             "tool_version": "1.11.0", 
             "type": "tool", 
             "uuid": "9374fcc3-0222-4df1-b6d6-9f49391ce1e3", 
@@ -256,15 +256,15 @@
                 {
                     "label": null, 
                     "output_name": "output_psm", 
-                    "uuid": "ffd1646d-0ea1-4339-8b8f-603fd43af4b4"
+                    "uuid": "b8f12c02-58db-4f13-a6a8-3e0510cd3469"
                 }, 
                 {
                     "label": null, 
                     "output_name": "output_peptides", 
-                    "uuid": "0978e402-de11-4332-bcc9-8d56bfd66f35"
+                    "uuid": "69deafae-12bb-44fd-b4db-e35630ea1e65"
                 }
             ]
         }
     }, 
-    "uuid": "e859a669-7283-4f53-80dc-7dc9ac13cecc"
+    "uuid": "5f540f9a-8d5b-4344-b280-fa543f4101ac"
 }

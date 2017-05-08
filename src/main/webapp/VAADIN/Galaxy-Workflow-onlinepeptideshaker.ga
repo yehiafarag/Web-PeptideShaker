@@ -2,7 +2,7 @@
     "a_galaxy_workflow": "true", 
     "annotation": "", 
     "format-version": "0.1", 
-    "name": "onlinepeptideshaker (imported from uploaded file)", 
+    "name": "onlinepeptideshaker (imported from uploaded file) (imported from uploaded file)", 
     "steps": {
         "0": {
             "annotation": "", 
@@ -19,7 +19,7 @@
             "name": "Input dataset", 
             "outputs": [], 
             "position": {
-                "left": 221.203125, 
+                "left": 222.203125, 
                 "top": 424.3125
             }, 
             "tool_errors": null, 
@@ -51,7 +51,7 @@
             "name": "Input dataset", 
             "outputs": [], 
             "position": {
-                "left": 201.96875, 
+                "left": 202.96875, 
                 "top": 542.609375
             }, 
             "tool_errors": null, 
@@ -101,7 +101,7 @@
                 }
             ], 
             "position": {
-                "left": 466.421875, 
+                "left": 467.421875, 
                 "top": 514
             }, 
             "post_job_actions": {
@@ -190,7 +190,7 @@
                 }
             ], 
             "position": {
-                "left": 770.4375, 
+                "left": 771.4375, 
                 "top": 201
             }, 
             "post_job_actions": {
@@ -198,6 +198,11 @@
                     "action_arguments": {}, 
                     "action_type": "HideDatasetAction", 
                     "output_name": "mzidentML"
+                }, 
+                "HideDatasetActionoutput_certificate": {
+                    "action_arguments": {}, 
+                    "action_type": "HideDatasetAction", 
+                    "output_name": "output_certificate"
                 }, 
                 "HideDatasetActionoutput_cps": {
                     "action_arguments": {}, 
@@ -209,20 +214,25 @@
                     "action_type": "HideDatasetAction", 
                     "output_name": "output_hierarchical"
                 }, 
+                "HideDatasetActionoutput_peptides": {
+                    "action_arguments": {}, 
+                    "action_type": "HideDatasetAction", 
+                    "output_name": "output_peptides"
+                }, 
                 "HideDatasetActionoutput_peptides_phosphorylation": {
                     "action_arguments": {}, 
                     "action_type": "HideDatasetAction", 
                     "output_name": "output_peptides_phosphorylation"
                 }, 
+                "HideDatasetActionoutput_proteins": {
+                    "action_arguments": {}, 
+                    "action_type": "HideDatasetAction", 
+                    "output_name": "output_proteins"
+                }, 
                 "HideDatasetActionoutput_proteins_phosphorylation": {
                     "action_arguments": {}, 
                     "action_type": "HideDatasetAction", 
                     "output_name": "output_proteins_phosphorylation"
-                }, 
-                "HideDatasetActionoutput_psm": {
-                    "action_arguments": {}, 
-                    "action_type": "HideDatasetAction", 
-                    "output_name": "output_psm"
                 }, 
                 "HideDatasetActionoutput_psm_phosphorylation": {
                     "action_arguments": {}, 
@@ -243,28 +253,18 @@
                 "owner": "galaxyp", 
                 "tool_shed": "toolshed.g2.bx.psu.edu"
             }, 
-            "tool_state": "{\"__page__\": 0, \"outputs\": \"[\\\"3\\\", \\\"5\\\", \\\"7\\\", \\\"1\\\", \\\"cps\\\"]\", \"__rerun_remap_job_id__\": null, \"filtering_options\": \"{\\\"filtering_options_selector\\\": \\\"no\\\", \\\"__current_case__\\\": 0}\", \"searchgui_input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"species_type\": \"{\\\"__current_case__\\\": 0, \\\"species_type_selector\\\": \\\"no_species_type\\\"}\", \"processing_options\": \"{\\\"processing_options_selector\\\": \\\"no\\\", \\\"__current_case__\\\": 0}\"}", 
+            "tool_state": "{\"__page__\": 0, \"outputs\": \"[\\\"3\\\", \\\"5\\\", \\\"7\\\", \\\"cps\\\"]\", \"__rerun_remap_job_id__\": null, \"filtering_options\": \"{\\\"filtering_options_selector\\\": \\\"no\\\", \\\"__current_case__\\\": 0}\", \"searchgui_input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"species_type\": \"{\\\"__current_case__\\\": 0, \\\"species_type_selector\\\": \\\"no_species_type\\\"}\", \"processing_options\": \"{\\\"processing_options_selector\\\": \\\"no\\\", \\\"__current_case__\\\": 0}\"}", 
             "tool_version": "1.11.0", 
             "type": "tool", 
             "uuid": "9374fcc3-0222-4df1-b6d6-9f49391ce1e3", 
             "workflow_outputs": [
                 {
                     "label": null, 
-                    "output_name": "output_proteins", 
-                    "uuid": "70fdbf94-1981-4ed0-8614-3f908a6b7e81"
-                }, 
-                {
-                    "label": null, 
-                    "output_name": "output_certificate", 
-                    "uuid": "d081c9ea-1cb3-45df-9398-0262cb003672"
-                }, 
-                {
-                    "label": null, 
-                    "output_name": "output_peptides", 
-                    "uuid": "83c534a8-5f34-40d8-91c2-167721294348"
+                    "output_name": "output_psm", 
+                    "uuid": "023575dd-b9bf-49c3-bb35-887aa10d13c6"
                 }
             ]
         }
     }, 
-    "uuid": "578187ff-3928-4482-8752-6a70d1b55ecf"
+    "uuid": "56138799-92b9-4a7c-b617-0f244f5494b9"
 }

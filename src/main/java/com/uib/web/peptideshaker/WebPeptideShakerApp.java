@@ -39,30 +39,27 @@ public class WebPeptideShakerApp extends VerticalLayout {
         Galaxy_Layer = new GalaxyLayer() {
             @Override
             public void systemConnected() {
-               
-                    presentationManager.setSideButtonsVisible(true);
-                    connectGalaxy();
-                
-
+                presentationManager.setSideButtonsVisible(true);
+                connectGalaxy();
             }
 
             @Override
             public void systemDisconnected() {
-                 presentationManager.setSideButtonsVisible(false);
+                presentationManager.setSideButtonsVisible(false);
             }
-            
+
         };
 
         WelcomePage welcomePage = new WelcomePage(Galaxy_Layer.getGalaxyConnectionPanel());
         presentationManager.registerView(welcomePage);
         presentationManager.viewLayout(welcomePage.getViewId());
 
-        toolsView = new ToolPresenter(){
+        toolsView = new ToolPresenter() {
             @Override
             public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList) {
                 Galaxy_Layer.executeWorkFlow(fastaFileId, mgfIdsList, searchEnginesList);
             }
-        
+
         };
         presentationManager.registerView(toolsView);
 //         
@@ -71,8 +68,19 @@ public class WebPeptideShakerApp extends VerticalLayout {
 
     }
 
-    private void connectGalaxy() {        
-        toolsView.updateHistoryHandler(Galaxy_Layer.getFastaFilesMap(),Galaxy_Layer.getMgfFilesMap());
+    private void connectGalaxy() {
+        if (Galaxy_Layer.checkToolsAvailable()) {
+            toolsView.getRightView().setEnabled(true);
+            toolsView.getTopView().setEnabled(true);
+            toolsView.getRightView().setDescription("Click to view the tools layout");
+            toolsView.getTopView().setDescription("Click to view the tools layout");
+            toolsView.updateHistoryHandler(Galaxy_Layer.getFastaFilesMap(), Galaxy_Layer.getMgfFilesMap());
+        } else {
+             toolsView.getRightView().setDescription("Tools are not available");
+            toolsView.getTopView().setDescription("Tools are not available");
+            toolsView.getRightView().setEnabled(false);
+            toolsView.getTopView().setEnabled(false);
+        }
     }
 
 }
