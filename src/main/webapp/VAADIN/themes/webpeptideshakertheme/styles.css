@@ -13407,7 +13407,7 @@ div.v-layout.v-horizontal.v-widget {
 	height: 40px !important;
 	min-width: 10px !important;
 	max-width: 40px !important;
-	z-index: 10 !important;
+	z-index: 2000000 !important;
 	left: 100% !important;
 	top: 100% !important;
 	margin-left: -68px !important;

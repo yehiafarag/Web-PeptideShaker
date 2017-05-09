@@ -2,7 +2,7 @@
     "a_galaxy_workflow": "true", 
     "annotation": "", 
     "format-version": "0.1", 
-    "name": "onlinepeptideshaker_collection (imported from uploaded file) (imported from uploaded file)", 
+    "name": "onlinepeptideshaker_collection", 
     "steps": {
         "0": {
             "annotation": "", 
@@ -104,13 +104,7 @@
                 "left": 459.25, 
                 "top": 200
             }, 
-            "post_job_actions": {
-                "HideDatasetActionsearchgui_results": {
-                    "action_arguments": {}, 
-                    "action_type": "HideDatasetAction", 
-                    "output_name": "searchgui_results"
-                }
-            }, 
+            "post_job_actions": {}, 
             "tool_errors": null, 
             "tool_id": "toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/search_gui/2.9.0", 
             "tool_shed_repository": {
@@ -123,7 +117,13 @@
             "tool_version": "2.9.0", 
             "type": "tool", 
             "uuid": "a0146c36-76a0-4c6f-a827-f2e57ca322da", 
-            "workflow_outputs": []
+            "workflow_outputs": [
+                {
+                    "label": null, 
+                    "output_name": "searchgui_results", 
+                    "uuid": "f0036e06-bae3-4490-9552-ff9d27b91c59"
+                }
+            ]
         }, 
         "3": {
             "annotation": "", 
@@ -219,11 +219,6 @@
                     "action_type": "HideDatasetAction", 
                     "output_name": "output_peptides_phosphorylation"
                 }, 
-                "HideDatasetActionoutput_proteins": {
-                    "action_arguments": {}, 
-                    "action_type": "HideDatasetAction", 
-                    "output_name": "output_proteins"
-                }, 
                 "HideDatasetActionoutput_proteins_phosphorylation": {
                     "action_arguments": {}, 
                     "action_type": "HideDatasetAction", 
@@ -248,11 +243,16 @@
                 "owner": "galaxyp", 
                 "tool_shed": "toolshed.g2.bx.psu.edu"
             }, 
-            "tool_state": "{\"__page__\": 0, \"outputs\": \"[\\\"3\\\", \\\"5\\\", \\\"7\\\", \\\"cps\\\"]\", \"__rerun_remap_job_id__\": null, \"filtering_options\": \"{\\\"filtering_options_selector\\\": \\\"no\\\", \\\"__current_case__\\\": 0}\", \"searchgui_input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"species_type\": \"{\\\"__current_case__\\\": 0, \\\"species_type_selector\\\": \\\"no_species_type\\\"}\", \"processing_options\": \"{\\\"processing_options_selector\\\": \\\"no\\\", \\\"__current_case__\\\": 0}\"}", 
+            "tool_state": "{\"__page__\": 0, \"outputs\": \"[\\\"3\\\", \\\"5\\\", \\\"7\\\"]\", \"__rerun_remap_job_id__\": null, \"filtering_options\": \"{\\\"filtering_options_selector\\\": \\\"no\\\", \\\"__current_case__\\\": 0}\", \"searchgui_input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"species_type\": \"{\\\"__current_case__\\\": 0, \\\"species_type_selector\\\": \\\"no_species_type\\\"}\", \"processing_options\": \"{\\\"processing_options_selector\\\": \\\"no\\\", \\\"__current_case__\\\": 0}\"}", 
             "tool_version": "1.11.0", 
             "type": "tool", 
             "uuid": "9374fcc3-0222-4df1-b6d6-9f49391ce1e3", 
             "workflow_outputs": [
+                {
+                    "label": null, 
+                    "output_name": "output_proteins", 
+                    "uuid": "0dc751a3-02b4-41eb-bb97-2a1a383f1d7c"
+                }, 
                 {
                     "label": null, 
                     "output_name": "output_psm", 
@@ -266,5 +266,5 @@
             ]
         }
     }, 
-    "uuid": "5f540f9a-8d5b-4344-b280-fa543f4101ac"
+    "uuid": "d7f67fb8-df7a-4d36-bd11-92f091e1aa07"
 }

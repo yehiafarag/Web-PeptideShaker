@@ -104,13 +104,7 @@
                 "left": 467.421875, 
                 "top": 514
             }, 
-            "post_job_actions": {
-                "HideDatasetActionsearchgui_results": {
-                    "action_arguments": {}, 
-                    "action_type": "HideDatasetAction", 
-                    "output_name": "searchgui_results"
-                }
-            }, 
+            "post_job_actions": {}, 
             "tool_errors": null, 
             "tool_id": "toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/search_gui/2.9.0", 
             "tool_shed_repository": {
@@ -123,7 +117,13 @@
             "tool_version": "2.9.0", 
             "type": "tool", 
             "uuid": "a0146c36-76a0-4c6f-a827-f2e57ca322da", 
-            "workflow_outputs": []
+            "workflow_outputs": [
+                {
+                    "label": null, 
+                    "output_name": "searchgui_results", 
+                    "uuid": "350e070e-2b52-4c0e-934e-87fa7af90da0"
+                }
+            ]
         }, 
         "3": {
             "annotation": "", 
@@ -214,20 +214,10 @@
                     "action_type": "HideDatasetAction", 
                     "output_name": "output_hierarchical"
                 }, 
-                "HideDatasetActionoutput_peptides": {
-                    "action_arguments": {}, 
-                    "action_type": "HideDatasetAction", 
-                    "output_name": "output_peptides"
-                }, 
                 "HideDatasetActionoutput_peptides_phosphorylation": {
                     "action_arguments": {}, 
                     "action_type": "HideDatasetAction", 
                     "output_name": "output_peptides_phosphorylation"
-                }, 
-                "HideDatasetActionoutput_proteins": {
-                    "action_arguments": {}, 
-                    "action_type": "HideDatasetAction", 
-                    "output_name": "output_proteins"
                 }, 
                 "HideDatasetActionoutput_proteins_phosphorylation": {
                     "action_arguments": {}, 
@@ -253,18 +243,28 @@
                 "owner": "galaxyp", 
                 "tool_shed": "toolshed.g2.bx.psu.edu"
             }, 
-            "tool_state": "{\"__page__\": 0, \"outputs\": \"[\\\"3\\\", \\\"5\\\", \\\"7\\\", \\\"cps\\\"]\", \"__rerun_remap_job_id__\": null, \"filtering_options\": \"{\\\"filtering_options_selector\\\": \\\"no\\\", \\\"__current_case__\\\": 0}\", \"searchgui_input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"species_type\": \"{\\\"__current_case__\\\": 0, \\\"species_type_selector\\\": \\\"no_species_type\\\"}\", \"processing_options\": \"{\\\"processing_options_selector\\\": \\\"no\\\", \\\"__current_case__\\\": 0}\"}", 
+            "tool_state": "{\"__page__\": 0, \"outputs\": \"[\\\"3\\\", \\\"5\\\", \\\"7\\\"]\", \"__rerun_remap_job_id__\": null, \"filtering_options\": \"{\\\"filtering_options_selector\\\": \\\"no\\\", \\\"__current_case__\\\": 0}\", \"searchgui_input\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"species_type\": \"{\\\"__current_case__\\\": 0, \\\"species_type_selector\\\": \\\"no_species_type\\\"}\", \"processing_options\": \"{\\\"processing_options_selector\\\": \\\"no\\\", \\\"__current_case__\\\": 0}\"}", 
             "tool_version": "1.11.0", 
             "type": "tool", 
             "uuid": "9374fcc3-0222-4df1-b6d6-9f49391ce1e3", 
             "workflow_outputs": [
                 {
                     "label": null, 
+                    "output_name": "output_proteins", 
+                    "uuid": "10c6476c-8996-41cc-8762-e5bb3c54dc07"
+                }, 
+                {
+                    "label": null, 
                     "output_name": "output_psm", 
                     "uuid": "023575dd-b9bf-49c3-bb35-887aa10d13c6"
+                }, 
+                {
+                    "label": null, 
+                    "output_name": "output_peptides", 
+                    "uuid": "dfe332cf-fa9e-4a95-949c-bea84420c368"
                 }
             ]
         }
     }, 
-    "uuid": "56138799-92b9-4a7c-b617-0f244f5494b9"
+    "uuid": "c5a531c5-1507-4fcb-9877-607224c981bd"
 }

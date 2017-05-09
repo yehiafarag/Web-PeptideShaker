@@ -1,6 +1,9 @@
 package com.uib.web.peptideshaker.galaxy;
 
 import com.github.jmchilton.blend4j.galaxy.GalaxyInstance;
+import com.github.jmchilton.blend4j.galaxy.HistoriesClient;
+import com.github.jmchilton.blend4j.galaxy.ToolsClient;
+import com.github.jmchilton.blend4j.galaxy.WorkflowsClient;
 import com.uib.web.peptideshaker.presenter.components.GalaxyConnectionPanelLayout;
 import com.vaadin.server.Page;
 import com.vaadin.server.Sizeable;
@@ -27,6 +30,18 @@ public abstract class GalaxyLayer {
 
     private final HorizontalLayout galaxyConnectionPanel;
     private final PopupView connectionSettingsPanel;
+//    /**
+//     * The main galaxy Tools Client on galaxy server.
+//     */
+//    private  ToolsClient galaxyToolClient;
+//    /**
+//     * The main galaxy Work-Flow Client on galaxy server.
+//     */
+//    private  WorkflowsClient galaxyWorkFlowClient;
+//    /**
+//     * The main galaxy Work-Flow Client on galaxy server.
+//     */
+//    private  HistoriesClient galaxyHistoriesClient;
     /**
      * Galaxy server history management system
      *
@@ -38,12 +53,6 @@ public abstract class GalaxyLayer {
      *
      */
     private ToolsHandler toolsHandler;
-    /**
-     * Request cookies to attach to every request for galaxy used mainly for
-     * securing sessions.
-     */
-    private String cookiesRequestProperty;
-
     /**
      * Constructor to initialize Galaxy layer.
      */
@@ -96,10 +105,14 @@ public abstract class GalaxyLayer {
             public void connectedToGalaxy(GalaxyInstance Galaxy_Instance) {
                 try {
                     if (Galaxy_Instance != null) {
+                        System.out.println("at not null galaxy");
+//                        galaxyToolClient = Galaxy_Instance.getToolsClient();
+//                        galaxyWorkFlowClient=Galaxy_Instance.getWorkflowsClient();
+//                        galaxyHistoriesClient=Galaxy_Instance.getHistoriesClient();
                         connectionBtn.setCaption("Disconnect");
                         connectionBtn.addStyleName("disconnect");
                         connectionStatuesLabel.setValue("Galaxy is <font color='green'>connected </font><font size='3' color='green'> &#128522;</font>");
-                        toolsHandler = new ToolsHandler(Galaxy_Instance);
+                        toolsHandler = new ToolsHandler(Galaxy_Instance.getToolsClient(),Galaxy_Instance.getWorkflowsClient() ,Galaxy_Instance.getHistoriesClient());
                         historyHandler = new HistoryHandler(Galaxy_Instance) {
                             @Override
                             public String reIndexFile(String id, String historyId, String workHistoryId) {
@@ -109,9 +122,13 @@ public abstract class GalaxyLayer {
                         
                         systemConnected();
                     } else {
+                        System.out.println("at null galaxy");
                         connectionSettingsPanel.setPopupVisible(true);
                         historyHandler = null;
                         toolsHandler = null;
+//                          galaxyToolClient = null;
+//                        galaxyWorkFlowClient=null;
+//                        galaxyHistoriesClient=null;
                         systemDisconnected();
                     }
 //

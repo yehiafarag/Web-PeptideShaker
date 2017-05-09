@@ -176,7 +176,7 @@ public class PeptideShakerViewPresenter extends VerticalLayout implements Presen
 
     @Override
     public SmallSideBtn getTopView() {
-return topToolsBtn;
+        return topToolsBtn;
     }
 
 }
