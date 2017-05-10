@@ -13067,9 +13067,6 @@ div.v-layout.v-horizontal.v-widget {
 	width: 50px !important;
 	margin-left: -35px;
 	background-color: white;
-	border-top: 2px solid lightgray;
-	border-bottom: 2px solid lightgray;
-	border-bottom: 2px solid lightgray;
 	overflow: hidden;
 }
 
@@ -13085,7 +13082,7 @@ div.v-layout.v-horizontal.v-widget {
 
 .webpeptideshakertheme .smallmenubtn {
 	background-color: white;
-	border: 2px solid lightgray;
+	border: 1px solid lightgray;
 	border-radius: 5px;
 	width: 35px !important;
 	height: 35px !important;
@@ -13105,19 +13102,14 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .webpeptideshakertheme .selectedsmallbtn {
-	width: 45px !important;
-	height: 45px !important;
+	background-color: lightgray;
 	border-width: 2px;
-	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
-	-webkit-box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
-	-moz-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
 	border-color: gray;
 	padding: 0px !important;
 }
 
 .webpeptideshakertheme .smallmenubtn img {
 	padding: 10%;
-	background-color: whitesmoke;
 }
 
 .webpeptideshakertheme .hidepanel {
@@ -13348,6 +13340,10 @@ div.v-layout.v-horizontal.v-widget {
 	visibility: visible !important;
 }
 
+.webpeptideshakertheme .v-slot-rightsidebtncontainer.v-slot-hide {
+	border: none !important;
+}
+
 .webpeptideshakertheme .middleviewcontainer {
 	padding-left: 98px;
 	padding-right: 15px;
@@ -13564,4 +13560,25 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: bold;
 	font-family: "Open Sans", sans-serif;
 	color: #464646;
+}
+
+.webpeptideshakertheme .v-slot-smallmenubtn {
+	border-left: 1px solid gray;
+	border-bottom-left-radius: 5px;
+	border-top-left-radius: 5px;
+	border-bottom-right-radius: -1px !important;
+	margin-left: 2px;
+	border-top: 2px solid lightgray;
+	border-bottom: 2px solid lightgray;
+	border-left: 2px solid lightgray;
+	margin-top: -4px;
+}
+
+.webpeptideshakertheme .v-slot-selectedsmallbtn {
+	border-top: 0 !important;
+	border-bottom: 0 !important;
+	border-right: 2px solid lightgray;
+	margin-left: -4px;
+	margin-top: -4px;
+	border-radius: 8px;
 }

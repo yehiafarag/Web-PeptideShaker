@@ -74,10 +74,6 @@ public abstract class GalaxyConnectionPanelLayout extends VerticalLayout impleme
      * Main galaxy server instance.
      */
     private GalaxyInstance galaxyInstance;
-     /**
-     * Main galaxy server Configuration Client.
-     */
-    private ConfigurationClient galaxyConfigClient;
     /**
      * Connect to galaxy button
      */
@@ -88,13 +84,10 @@ public abstract class GalaxyConnectionPanelLayout extends VerticalLayout impleme
      */
     private String cookiesRequestProperty;
 
-    private final GalaxyInstanceFactory Galaxy_Instance_Factory;
-
     /**
      * Constructor to initialize the main variable.
      */
     public GalaxyConnectionPanelLayout() {
-        Galaxy_Instance_Factory = new GalaxyInstanceFactory();
         GalaxyConnectionPanelLayout.this.setWidth(500, Unit.PIXELS);
         GalaxyConnectionPanelLayout.this.setHeight(300, Unit.PIXELS);
         GalaxyConnectionPanelLayout.this.addComponent(this.initializeUserInputPanel());
@@ -330,7 +323,7 @@ public abstract class GalaxyConnectionPanelLayout extends VerticalLayout impleme
                 galaxyInstance = null;
                 return false;
             }
-            galaxyInstance = Galaxy_Instance_Factory.getFromCredentials(galaxyLink.getValue().toString(), userEmail.getValue(), password.getValue());
+            galaxyInstance = GalaxyInstanceFactory.getFromCredentials(galaxyLink.getValue().toString(), userEmail.getValue(), password.getValue());
         } else {
             galaxyLink.setRequired(true);
             APIKey.setRequired(true);
@@ -356,25 +349,25 @@ public abstract class GalaxyConnectionPanelLayout extends VerticalLayout impleme
 
             try {
                 System.out.println("at we reach 3");
-                galaxyInstance = Galaxy_Instance_Factory.get(galaxyLink.getValue().toString(), APIKey.getValue());               
+                galaxyInstance = GalaxyInstanceFactory.get(galaxyLink.getValue().toString(), APIKey.getValue());
                 System.out.println("at we reach 4");
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
         }
-        
 
         try {
-            initGalaxyClients(galaxyInstance);
-            System.out.println("at we reach 5" + galaxyConfigClient.getRawConfiguration().keySet());
+
+//             ConfigurationClient galaxyConfigClient =galaxyInstance.getConfigurationClient();
+//            System.out.println("at we reach 5" + galaxyConfigClient);
             System.out.println("at we reach 6");
-            galaxyInstance.getGalaxyUrl();
+//            galaxyInstance.getGalaxyUrl();
             System.out.println("at we reach 7");
-            System.out.println("at galaxy conn " + galaxyInstance.getApiKey());
+//            System.out.println("at galaxy conn " + galaxyInstance.getApiKey());
             System.out.println("at we reach 8");
         } catch (Exception e) {
-            this.galaxyConfigClient = null;
+            e.printStackTrace();
             galaxyInstance = null;
             galaxyConnected = false;
             connectionLabel.setValue("<font color='red'>Galaxy is not connected, check input data <font size='3' color='red'>&#128530;</font></font>");
@@ -404,14 +397,13 @@ public abstract class GalaxyConnectionPanelLayout extends VerticalLayout impleme
      */
     public abstract void hideGalaxyPanel();
 
-    public synchronized void validateAndConnect() {
+    public void validateAndConnect() {
         if (galaxyConnected) {
             galaxyConnected = false;
             connectionLabel.setValue("Galaxy is not connected <font size=\"3\" color=\"red\"> &#128528;</font>");
             galaxyLinkContainer.setEnabled(!galaxyConnected);
             inputTabSheet.setEnabled(!galaxyConnected);
             galaxyInstance = null;
-            galaxyConfigClient=null;
             return;
 
         } else {
@@ -426,10 +418,6 @@ public abstract class GalaxyConnectionPanelLayout extends VerticalLayout impleme
         System.out.println("com.uib.web.peptideshaker.presenter.components.GalaxyConnectionPanelLayout.validateAndConnect()");
         this.connectedToGalaxy(galaxyInstance);
 
-    }
-    
-    private void initGalaxyClients(GalaxyInstance galaxyInstance){
-        this.galaxyConfigClient = galaxyInstance.getConfigurationClient();
     }
 
 }

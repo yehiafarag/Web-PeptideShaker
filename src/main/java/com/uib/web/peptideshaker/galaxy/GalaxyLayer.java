@@ -7,6 +7,7 @@ import com.github.jmchilton.blend4j.galaxy.WorkflowsClient;
 import com.uib.web.peptideshaker.presenter.components.GalaxyConnectionPanelLayout;
 import com.vaadin.server.Page;
 import com.vaadin.server.Sizeable;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -14,6 +15,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.PopupView;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import java.util.HashMap;
@@ -53,6 +55,7 @@ public abstract class GalaxyLayer {
      *
      */
     private ToolsHandler toolsHandler;
+
     /**
      * Constructor to initialize Galaxy layer.
      */
@@ -106,29 +109,22 @@ public abstract class GalaxyLayer {
                 try {
                     if (Galaxy_Instance != null) {
                         System.out.println("at not null galaxy");
-//                        galaxyToolClient = Galaxy_Instance.getToolsClient();
-//                        galaxyWorkFlowClient=Galaxy_Instance.getWorkflowsClient();
-//                        galaxyHistoriesClient=Galaxy_Instance.getHistoriesClient();
-                        connectionBtn.setCaption("Disconnect");
-                        connectionBtn.addStyleName("disconnect");
-                        connectionStatuesLabel.setValue("Galaxy is <font color='green'>connected </font><font size='3' color='green'> &#128522;</font>");
-                        toolsHandler = new ToolsHandler(Galaxy_Instance.getToolsClient(),Galaxy_Instance.getWorkflowsClient() ,Galaxy_Instance.getHistoriesClient());
+                     toolsHandler = new ToolsHandler(Galaxy_Instance.getToolsClient(), Galaxy_Instance.getWorkflowsClient(), Galaxy_Instance.getHistoriesClient());
                         historyHandler = new HistoryHandler(Galaxy_Instance) {
                             @Override
                             public String reIndexFile(String id, String historyId, String workHistoryId) {
                                 return GalaxyLayer.this.reIndexFile(id, historyId, workHistoryId);
                             }
-                        };
-                        
+                        };//                        
+                        connectionBtn.setCaption("Disconnect");
+                        connectionBtn.addStyleName("disconnect");
+                        connectionStatuesLabel.setValue("Galaxy is <font color='green'>connected </font><font size='3' color='green'> &#128522;</font>");
                         systemConnected();
                     } else {
                         System.out.println("at null galaxy");
                         connectionSettingsPanel.setPopupVisible(true);
                         historyHandler = null;
                         toolsHandler = null;
-//                          galaxyToolClient = null;
-//                        galaxyWorkFlowClient=null;
-//                        galaxyHistoriesClient=null;
                         systemDisconnected();
                     }
 //
@@ -164,6 +160,8 @@ public abstract class GalaxyLayer {
                 historyHandler = null;
                 toolsHandler = null;
                 connectionBtn.setEnabled(true);
+                UI.getCurrent().getSession().close();
+                VaadinSession.getCurrent().getSession().invalidate();
                 Page.getCurrent().reload();
 
             } else {
@@ -213,8 +211,9 @@ public abstract class GalaxyLayer {
             return new HashMap<>();
         }
     }
-    public boolean checkToolsAvailable(){
-    
+
+    public boolean checkToolsAvailable() {
+
         return toolsHandler.isValidTools();
     }
 
@@ -244,14 +243,15 @@ public abstract class GalaxyLayer {
      *
      */
     public String reIndexFile(String id, String historyId, String workHistoryId) {
-       
+
         if (toolsHandler != null) {
             return toolsHandler.reIndexFile(id, historyId, workHistoryId);
         }
-        
+
         return null;
     }
-     /**
+
+    /**
      * Run Online Peptide-Shaker work-flow
      *
      * @param fastaFileId FASTA file dataset id
@@ -259,7 +259,7 @@ public abstract class GalaxyLayer {
      * @param searchEnginesList List of selected search engine names
      * @param historyId galaxy history id that will store the results
      */
-    public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList) {    
+    public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList) {
         toolsHandler.executeWorkFlow(fastaFileId, mgfIdsList, searchEnginesList, historyHandler.getWorkingHistoryId());
         historyHandler.updateHistoryDatastructure();
     }

@@ -2,18 +2,18 @@ package com.uib.web.peptideshaker.galaxy;
 
 import com.github.jmchilton.blend4j.galaxy.GalaxyInstance;
 import com.github.jmchilton.blend4j.galaxy.HistoriesClient;
-import com.github.jmchilton.blend4j.galaxy.beans.Dataset;
 import com.github.jmchilton.blend4j.galaxy.beans.History;
-import com.github.jmchilton.blend4j.galaxy.beans.HistoryContents;
 import com.github.jmchilton.blend4j.galaxy.beans.HistoryContentsProvenance;
 import com.github.wolfie.refresher.Refresher;
 import com.uib.web.peptideshaker.PeptidShakerUI;
+import com.vaadin.server.Page;
 import com.vaadin.server.Sizeable.Unit;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.window.WindowMode;
+import com.vaadin.ui.Notification;
 
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,8 +90,8 @@ public abstract class HistoryHandler {
         progressWindow.setDraggable(false);
         progressWindow.setDescription("Galaxy is still processing data");
         progressWindow.setVisible(false);
-
         UI.getCurrent().addWindow(progressWindow);
+
         this.updateHistoryDatastructure();
 
     }
@@ -142,7 +142,7 @@ public abstract class HistoryHandler {
                     }
                 }
                 if (workingHistory == null) {
-                    workingHistory = galaxyHistoriesClient.create(new History("Online-PeptideShaker-Job-History"));
+                    workingHistory = Galaxy_Instance.getHistoriesClient().create(new History("Online-PeptideShaker-Job-History"));
                 }
             }
             System.out.println("at get history 2");
@@ -353,12 +353,24 @@ public abstract class HistoryHandler {
 //            }
 //
 //            System.out.println("at --- hList is stage 6 ");
-//            checkNotReadyHistory();
+            checkNotReadyHistory();
 //
 //            System.out.println("at --- hList is stage 7 ---- done ! ");
 //
         } catch (Exception e) {
-            e.printStackTrace();
+            if (e.toString().contains("Service Temporarily Unavailable")) {
+                Notification.show("Service Temporarily Unavailable", Notification.Type.ERROR_MESSAGE);
+                UI.getCurrent().getSession().close();
+                VaadinSession.getCurrent().getSession().invalidate();
+              
+
+            }else{
+            System.out.println("at error --- " + e.toString());
+            System.out.println("at history are not available");
+            UI.getCurrent().getSession().close();
+            VaadinSession.getCurrent().getSession().invalidate();
+            Page.getCurrent().reload();
+            }
         }
 
     }

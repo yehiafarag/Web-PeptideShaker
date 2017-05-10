@@ -1,21 +1,27 @@
 package com.uib.web.peptideshaker.galaxy;
 
-import com.github.jmchilton.blend4j.galaxy.GalaxyInstance;
 import com.github.jmchilton.blend4j.galaxy.HistoriesClient;
 import com.github.jmchilton.blend4j.galaxy.ToolsClient;
 import com.github.jmchilton.blend4j.galaxy.WorkflowsClient;
+import com.github.jmchilton.blend4j.galaxy.beans.Tool;
+import com.github.jmchilton.blend4j.galaxy.beans.ToolSection;
 import com.github.jmchilton.blend4j.galaxy.beans.Workflow;
 import com.github.jmchilton.blend4j.galaxy.beans.WorkflowInputs;
 import com.github.jmchilton.blend4j.galaxy.beans.WorkflowOutputs;
 import com.github.jmchilton.blend4j.galaxy.beans.collection.request.CollectionDescription;
 import com.github.jmchilton.blend4j.galaxy.beans.collection.request.HistoryDatasetElement;
 import com.github.jmchilton.blend4j.galaxy.beans.collection.response.CollectionResponse;
+import com.vaadin.server.Page;
 import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinSession;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.UI;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -25,18 +31,7 @@ import java.util.Set;
  */
 public class ToolsHandler {
 
-    /**
-     * The SearchGUI tool on galaxy server.
-     */
-    private String galaxySearchGUIToolId = null;
-    /**
-     * The PeptideShaker tool on galaxy server.
-     */
-    private String galaxyPeptideShakerToolId = null;
-    /**
-     * The main galaxy Tools Client on galaxy server.
-     */
-    private final ToolsClient galaxyToolClient;
+    private boolean validToolsAvailable;
     /**
      * The main galaxy Work-Flow Client on galaxy server.
      */
@@ -53,23 +48,63 @@ public class ToolsHandler {
      *
      */
     public ToolsHandler(ToolsClient galaxyToolClient, WorkflowsClient galaxyWorkFlowClient, HistoriesClient galaxyHistoriesClient) {
-        this.galaxyToolClient = galaxyToolClient;
+
         this.galaxyWorkFlowClient = galaxyWorkFlowClient;
         this.galaxyHistoriesClient = galaxyHistoriesClient;
+        /**
+         * The SearchGUI tool on galaxy server.
+         */
+        String galaxySearchGUIToolId = null;
+        /**
+         * The PeptideShaker tool on galaxy server.
+         */
+        String galaxyPeptideShakerToolId = null;
         try {
-            if (galaxyToolClient.showTool("toolshed.g2.bx.psu.edu%2Frepos%2Fgalaxyp%2Fpeptideshaker%2Fpeptide_shaker%2F1.11.0") != null) {
-                galaxyPeptideShakerToolId = "toolshed.g2.bx.psu.edu%2Frepos%2Fgalaxyp%2Fpeptideshaker%2Fpeptide_shaker%2F1.11.0";
+
+            List<ToolSection> toolSections = galaxyToolClient.getTools();
+            for (ToolSection secion : toolSections) {
+                List<Tool> tools = secion.getElems();
+                if (tools != null && !validToolsAvailable) {
+                    for (Tool tool : tools) {
+                        if (tool.getId().equalsIgnoreCase("toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/peptide_shaker/1.11.0")) {
+                            galaxyPeptideShakerToolId = tool.getId();
+                            System.out.println("at tool " + tool.getId());
+                        } else if (tool.getId().equalsIgnoreCase("toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/search_gui/2.9.0")) {
+                            galaxySearchGUIToolId = tool.getId();
+                            System.out.println("at tool " + tool.getId());
+                        }
+                        if (galaxyPeptideShakerToolId != null && galaxySearchGUIToolId != null) {
+                            validToolsAvailable = true;
+                            break;
+                        }
+                    }
+                }
+                if (validToolsAvailable) {
+                    break;
+                }
+
             }
-            if (galaxyToolClient.showTool("toolshed.g2.bx.psu.edu%2Frepos%2Fgalaxyp%2Fpeptideshaker%2Fsearch_gui%2F2.9.0") != null) {
-                galaxySearchGUIToolId = "toolshed.g2.bx.psu.edu%2Frepos%2Fgalaxyp%2Fpeptideshaker%2Fsearch_gui%2F2.9.0";
-            }
+
         } catch (Exception e) {
-            System.out.println("at tools are not available");
+            if (e.toString().contains("Service Temporarily Unavailable")) {
+                Notification.show("Service Temporarily Unavailable", Notification.Type.ERROR_MESSAGE);
+                UI.getCurrent().getSession().close();
+                VaadinSession.getCurrent().getSession().invalidate();
+
+            } else {
+                System.out.println("at tools are not available");
+                UI.getCurrent().getSession().close();
+                VaadinSession.getCurrent().getSession().invalidate();
+                Page.getCurrent().reload();
+            }
         }
     }
 
     public boolean isValidTools() {
-        return ((galaxyPeptideShakerToolId != null) && (galaxySearchGUIToolId != null));
+        if (!validToolsAvailable) {
+            Notification.show("PeptideShaker tools are not available on this Galaxy Server", Notification.Type.WARNING_MESSAGE);
+        }
+        return validToolsAvailable;
     }
 
     /**
