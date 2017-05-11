@@ -12,7 +12,6 @@ import com.vaadin.ui.PopupView;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -75,7 +74,11 @@ public abstract class WorkFlowLayout extends Panel {
         bottomLayout.setStyleName("bottomformlayout");
         bottomLayout.setSpacing(true);
         content.addComponent(bottomLayout);
-        PopupView advancedSearchOption = new PopupView("Advanced Search", new VerticalLayout());
+        SearchSettingsLayout searchSettingsLayout=new SearchSettingsLayout();
+        searchSettingsLayout.setSizeFull();
+        PopupView advancedSearchOption = new PopupView("Search Settings", searchSettingsLayout);
+        advancedSearchOption.setStyleName("centerwindow");
+        advancedSearchOption.setHideOnMouseOut(false);
         bottomLayout.addComponent(advancedSearchOption);
 
         Button executeWorkFlow = new Button("Execute");

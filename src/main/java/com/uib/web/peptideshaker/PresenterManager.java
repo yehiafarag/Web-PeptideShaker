@@ -126,11 +126,11 @@ public class PresenterManager extends HorizontalLayout implements LayoutEvents.L
 //        
 //         
 
-        VerticalLayout marker = new VerticalLayout();
-        marker.setWidth(2, Unit.PIXELS);
-        marker.setHeight(80, Unit.PERCENTAGE);
-        marker.setStyleName("lightgraylayout");
-        rightLayoutContainer.addComponent(marker, "left: 50%; top: 16px;");
+//        VerticalLayout marker = new VerticalLayout();
+//        marker.setWidth(2, Unit.PIXELS);
+//        marker.setHeight(80, Unit.PERCENTAGE);
+//        marker.setStyleName("lightgraylayout");
+//        rightLayoutContainer.addComponent(marker, "left: 50%; top: 16px;");
         
         this.rightLayoutBtnsContainer = new VerticalLayout();
         rightLayoutBtnsContainer.setSizeFull();

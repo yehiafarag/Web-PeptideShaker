@@ -362,14 +362,13 @@ public abstract class HistoryHandler {
                 Notification.show("Service Temporarily Unavailable", Notification.Type.ERROR_MESSAGE);
                 UI.getCurrent().getSession().close();
                 VaadinSession.getCurrent().getSession().invalidate();
-              
 
-            }else{
-            System.out.println("at error --- " + e.toString());
-            System.out.println("at history are not available");
-            UI.getCurrent().getSession().close();
-            VaadinSession.getCurrent().getSession().invalidate();
-            Page.getCurrent().reload();
+            } else {
+                System.out.println("at error --- " + e.toString());
+                System.out.println("at history are not available");
+                UI.getCurrent().getSession().close();
+                VaadinSession.getCurrent().getSession().invalidate();
+                Page.getCurrent().reload();
             }
         }
 

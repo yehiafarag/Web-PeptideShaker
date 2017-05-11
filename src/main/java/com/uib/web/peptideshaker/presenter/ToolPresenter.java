@@ -27,11 +27,11 @@ public abstract class ToolPresenter extends VerticalLayout implements PresenterV
     /**
      * The tools layout side button.
      */
-    private SmallSideBtn toolsBtn;
+    private final SmallSideBtn toolsBtn;
     /**
      * The tools layout top button.
      */
-    private SmallSideBtn topToolsBtn;
+    private final SmallSideBtn topToolsBtn;
     /**
      * The Galaxy history handler.
      */
@@ -53,11 +53,12 @@ public abstract class ToolPresenter extends VerticalLayout implements PresenterV
         ToolPresenter.this.setSizeFull();
         ToolPresenter.this.setStyleName("activelayout");
 
-        ToolPresenter.this.toolsBtn = new SmallSideBtn("img/spectra.png");
-        ToolPresenter.this.toolsBtn.setData(ToolPresenter.this.getViewId());
+        this.toolsBtn = new SmallSideBtn("img/spectra.png");
+        this.toolsBtn.setData(ToolPresenter.this.getViewId());
+        this.toolsBtn.addStyleName("middilesmallbtn");
 
-        ToolPresenter.this.topToolsBtn = new SmallSideBtn("img/spectra.png");
-        ToolPresenter.this.topToolsBtn.setData(ToolPresenter.this.getViewId());
+        this.topToolsBtn = new SmallSideBtn("img/spectra.png");
+        this.topToolsBtn.setData(ToolPresenter.this.getViewId());
 
         this.btnsLayoutMap = new HashMap<>();
         this.initLayout();
@@ -84,13 +85,12 @@ public abstract class ToolPresenter extends VerticalLayout implements PresenterV
         btnContainer.setSpacing(true);
         btnContainer.setMargin(new MarginInfo(false, false, true, false));
 
-        workflowLayout = new WorkFlowLayout(){
+        workflowLayout = new WorkFlowLayout() {
             @Override
             public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList) {
-                 ToolPresenter.this.executeWorkFlow(fastaFileId, mgfIdsList, searchEnginesList);
+                ToolPresenter.this.executeWorkFlow(fastaFileId, mgfIdsList, searchEnginesList);
             }
-          
-        
+
         };
         VerticalLayout nelsLayout = new VerticalLayout();
 
@@ -244,7 +244,8 @@ public abstract class ToolPresenter extends VerticalLayout implements PresenterV
     public SmallSideBtn getTopView() {
         return topToolsBtn;
     }
-     /**
+
+    /**
      * Run Online Peptide-Shaker work-flow
      *
      * @param fastaFileId FASTA file dataset id

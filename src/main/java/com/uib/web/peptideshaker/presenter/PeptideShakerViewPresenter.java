@@ -22,11 +22,11 @@ public class PeptideShakerViewPresenter extends VerticalLayout implements Presen
     /**
      * The small side button.
      */
-    private SmallSideBtn toolsBtn;
+    private final SmallSideBtn toolsBtn;
     /**
      * The small top button.
      */
-    private SmallSideBtn topToolsBtn;
+    private final SmallSideBtn topToolsBtn;
     private final Set<BigSideBtn> btnsSet;
     private VerticalLayout rightLayoutContainer;
 
@@ -38,11 +38,11 @@ public class PeptideShakerViewPresenter extends VerticalLayout implements Presen
     public PeptideShakerViewPresenter() {
         PeptideShakerViewPresenter.this.setSizeFull();
         PeptideShakerViewPresenter.this.setStyleName("activelayout");
-        PeptideShakerViewPresenter.this.toolsBtn = new SmallSideBtn("img/graph2.png");
-        PeptideShakerViewPresenter.this.toolsBtn.setData(PeptideShakerViewPresenter.this.getViewId());
+        this.toolsBtn = new SmallSideBtn("img/graph2.png");
+        this.toolsBtn.setData(PeptideShakerViewPresenter.this.getViewId());
 
-        PeptideShakerViewPresenter.this.topToolsBtn = new SmallSideBtn("img/graph2.png");
-        PeptideShakerViewPresenter.this.topToolsBtn.setData(PeptideShakerViewPresenter.this.getViewId());
+        this.topToolsBtn = new SmallSideBtn("img/graph2.png");
+        this.topToolsBtn.setData(PeptideShakerViewPresenter.this.getViewId());
 
         PeptideShakerViewPresenter.this.minimizeView();
         this.btnsSet = new HashSet<>();
