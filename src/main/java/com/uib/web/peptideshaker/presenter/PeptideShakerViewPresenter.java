@@ -6,9 +6,12 @@ import com.vaadin.event.LayoutEvents;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -27,8 +30,9 @@ public class PeptideShakerViewPresenter extends VerticalLayout implements Presen
      * The small top button.
      */
     private final SmallSideBtn topToolsBtn;
-    private final Set<BigSideBtn> btnsSet;
-    private VerticalLayout rightLayoutContainer;
+    private VerticalLayout btnContainer;
+    private HorizontalLayout mobilebtnContainer;
+    private final Map<BigSideBtn, Component> btnsLayoutMap;
 
     /**
      * Initialize the web tool main attributes
@@ -44,82 +48,90 @@ public class PeptideShakerViewPresenter extends VerticalLayout implements Presen
         this.topToolsBtn = new SmallSideBtn("img/graph2.png");
         this.topToolsBtn.setData(PeptideShakerViewPresenter.this.getViewId());
 
-        PeptideShakerViewPresenter.this.minimizeView();
-        this.btnsSet = new HashSet<>();
+        this.btnsLayoutMap = new LinkedHashMap<>();
         this.initLayout();
+        PeptideShakerViewPresenter.this.minimizeView();
 
     }
 
     private void initLayout() {
-        HorizontalLayout container = new HorizontalLayout();
-        container.setSizeFull();
-        this.addComponent(container);
-
-        AbsoluteLayout leftLayoutContainer = new AbsoluteLayout();
-        leftLayoutContainer.setSizeFull();
-        leftLayoutContainer.setStyleName("leftsidebtncontainer");
-        container.addComponent(leftLayoutContainer);
-        container.setExpandRatio(leftLayoutContainer, 5);
-
-        rightLayoutContainer = new VerticalLayout();
-        rightLayoutContainer.setSizeFull();
-//        rightLayoutContainer.addStyleName("hide");
-        rightLayoutContainer.addStyleName("integratedframe");
-        container.addComponent(rightLayoutContainer);
-        container.setExpandRatio(rightLayoutContainer, 95);
-
-        VerticalLayout btnContainer = new VerticalLayout();
+        this.addStyleName("integratedframe");
+        btnContainer = new VerticalLayout();
         btnContainer.setWidth(100, Unit.PERCENTAGE);
         btnContainer.setHeightUndefined();
         btnContainer.setSpacing(true);
         btnContainer.setMargin(new MarginInfo(false, false, true, false));
-        leftLayoutContainer.addComponent(btnContainer);
+//
+        BigSideBtn datasetsOverviewBtn = new BigSideBtn("img/graph.png", "Get Data");
+        datasetsOverviewBtn.setData("datasetoverview");
+        btnContainer.addComponent(datasetsOverviewBtn);
+        btnContainer.setComponentAlignment(datasetsOverviewBtn, Alignment.TOP_CENTER);
+        datasetsOverviewBtn.addLayoutClickListener(PeptideShakerViewPresenter.this);
 
-        BigSideBtn nelsBtn = new BigSideBtn("img/NeLS.png", "Get Data");
-        nelsBtn.setData("nels");
-        btnContainer.addComponent(nelsBtn);
-        btnContainer.setComponentAlignment(nelsBtn, Alignment.TOP_CENTER);
-        nelsBtn.addLayoutClickListener(PeptideShakerViewPresenter.this);
-        btnsSet.add(nelsBtn);
+        VerticalLayout datasetOverviewLayout = new VerticalLayout();
+        btnsLayoutMap.put(datasetsOverviewBtn, datasetOverviewLayout);
 
-        BigSideBtn workFlowBtn = new BigSideBtn("img/workflow3.png", "Work-Flow");
-        workFlowBtn.setData("workflow");
-        workFlowBtn.addStyleName("zeropadding");
-        btnContainer.addComponent(workFlowBtn);
-        btnContainer.setComponentAlignment(workFlowBtn, Alignment.TOP_CENTER);
-        workFlowBtn.addLayoutClickListener(PeptideShakerViewPresenter.this);
-        workFlowBtn.setSelected(true);
-        btnsSet.add(workFlowBtn);
+        BigSideBtn proteinsOverviewBtn = new BigSideBtn("img/proteins.png", "Get Data");
+        proteinsOverviewBtn.setData("proteinoverview");
+        btnContainer.addComponent(proteinsOverviewBtn);
+        btnContainer.setComponentAlignment(proteinsOverviewBtn, Alignment.TOP_CENTER);
+        proteinsOverviewBtn.addLayoutClickListener(PeptideShakerViewPresenter.this);
 
-        BigSideBtn searchGUIBtn = new BigSideBtn("img/searchgui.png", "SearchGUI");
-        searchGUIBtn.setData("searchgui");
-        btnContainer.addComponent(searchGUIBtn);
-        btnContainer.setComponentAlignment(searchGUIBtn, Alignment.TOP_CENTER);
-        searchGUIBtn.addLayoutClickListener(PeptideShakerViewPresenter.this);
-        btnsSet.add(searchGUIBtn);
+        VerticalLayout proteinsOverviewLayout = new VerticalLayout();
+        btnsLayoutMap.put(proteinsOverviewBtn, proteinsOverviewLayout);
 
-        BigSideBtn peptideShakerBtn = new BigSideBtn("img/peptideshaker.png", "PeptideShaker");
-        peptideShakerBtn.setData("peptideshaker");
-        btnContainer.addComponent(peptideShakerBtn);
-        btnContainer.setComponentAlignment(peptideShakerBtn, Alignment.TOP_CENTER);
-        peptideShakerBtn.addLayoutClickListener(PeptideShakerViewPresenter.this);
-        btnsSet.add(peptideShakerBtn);
+        BigSideBtn peptidesOverviewBtn = new BigSideBtn("img/peptides.png", "Get Data");
+        peptidesOverviewBtn.setData("peptidesoverview");
+        btnContainer.addComponent(peptidesOverviewBtn);
+        btnContainer.setComponentAlignment(peptidesOverviewBtn, Alignment.TOP_CENTER);
+        peptidesOverviewBtn.addLayoutClickListener(PeptideShakerViewPresenter.this);
+
+        VerticalLayout peptidesOverviewLayout = new VerticalLayout();
+        btnsLayoutMap.put(peptidesOverviewBtn, peptidesOverviewLayout);
 
         VerticalLayout toolViewFrame = new VerticalLayout();
         toolViewFrame.setSizeFull();
         toolViewFrame.setStyleName("viewframe");
 
-        rightLayoutContainer.addComponent(toolViewFrame);
-
+        this.addComponent(toolViewFrame);
+        this.setExpandRatio(toolViewFrame, 100);
         AbsoluteLayout toolViewFrameContent = new AbsoluteLayout();
         toolViewFrameContent.addStyleName("viewframecontent");
         toolViewFrameContent.setSizeFull();
+        toolViewFrame.addComponent(datasetOverviewLayout);
+        toolViewFrameContent.addComponent(proteinsOverviewLayout);
+        toolViewFrameContent.addComponent(peptidesOverviewLayout);
+        
+        mobilebtnContainer = new HorizontalLayout();
+        mobilebtnContainer.setHeight(100, Unit.PERCENTAGE);
+        mobilebtnContainer.setWidthUndefined();
+        mobilebtnContainer.setSpacing(true);
+        mobilebtnContainer.setStyleName("bottomsidebtncontainer");
 
-        toolViewFrame.addComponent(toolViewFrameContent);
+        BigSideBtn datasetsOverviewBtnM = new BigSideBtn("img/graph.png", "Work-Flow");
+        datasetsOverviewBtnM.setData("datasetoverview");
+        datasetsOverviewBtnM.addStyleName("zeropadding");
+        mobilebtnContainer.addComponent(datasetsOverviewBtnM);
+        mobilebtnContainer.setComponentAlignment(datasetsOverviewBtnM, Alignment.TOP_CENTER);
+        datasetsOverviewBtnM.addLayoutClickListener(PeptideShakerViewPresenter.this);
+        datasetsOverviewBtnM.setSelected(true);
+        
+         BigSideBtn proteinsOverviewBtnM = new BigSideBtn("img/proteins.png", "Work-Flow");
+        datasetsOverviewBtnM.setData("proteinsoverview");
+        datasetsOverviewBtnM.addStyleName("zeropadding");
+        mobilebtnContainer.addComponent(proteinsOverviewBtnM);
+        mobilebtnContainer.setComponentAlignment(proteinsOverviewBtnM, Alignment.TOP_CENTER);
+        proteinsOverviewBtnM.addLayoutClickListener(PeptideShakerViewPresenter.this);
+        
+        
+         BigSideBtn peptidesOverviewBtnM = new BigSideBtn("img/peptides.png", "Work-Flow");
+        peptidesOverviewBtnM.setData("peptidesoverview");
+        peptidesOverviewBtnM.addStyleName("zeropadding");
+        mobilebtnContainer.addComponent(peptidesOverviewBtnM);
+        mobilebtnContainer.setComponentAlignment(peptidesOverviewBtnM, Alignment.TOP_CENTER);
+        peptidesOverviewBtnM.addLayoutClickListener(PeptideShakerViewPresenter.this);
+        peptidesOverviewBtnM.setSelected(true);
 
-//        this.rightLayoutBtnsContainer = new VerticalLayout();
-//        rightLayoutBtnsContainer.setSizeFull();
-//        rightLayoutContainer.addComponent(this.rightLayoutBtnsContainer);
     }
 
     @Override
@@ -137,41 +149,55 @@ public class PeptideShakerViewPresenter extends VerticalLayout implements Presen
         return PeptideShakerViewPresenter.class.getName();
     }
 
+    /**
+     *
+     */
     @Override
     public void minimizeView() {
         toolsBtn.setSelected(false);
-        this.addStyleName("hidepanel");
         topToolsBtn.setSelected(false);
+        this.addStyleName("hidepanel");
+        this.btnContainer.removeStyleName("visible");
+        this.mobilebtnContainer.addStyleName("hidepanel");
+
     }
 
+    /**
+     *
+     */
     @Override
     public void maximizeView() {
         toolsBtn.setSelected(true);
-        this.removeStyleName("hidepanel");
         topToolsBtn.setSelected(true);
+        this.btnContainer.addStyleName("visible");
+        this.mobilebtnContainer.removeStyleName("hidepanel");
+        this.removeStyleName("hidepanel");
     }
 
     @Override
     public void layoutClick(LayoutEvents.LayoutClickEvent event) {
-        rightLayoutContainer.removeStyleName("hide");
-        for (BigSideBtn bbt : btnsSet) {
-            bbt.setSelected(false);
-        }
         BigSideBtn comp = (BigSideBtn) event.getComponent();
-        comp.setSelected(true);
-//        if (comp.getData().toString().equalsIgnoreCase("nels")) {
-        System.out.println("at selected " + comp.getData().toString());
-//        }
+        for (BigSideBtn bbt : btnsLayoutMap.keySet()) {
+            if (comp.getData().toString().equalsIgnoreCase(bbt.getData().toString())) {
+                bbt.setSelected(true);
+                btnsLayoutMap.get(bbt).removeStyleName("hidepanel");
+            } else {
+                bbt.setSelected(false);
+                btnsLayoutMap.get(bbt).addStyleName("hidepanel");
+            }
+        }
+        if (comp.getData().toString().equalsIgnoreCase("nels")) {
+        }
     }
 
     @Override
     public VerticalLayout getLeftView() {
-        return new VerticalLayout();
+        return btnContainer;
     }
 
     @Override
     public HorizontalLayout getBottomView() {
-        return new HorizontalLayout();
+        return mobilebtnContainer;
     }
 
     @Override

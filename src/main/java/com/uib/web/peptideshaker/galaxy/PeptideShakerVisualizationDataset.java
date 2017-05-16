@@ -22,7 +22,7 @@ public class PeptideShakerVisualizationDataset {
     private final Set<String> mgfFiles;
     private String fastaFileId;
     private String fastaFileIndex;
-    private  final Map<String,String> mgfFilesIndexes;
+    private final Map<String, String> mgfFilesIndexes;
 
     public String getFastaFileIndex() {
         return fastaFileIndex;
@@ -37,9 +37,11 @@ public class PeptideShakerVisualizationDataset {
         this.mgfFiles = new LinkedHashSet<>();
         mgfFilesIndexes = new LinkedHashMap<>();
     }
+
     public String getJobId() {
         return jobId;
     }
+
     public String getProteinFileId() {
         return proteinFileId;
     }
@@ -65,7 +67,7 @@ public class PeptideShakerVisualizationDataset {
     }
 
     public boolean isValidFile() {
-        return !(proteinFileId == null || peptideFileId == null || searchGUIFileId == null || psmFileId == null || mgfFiles.isEmpty() || fastaFileId == null || fastaFileIndex==null|| mgfFilesIndexes.isEmpty());
+        return !(proteinFileId == null || peptideFileId == null || searchGUIFileId == null || psmFileId == null || mgfFiles.isEmpty() || fastaFileId == null || fastaFileIndex == null || mgfFilesIndexes.isEmpty());
     }
 
     public String getPsmFileId() {
@@ -99,8 +101,8 @@ public class PeptideShakerVisualizationDataset {
     public void setFastaFileId(String fastaFileId) {
         this.fastaFileId = fastaFileId;
     }
-    
-    public void addMGFFileIndex(String mgfFileId,String mgfFileIndex){
+
+    public void addMGFFileIndex(String mgfFileId, String mgfFileIndex) {
         mgfFilesIndexes.put(mgfFileId, mgfFileIndex);
     }
 

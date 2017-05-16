@@ -63,6 +63,10 @@ public abstract class HistoryHandler {
      */
     private final Refresher REFRESHER;
 
+    public Map<String, PeptideShakerVisualizationDataset> getPeptideShakerVisualizationMap() {
+        return peptideShakerVisualizationMap;
+    }
+
     /**
      * Constructor to initialize the main data structure and other variables.
      *
