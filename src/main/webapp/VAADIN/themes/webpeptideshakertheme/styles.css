@@ -13475,6 +13475,59 @@ div.v-layout.v-horizontal.v-widget {
 	background-position: center;
 }
 
+.webpeptideshakertheme .v-popupview-popup-centerwindow {
+	position: absolute !important;
+	max-width: 100%;
+	max-height: 100%;
+	top: 50% !important;
+	left: 50% !important;
+	transform: translate(-50%, -50%);
+	overflow: auto !important;
+	border: 2px solid gray;
+}
+
+.webpeptideshakertheme .v-popupview-popup-centerwindow .v-label {
+	color: gray;
+	font-size: 18px;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+.webpeptideshakertheme .v-slot-panelframe {
+	min-width: 700px !important;
+}
+
+.webpeptideshakertheme .panelframe .v-label {
+	text-decoration: underline;
+	font-size: 15px !important;
+}
+
+.webpeptideshakertheme .panelframe .v-captiontext {
+	margin-top: 5px;
+	font-size: 13px !important;
+}
+
+.webpeptideshakertheme .v-filterselect-input {
+	font-size: 13px !important;
+}
+
+.webpeptideshakertheme .v-filterselect {
+	z-index: 3 !important;
+	position: relative !important;
+}
+
+.webpeptideshakertheme .v-caption-inline-label {
+	display: inline-block !important;
+	padding-right: 5px;
+}
+
+.webpeptideshakertheme .v-has-caption.v-has-width > .inline-label.v-widget {
+	background-color: green;
+	width: 70% !important;
+	float: right;
+	margin-top: 5px;
+}
+
 .webpeptideshakertheme .horizontalcss .v-slot-leftsidebtncontainer {
 	width: 1% !important;
 	background-color: white;
@@ -13690,28 +13743,4 @@ div.v-layout.v-horizontal.v-widget {
 	margin-left: 0px;
 	overflow: hidden;
 	z-index: 2 !important;
-}
-
-.webpeptideshakertheme .v-popupview-popup-centerwindow {
-	position: absolute !important;
-	max-width: 100%;
-	max-height: 100%;
-	top: 50% !important;
-	left: 50% !important;
-	transform: translate(-50%, -50%);
-	overflow: auto !important;
-	border: 2px solid gray;
-}
-
-.webpeptideshakertheme .v-popupview-popup-centerwindow .v-label {
-	color: gray;
-	font-size: 12px;
-	font-weight: bold;
-	margin-left: 10px;
-	margin-top: 10px;
-}
-
-.webpeptideshakertheme .v-filterselect {
-	z-index: 3 !important;
-	position: relative !important;
 }

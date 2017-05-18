@@ -74,7 +74,7 @@
 @mixin webpeptideshakertheme {
     @include valo;
     // Insert your own theme rules here
-     @include vaadin-icons;
+    @include vaadin-icons;
 
     .margin{
         padding: 10px;
@@ -493,6 +493,51 @@
         background-repeat: no-repeat;
         background-position: center;
     }
+    .v-popupview-popup-centerwindow{
+        position: absolute !important; /* or absolute */
+        max-width:100%;
+        max-height:100%;
+        top: 50% !important;;
+        left: 50% !important;
+        /* bring your own prefixes */
+        transform: translate(-50%, -50%);
+        overflow:auto !important;
+        border:2px solid  gray;
+    }
+    .v-popupview-popup-centerwindow .v-label {
+        color: gray;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom:10px;
+    }
+    .v-slot-panelframe{
+        min-width:700px !important;
+    }
+    .panelframe .v-label{
+        text-decoration:underline;
+        font-size:15px !important;
+    }
+    .panelframe .v-captiontext{
+        margin-top:5px;
+        font-size:13px !important;
+    }
+    .v-filterselect-input{
+        font-size:13px !important;
+    }
+    .v-filterselect {
+        z-index: 3 !important;
+        position: relative !important;
+    }
+    .v-caption-inline-label{
+        display: inline-block !important;
+        padding-right:5px;
+    }
+    .v-has-caption.v-has-width > .inline-label.v-widget {
+        background-color:green;
+        width: 70% !important;
+        float: right; 
+        margin-top: 5px;
+    }
     /****mobile css**/
     .horizontalcss .mainlayout {
 
@@ -719,27 +764,5 @@
         z-index: 2 !important;
 
     }
-    .v-popupview-popup-centerwindow{
-        position: absolute !important; /* or absolute */
-        max-width:100%;
-        max-height:100%;
-        top: 50% !important;;
-        left: 50% !important;
-        /* bring your own prefixes */
-        transform: translate(-50%, -50%);
-        overflow:auto !important;
-        border:2px solid  gray;
-    }
-    .v-popupview-popup-centerwindow .v-label{
-        color:gray;
-        font-size:12px;
-        font-weight:bold;
-        margin-left:10px;
-        margin-top:10px;
 
-    }
-    .v-filterselect{ 
-        z-index:3 !important;
-        position:relative !important;
-    }
 }

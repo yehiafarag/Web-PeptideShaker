@@ -75,8 +75,9 @@ public abstract class WorkFlowLayout extends Panel {
         bottomLayout.setSpacing(true);
         content.addComponent(bottomLayout);
         SearchSettingsLayout searchSettingsLayout=new SearchSettingsLayout();
-        searchSettingsLayout.setSizeFull();
+        
         PopupView advancedSearchOption = new PopupView("Search Settings", searchSettingsLayout);
+        advancedSearchOption.setSizeFull();
         advancedSearchOption.setStyleName("centerwindow");
         advancedSearchOption.setHideOnMouseOut(false);
         bottomLayout.addComponent(advancedSearchOption);
