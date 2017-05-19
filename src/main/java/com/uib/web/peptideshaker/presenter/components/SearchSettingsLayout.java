@@ -1,7 +1,13 @@
 package com.uib.web.peptideshaker.presenter.components;
 
 import com.uib.web.peptideshaker.presenter.core.CloseButton;
+import com.uib.web.peptideshaker.presenter.core.form.HorizontalLabel2DropdownList;
+import com.uib.web.peptideshaker.presenter.core.form.HorizontalLabelDropDounList;
+import com.uib.web.peptideshaker.presenter.core.form.HorizontalLabelTextField;
+import com.uib.web.peptideshaker.presenter.core.form.HorizontalLabelTextFieldDropdownList;
 import com.vaadin.data.Property;
+import com.vaadin.data.validator.DoubleRangeValidator;
+import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.event.LayoutEvents;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.ui.MarginInfo;
@@ -13,6 +19,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import java.util.LinkedHashMap;
@@ -289,11 +296,19 @@ public class SearchSettingsLayout extends VerticalLayout {
         return modificationsTable;
     }
 
-    private GridLayout inititProteaseFragmentationLayout() {
+    private HorizontalLabelDropDounList digestionList;
+     private HorizontalLabelDropDounList enzymeList;     
+     private HorizontalLabelDropDounList specificityList;
+     private HorizontalLabelTextField maxMissCleav;
+     private HorizontalLabel2DropdownList fragmentIonTypes;
+     private HorizontalLabelTextFieldDropdownList precursorTolerance;
+      private HorizontalLabelTextFieldDropdownList fragmentTolerance;
+     
+     private GridLayout inititProteaseFragmentationLayout() {
         GridLayout proteaseFragmentationContainer = new GridLayout(2, 6);
         proteaseFragmentationContainer.setStyleName("panelframe");
-        proteaseFragmentationContainer.setColumnExpandRatio(0, 55);
-        proteaseFragmentationContainer.setColumnExpandRatio(1, 45);
+        proteaseFragmentationContainer.setColumnExpandRatio(0, 50);
+        proteaseFragmentationContainer.setColumnExpandRatio(1, 50);
         proteaseFragmentationContainer.setMargin(new MarginInfo(false, false, true, false));
         proteaseFragmentationContainer.setWidth(700, Unit.PIXELS);
         proteaseFragmentationContainer.setHeight(220, Unit.PIXELS);
@@ -302,53 +317,79 @@ public class SearchSettingsLayout extends VerticalLayout {
         Label label = new Label("Protease & Fragmentation");
         label.setSizeFull();
         proteaseFragmentationContainer.addComponent(label, 0, 0);
+        
+        digestionList = new HorizontalLabelDropDounList("Digestion", new LinkedHashSet<>());
+        enzymeList = new HorizontalLabelDropDounList("Enzyme", new LinkedHashSet<>());
+        specificityList = new HorizontalLabelDropDounList("Specificity", new LinkedHashSet<>());
+        maxMissCleav = new HorizontalLabelTextField("Max Missed Cleavages",2,new IntegerRangeValidator("Error Value", Integer.MIN_VALUE, Integer.MAX_VALUE));
+        fragmentIonTypes = new HorizontalLabel2DropdownList("Fragment Ion Types", new LinkedHashSet<>(), new LinkedHashSet<>());
 
-        proteaseFragmentationContainer.addComponent(initLabelDropDounList("Digestion", new LinkedHashSet<>()), 0, 1);
-        proteaseFragmentationContainer.addComponent(initLabelDropDounList("Digestion", new LinkedHashSet<>()), 0, 2);
-        proteaseFragmentationContainer.addComponent(initLabelDropDounList("Digestion", new LinkedHashSet<>()), 0, 3);
-        proteaseFragmentationContainer.addComponent(initLabelDropDounList("Digestion", new LinkedHashSet<>()), 0, 4);
-        proteaseFragmentationContainer.addComponent(initLabelDropDounList("Digestion", new LinkedHashSet<>()), 0, 5);
-        proteaseFragmentationContainer.addComponent(initLabelDropDounList("Digestion", new LinkedHashSet<>()), 1, 1);
-        proteaseFragmentationContainer.addComponent(initLabelDropDounList("Digestion", new LinkedHashSet<>()), 1, 2);
-        proteaseFragmentationContainer.addComponent(initLabelDropDounList("Digestion", new LinkedHashSet<>()), 1, 3);
-        proteaseFragmentationContainer.addComponent(initLabelDropDounList("Digestion", new LinkedHashSet<>()), 1, 4);
+        proteaseFragmentationContainer.addComponent(digestionList, 0, 1);
+        proteaseFragmentationContainer.addComponent(enzymeList, 0, 2);
+        proteaseFragmentationContainer.addComponent(specificityList, 0, 3);
+
+        proteaseFragmentationContainer.addComponent(maxMissCleav, 0, 4);
+        proteaseFragmentationContainer.addComponent(fragmentIonTypes, 0, 5);
+        
+        precursorTolerance = new HorizontalLabelTextFieldDropdownList("Precursor m/z Tolerance",10.0, new LinkedHashSet<>(),new DoubleRangeValidator("Error Value", Double.MIN_VALUE, Double.MAX_VALUE));
+        fragmentTolerance = new HorizontalLabelTextFieldDropdownList("Fragment m/z Tolerance",0.5, new LinkedHashSet<>(),new DoubleRangeValidator("Error Value", Double.MIN_VALUE, Double.MAX_VALUE));
+        
+        
+        proteaseFragmentationContainer.addComponent(precursorTolerance, 1, 1);
+        proteaseFragmentationContainer.addComponent(fragmentTolerance, 1, 2);
+        proteaseFragmentationContainer.addComponent(initLabel2TextField("Precursor", "2","4"), 1, 3);
+        proteaseFragmentationContainer.addComponent(initLabel2TextField("Isotopes","0","1"), 1, 4);
         Button closeBtn = new Button("Close");
         closeBtn.setStyleName(ValoTheme.BUTTON_SMALL);
         closeBtn.addStyleName(ValoTheme.BUTTON_TINY);
-        closeBtn.setHeight(25,Unit.PIXELS);
+        closeBtn.setHeight(25, Unit.PIXELS);
         closeBtn.addClickListener((Button.ClickEvent event) -> {
             ((PopupView) SearchSettingsLayout.this.getParent()).setPopupVisible(false);
         });
-          proteaseFragmentationContainer.addComponent(closeBtn, 1, 5);
-          proteaseFragmentationContainer.setComponentAlignment(closeBtn, Alignment.BOTTOM_RIGHT);
+        proteaseFragmentationContainer.addComponent(closeBtn, 1, 5);
+        proteaseFragmentationContainer.setComponentAlignment(closeBtn, Alignment.BOTTOM_RIGHT);
 
         return proteaseFragmentationContainer;
 
     }
 
-    private HorizontalLayout initLabelDropDounList(String title, Set<String> values) {
-        HorizontalLayout container = new HorizontalLayout();
+   
+
+   
+
+
+
+    private HorizontalLayout initLabel2TextField(String title,String defaultValue1,String defaultValue2) {
+ HorizontalLayout container = new HorizontalLayout();
         container.setSizeFull();
-        ComboBox list = new ComboBox(title);
-        list.setWidth(100, Unit.PERCENTAGE);
-        list.setHeight(25, Unit.PIXELS);
-        list.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        list.addStyleName(ValoTheme.COMBOBOX_TINY);
-        list.addStyleName("inline-label");
-        list.setNullSelectionAllowed(false);
-        list.addItem("Most Used Modifications");
-        list.addItem("All Modifications");
-        list.setValue("Most Used Modifications");
-        container.addComponent(list);
-        container.setComponentAlignment(list, Alignment.MIDDLE_CENTER);
+        Label cap = new Label(title);
+        cap.addStyleName(ValoTheme.LABEL_TINY);
+        cap.addStyleName(ValoTheme.LABEL_SMALL);
+        cap.addStyleName("smallundecorated");
+        container.addComponent(cap);
+        container.setExpandRatio(cap, 45);
 
-        return container;
-    }
+        TextField textField = new TextField();
+        textField.setValue(defaultValue1);
+        textField.addStyleName(ValoTheme.TEXTFIELD_ALIGN_CENTER);
+        textField.setWidth(100, Unit.PERCENTAGE);
+        textField.addStyleName(ValoTheme.TEXTFIELD_TINY);
+        textField.setNullRepresentation(defaultValue1);
+        textField.setWidth(100, Unit.PERCENTAGE);
+        textField.setHeight(25, Unit.PIXELS);
+        container.addComponent(textField);
+        container.setExpandRatio(textField, 27.5f);
 
-    private HorizontalLayout initLabelTextAreaDropDounList() {
-
-        HorizontalLayout container = new HorizontalLayout();
-
+         TextField textField2 = new TextField();
+        textField2.setValue(defaultValue2);
+        textField2.addStyleName(ValoTheme.TEXTFIELD_ALIGN_CENTER);
+        textField2.setWidth(100, Unit.PERCENTAGE);
+        textField2.addStyleName(ValoTheme.TEXTFIELD_TINY);
+        textField2.setNullRepresentation(defaultValue1);
+        textField2.setWidth(100, Unit.PERCENTAGE);
+        textField2.setHeight(25, Unit.PIXELS);
+        container.addComponent(textField2);
+        container.setExpandRatio(textField2, 27.5f);
         return container;
 
     }

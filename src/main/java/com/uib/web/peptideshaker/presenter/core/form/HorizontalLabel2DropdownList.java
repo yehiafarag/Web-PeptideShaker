@@ -1,0 +1,105 @@
+package com.uib.web.peptideshaker.presenter.core.form;
+
+import com.vaadin.data.Validator;
+import com.vaadin.data.validator.IntegerRangeValidator;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.themes.ValoTheme;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * This class represent form component (drop down list with caption on the left
+ * side)
+ *
+ * @author Yehia Farag
+ */
+public class HorizontalLabel2DropdownList extends HorizontalLayout {
+
+    /**
+     * First drop-down list.
+     */
+    private final ComboBox list1;
+    /**
+     * Second drop-down list.
+     */
+    private final ComboBox list2;
+
+    /**
+     * Constructor to initialize the main attributes
+     *
+     * @param caption title
+     * @param values the drop-down list values
+     */
+    public HorizontalLabel2DropdownList(String title, Set<String> values, Set<String> values2) {
+
+        HorizontalLabel2DropdownList.this.setSizeFull();
+        Label cap = new Label(title);
+        cap.addStyleName(ValoTheme.LABEL_TINY);
+        cap.addStyleName(ValoTheme.LABEL_SMALL);
+        cap.addStyleName("smallundecorated");
+        HorizontalLabel2DropdownList.this.addComponent(cap);
+        HorizontalLabel2DropdownList.this.setExpandRatio(cap, 45);
+
+        if (values == null) {
+            values = new HashSet<>();
+        }
+        if (values.isEmpty()) {
+            values.add("N/A");
+            values.add("a");
+            values.add("b");
+            values.add("c");
+        }
+        if (values2 == null) {
+            values2 = new HashSet<>();
+        }
+        if (values2.isEmpty()) {
+            values2.add("N/A");
+            values.add("x");
+            values2.add("y");
+            values2.add("z");
+        }
+        list1 = new ComboBox();
+        list1.setWidth(100, Unit.PERCENTAGE);
+        list1.setHeight(25, Unit.PIXELS);
+        list1.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        list1.addStyleName(ValoTheme.COMBOBOX_TINY);
+//        list.addStyleName("inline-label");
+        list1.setNullSelectionAllowed(false);
+        for (String str : values) {
+            list1.addItem(str);
+        }
+        list1.setValue(values.toArray()[0]);
+
+        HorizontalLabel2DropdownList.this.addComponent(list1);
+        HorizontalLabel2DropdownList.this.setExpandRatio(list1, 27.5f);
+
+        list2 = new ComboBox();
+        list2.setWidth(100, Unit.PERCENTAGE);
+        list2.setHeight(25, Unit.PIXELS);
+        list2.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        list2.addStyleName(ValoTheme.COMBOBOX_TINY);
+//        list.addStyleName("inline-label");
+        list2.setNullSelectionAllowed(false);
+
+        for (String str : values2) {
+            list2.addItem(str);
+        }
+        list2.setValue(values.toArray()[0]);
+        HorizontalLabel2DropdownList.this.addComponent(list2);
+        HorizontalLabel2DropdownList.this.setExpandRatio(list2, 27.5f);
+    }
+
+    public String getFirstSelectedValue() {
+        return list1.getValue().toString();
+
+    }
+
+    public String getSecondSelectedValue() {
+        return list2.getValue().toString();
+
+    }
+
+}

@@ -532,12 +532,27 @@
         display: inline-block !important;
         padding-right:5px;
     }
-    .v-has-caption.v-has-width > .inline-label.v-widget {
-        background-color:green;
-        width: 70% !important;
-        float: right; 
-        margin-top: 5px;
+    .smallundecorated.v-label-smallundecorated {
+        text-decoration: none !important;
+        font-size: 12px !important;
+        font-weight:normal !important;
     }
+
+    /*    .v-has-caption.v-has-width > .inline-label.v-widget {
+            width: 50% !important;
+            float: right;
+            margin-top: 5px;
+        }
+        .inline-label.v-textfield-inline-label{
+            width: 50% !important;
+            float: right;
+            margin-top: 5px;
+        }
+        .v-caption-inline-label div{
+            display: inline-block !important;
+            background-color:#cdc9ca;
+            margin-top:5px !important;
+        }*/
     /****mobile css**/
     .horizontalcss .mainlayout {
 

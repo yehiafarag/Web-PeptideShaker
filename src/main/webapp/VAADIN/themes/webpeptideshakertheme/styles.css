@@ -13521,11 +13521,10 @@ div.v-layout.v-horizontal.v-widget {
 	padding-right: 5px;
 }
 
-.webpeptideshakertheme .v-has-caption.v-has-width > .inline-label.v-widget {
-	background-color: green;
-	width: 70% !important;
-	float: right;
-	margin-top: 5px;
+.webpeptideshakertheme .smallundecorated.v-label-smallundecorated {
+	text-decoration: none !important;
+	font-size: 12px !important;
+	font-weight: normal !important;
 }
 
 .webpeptideshakertheme .horizontalcss .v-slot-leftsidebtncontainer {
