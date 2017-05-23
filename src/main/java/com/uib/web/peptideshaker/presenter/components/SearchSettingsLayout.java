@@ -1,5 +1,10 @@
 package com.uib.web.peptideshaker.presenter.components;
 
+import com.compomics.util.experiment.biology.Enzyme;
+import com.compomics.util.experiment.biology.EnzymeFactory;
+import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
+import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.uib.web.peptideshaker.presenter.core.CloseButton;
 import com.uib.web.peptideshaker.presenter.core.form.HorizontalLabel2DropdownList;
 import com.uib.web.peptideshaker.presenter.core.form.HorizontalLabelDropDounList;
@@ -24,6 +29,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,16 +40,39 @@ import java.util.Set;
  */
 public class SearchSettingsLayout extends VerticalLayout {
 
+    private final SearchParameters searchParam;
+    /**
+     * The sequence factory.
+     */
+    private SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+    /**
+     * The enzyme factory.
+     */
+    private EnzymeFactory enzymeFactory = EnzymeFactory.getInstance();
+    /**
+     * Convenience array for forward ion type selection.
+     */
+    private String[] forwardIons = {"a", "b", "c"};
+    /**
+     * Convenience array for rewind ion type selection.
+     */
+    private String[] rewindIons = {"x", "y", "z"};
+    /**
+     * The post translational modifications factory.
+     */
+    private PTMFactory ptmFactory = PTMFactory.getInstance();
+
     /**
      * Constructor to initialize the main setting parameters
      */
-    public SearchSettingsLayout() {
+    public SearchSettingsLayout(SearchParameters searchParam) {
         SearchSettingsLayout.this.setMargin(true);
         SearchSettingsLayout.this.setSizeUndefined();
         SearchSettingsLayout.this.setSpacing(true);
         HorizontalLayout titleLayout = new HorizontalLayout();
         titleLayout.setSizeFull();
 
+        this.searchParam = searchParam;
         SearchSettingsLayout.this.addComponent(titleLayout);
         Label setteingsLabel = new Label("Search Settings");
         titleLayout.addComponent(setteingsLabel);
@@ -166,13 +195,16 @@ public class SearchSettingsLayout extends VerticalLayout {
         Table mostUsedModificationsTable = initModificationTable("");
         Map<Object, Object[]> mostUseModificationItems = new LinkedHashMap<>();
         Map<Object, Object[]> completeModificationItems = new LinkedHashMap<>();
-        for (int x = 0; x < 22; x++) {
-            Object[] modificationArr = new Object[]{1 + x, "modi ", Double.valueOf(x + 10)};
+        PTMFactory PTM = PTMFactory.getInstance();
+        List<String> allModiList = PTM.getDefaultModifications();
+        System.out.println("at all ------------------ param " + allModiList + "   ");
+        for (int x = 0; x < allModiList.size(); x++) {
+            Object[] modificationArr = new Object[]{1 + x, allModiList.get(x), PTM.getPTM(allModiList.get(x)).getMass()};
             mostUseModificationItems.put(x, modificationArr);
-            completeModificationItems.put(x, modificationArr);
+//            completeModificationItems.put(x, modificationArr);
         }
-        for (int x = 22; x < 30; x++) {
-            Object[] modificationArr = new Object[]{1 + x, "compl modi ", Double.valueOf(x + 10)};
+        for (int x = 0; x < allModiList.size(); x++) {
+            Object[] modificationArr = new Object[]{1 + x, allModiList.get(x), PTM.getPTM(allModiList.get(x)).getMass()};
             completeModificationItems.put(x, modificationArr);
         }
         for (Object id : mostUseModificationItems.keySet()) {
@@ -297,14 +329,14 @@ public class SearchSettingsLayout extends VerticalLayout {
     }
 
     private HorizontalLabelDropDounList digestionList;
-     private HorizontalLabelDropDounList enzymeList;     
-     private HorizontalLabelDropDounList specificityList;
-     private HorizontalLabelTextField maxMissCleav;
-     private HorizontalLabel2DropdownList fragmentIonTypes;
-     private HorizontalLabelTextFieldDropdownList precursorTolerance;
-      private HorizontalLabelTextFieldDropdownList fragmentTolerance;
-     
-     private GridLayout inititProteaseFragmentationLayout() {
+    private HorizontalLabelDropDounList enzymeList;
+    private HorizontalLabelDropDounList specificityList;
+    private HorizontalLabelTextField maxMissCleav;
+    private HorizontalLabel2DropdownList fragmentIonTypes;
+    private HorizontalLabelTextFieldDropdownList precursorTolerance;
+    private HorizontalLabelTextFieldDropdownList fragmentTolerance;
+
+    private GridLayout inititProteaseFragmentationLayout() {
         GridLayout proteaseFragmentationContainer = new GridLayout(2, 6);
         proteaseFragmentationContainer.setStyleName("panelframe");
         proteaseFragmentationContainer.setColumnExpandRatio(0, 50);
@@ -317,11 +349,28 @@ public class SearchSettingsLayout extends VerticalLayout {
         Label label = new Label("Protease & Fragmentation");
         label.setSizeFull();
         proteaseFragmentationContainer.addComponent(label, 0, 0);
-        
+
         digestionList = new HorizontalLabelDropDounList("Digestion", new LinkedHashSet<>());
-        enzymeList = new HorizontalLabelDropDounList("Enzyme", new LinkedHashSet<>());
+
+        Set<String> enzList = new LinkedHashSet<>();
+        Enzyme enzyme = searchParam.getEnzyme();
+        if (enzyme != null) {
+            String enzymeName = enzyme.getName();
+
+            if (!enzymeFactory.enzymeLoaded(enzymeName)) {
+                enzymeFactory.addEnzyme(searchParam.getEnzyme());
+            }
+            enzList.add(enzymeName);
+        }
+        List<Enzyme> enzObjList = enzymeFactory.getEnzymes();
+        for (Enzyme enz : enzObjList) {
+            enzList.add(enz.getName());
+        }
+
+        enzymeList = new HorizontalLabelDropDounList("Enzyme", enzList);
+
         specificityList = new HorizontalLabelDropDounList("Specificity", new LinkedHashSet<>());
-        maxMissCleav = new HorizontalLabelTextField("Max Missed Cleavages",2,new IntegerRangeValidator("Error Value", Integer.MIN_VALUE, Integer.MAX_VALUE));
+        maxMissCleav = new HorizontalLabelTextField("Max Missed Cleavages", 2, new IntegerRangeValidator("Error Value", Integer.MIN_VALUE, Integer.MAX_VALUE));
         fragmentIonTypes = new HorizontalLabel2DropdownList("Fragment Ion Types", new LinkedHashSet<>(), new LinkedHashSet<>());
 
         proteaseFragmentationContainer.addComponent(digestionList, 0, 1);
@@ -330,15 +379,14 @@ public class SearchSettingsLayout extends VerticalLayout {
 
         proteaseFragmentationContainer.addComponent(maxMissCleav, 0, 4);
         proteaseFragmentationContainer.addComponent(fragmentIonTypes, 0, 5);
-        
-        precursorTolerance = new HorizontalLabelTextFieldDropdownList("Precursor m/z Tolerance",10.0, new LinkedHashSet<>(),new DoubleRangeValidator("Error Value", Double.MIN_VALUE, Double.MAX_VALUE));
-        fragmentTolerance = new HorizontalLabelTextFieldDropdownList("Fragment m/z Tolerance",0.5, new LinkedHashSet<>(),new DoubleRangeValidator("Error Value", Double.MIN_VALUE, Double.MAX_VALUE));
-        
-        
+
+        precursorTolerance = new HorizontalLabelTextFieldDropdownList("Precursor m/z Tolerance", 10.0, new LinkedHashSet<>(), new DoubleRangeValidator("Error Value", Double.MIN_VALUE, Double.MAX_VALUE));
+        fragmentTolerance = new HorizontalLabelTextFieldDropdownList("Fragment m/z Tolerance", 0.5, new LinkedHashSet<>(), new DoubleRangeValidator("Error Value", Double.MIN_VALUE, Double.MAX_VALUE));
+
         proteaseFragmentationContainer.addComponent(precursorTolerance, 1, 1);
         proteaseFragmentationContainer.addComponent(fragmentTolerance, 1, 2);
-        proteaseFragmentationContainer.addComponent(initLabel2TextField("Precursor", "2","4"), 1, 3);
-        proteaseFragmentationContainer.addComponent(initLabel2TextField("Isotopes","0","1"), 1, 4);
+        proteaseFragmentationContainer.addComponent(initLabel2TextField("Precursor", "2", "4"), 1, 3);
+        proteaseFragmentationContainer.addComponent(initLabel2TextField("Isotopes", "0", "1"), 1, 4);
         Button closeBtn = new Button("Close");
         closeBtn.setStyleName(ValoTheme.BUTTON_SMALL);
         closeBtn.addStyleName(ValoTheme.BUTTON_TINY);
@@ -353,14 +401,8 @@ public class SearchSettingsLayout extends VerticalLayout {
 
     }
 
-   
-
-   
-
-
-
-    private HorizontalLayout initLabel2TextField(String title,String defaultValue1,String defaultValue2) {
- HorizontalLayout container = new HorizontalLayout();
+    private HorizontalLayout initLabel2TextField(String title, String defaultValue1, String defaultValue2) {
+        HorizontalLayout container = new HorizontalLayout();
         container.setSizeFull();
         Label cap = new Label(title);
         cap.addStyleName(ValoTheme.LABEL_TINY);
@@ -380,7 +422,7 @@ public class SearchSettingsLayout extends VerticalLayout {
         container.addComponent(textField);
         container.setExpandRatio(textField, 27.5f);
 
-         TextField textField2 = new TextField();
+        TextField textField2 = new TextField();
         textField2.setValue(defaultValue2);
         textField2.addStyleName(ValoTheme.TEXTFIELD_ALIGN_CENTER);
         textField2.setWidth(100, Unit.PERCENTAGE);

@@ -1,9 +1,11 @@
 package com.uib.web.peptideshaker.presenter.components;
 
+import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.uib.web.peptideshaker.galaxy.DataSet;
 import com.uib.web.peptideshaker.presenter.core.DropDownList;
 import com.uib.web.peptideshaker.presenter.core.MultiSelectOptionGroup;
 import com.vaadin.server.Sizeable.Unit;
+import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -11,9 +13,13 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class represents SearchGUI-Peptide-Shaker work-flow which include input
@@ -31,6 +37,7 @@ public abstract class WorkFlowLayout extends Panel {
      * select MGF file list.
      */
     private final MultiSelectOptionGroup mgfFileList;
+    private  SearchParameters searchParam;
 
     /**
      * Constructor to initialize the main attributes.
@@ -74,7 +81,17 @@ public abstract class WorkFlowLayout extends Panel {
         bottomLayout.setStyleName("bottomformlayout");
         bottomLayout.setSpacing(true);
         content.addComponent(bottomLayout);
-        SearchSettingsLayout searchSettingsLayout=new SearchSettingsLayout();
+        
+        String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
+            File file= new File(basepath + "/VAADIN/searchParam.par");
+        try {
+            this.searchParam =SearchParameters.getIdentificationParameters(file);
+        } catch (IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        System.out.println("at search param "+ searchParam.getMaxChargeSearched());
+       
+        SearchSettingsLayout searchSettingsLayout=new SearchSettingsLayout(searchParam);
         
         PopupView advancedSearchOption = new PopupView("Search Settings", searchSettingsLayout);
         advancedSearchOption.setSizeFull();
@@ -98,6 +115,7 @@ public abstract class WorkFlowLayout extends Panel {
             
 
         });
+            
 
     }
 

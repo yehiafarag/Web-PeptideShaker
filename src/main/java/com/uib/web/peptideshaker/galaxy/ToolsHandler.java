@@ -66,10 +66,10 @@ public class ToolsHandler {
                 List<Tool> tools = secion.getElems();
                 if (tools != null && !validToolsAvailable) {
                     for (Tool tool : tools) {
-                        if (tool.getId().equalsIgnoreCase("toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/peptide_shaker/1.11.0")) {
+                        if (tool.getId().equalsIgnoreCase("toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/peptide_shaker/1.16.3")) {
                             galaxyPeptideShakerToolId = tool.getId();
                             System.out.println("at tool " + tool.getId());
-                        } else if (tool.getId().equalsIgnoreCase("toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/search_gui/2.9.0")) {
+                        } else if (tool.getId().equalsIgnoreCase("toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/search_gui/3.2.11")) {
                             galaxySearchGUIToolId = tool.getId();
                             System.out.println("at tool " + tool.getId());
                         }

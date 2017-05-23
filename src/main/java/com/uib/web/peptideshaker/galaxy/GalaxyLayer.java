@@ -1,9 +1,6 @@
 package com.uib.web.peptideshaker.galaxy;
 
 import com.github.jmchilton.blend4j.galaxy.GalaxyInstance;
-import com.github.jmchilton.blend4j.galaxy.HistoriesClient;
-import com.github.jmchilton.blend4j.galaxy.ToolsClient;
-import com.github.jmchilton.blend4j.galaxy.WorkflowsClient;
 import com.uib.web.peptideshaker.presenter.components.GalaxyConnectionPanelLayout;
 import com.vaadin.server.Page;
 import com.vaadin.server.Sizeable;
