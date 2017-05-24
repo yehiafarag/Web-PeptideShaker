@@ -48,24 +48,19 @@ public class HorizontalLabel2DropdownList extends HorizontalLayout {
         }
         if (values.isEmpty()) {
             values.add("N/A");
-            values.add("a");
-            values.add("b");
-            values.add("c");
         }
         if (values2 == null) {
             values2 = new HashSet<>();
         }
         if (values2.isEmpty()) {
             values2.add("N/A");
-            values.add("x");
-            values2.add("y");
-            values2.add("z");
         }
         list1 = new ComboBox();
         list1.setWidth(100, Unit.PERCENTAGE);
         list1.setHeight(25, Unit.PIXELS);
         list1.setStyleName(ValoTheme.COMBOBOX_SMALL);
         list1.addStyleName(ValoTheme.COMBOBOX_TINY);
+        list1.addStyleName(ValoTheme.COMBOBOX_ALIGN_CENTER);
 //        list.addStyleName("inline-label");
         list1.setNullSelectionAllowed(false);
         for (String str : values) {
@@ -81,13 +76,13 @@ public class HorizontalLabel2DropdownList extends HorizontalLayout {
         list2.setHeight(25, Unit.PIXELS);
         list2.setStyleName(ValoTheme.COMBOBOX_SMALL);
         list2.addStyleName(ValoTheme.COMBOBOX_TINY);
+        list2.addStyleName(ValoTheme.COMBOBOX_ALIGN_CENTER);
 //        list.addStyleName("inline-label");
         list2.setNullSelectionAllowed(false);
 
         for (String str : values2) {
-            list2.addItem(str);
-        }
-        list2.setValue(values.toArray()[0]);
+            list2.addItem(str);        }
+        list2.setValue(values2.toArray()[0]);
         HorizontalLabel2DropdownList.this.addComponent(list2);
         HorizontalLabel2DropdownList.this.setExpandRatio(list2, 27.5f);
     }
@@ -100,6 +95,13 @@ public class HorizontalLabel2DropdownList extends HorizontalLayout {
     public String getSecondSelectedValue() {
         return list2.getValue().toString();
 
+    }
+    public void setSelectedI(Object objectId){
+        list1.select(objectId);
+    
+    }
+     public void setSelectedII(Object objectId){
+    list2.select(objectId);
     }
 
 }

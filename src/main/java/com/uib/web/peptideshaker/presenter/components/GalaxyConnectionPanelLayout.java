@@ -220,7 +220,7 @@ public abstract class GalaxyConnectionPanelLayout extends VerticalLayout impleme
         APIKey.addStyleName(ValoTheme.TEXTFIELD_TINY);
         APIKey.addStyleName("nomargin");
         APIKey.setInputPrompt("Galaxy API Key");
-        APIKey.setValue("71821f0c14cf63a2609f59d821bc1df3");//admin 6abed6a0b5021096631350a0b89c5155   --71821f0c14cf63a2609f59d821bc1df3--61062cd3acb2433c1e1ed66d6560357f
+        APIKey.setValue("abba9538dfd38d10c71aab67bbd30cfe");//admin 6abed6a0b5021096631350a0b89c5155   --71821f0c14cf63a2609f59d821bc1df3--61062cd3acb2433c1e1ed66d6560357f
         userAPIKeyPanel.addComponent(APIKey);
         APIKey.setWidth(100, Unit.PERCENTAGE);
         APIKey.setHeight(50, Unit.PERCENTAGE);
@@ -257,7 +257,7 @@ public abstract class GalaxyConnectionPanelLayout extends VerticalLayout impleme
             if (galaxyLink.getValue().toString().equalsIgnoreCase("https://test-fe.cbu.uib.no/galaxy")) {
                 APIKey.setValue("9228c9cd3eccff77b6fc2e8d6f3c7d48");
             } else if (galaxyLink.getValue().toString().equalsIgnoreCase("http://129.177.123.195/")) {
-                APIKey.setValue("71821f0c14cf63a2609f59d821bc1df3");
+                APIKey.setValue("abba9538dfd38d10c71aab67bbd30cfe");//71821f0c14cf63a2609f59d821bc1df3
             } else if (galaxyLink.getValue().toString().equalsIgnoreCase("https://usegalaxy.org/")) {
                 APIKey.setValue("75d32d7c17f3bca57f78b725c2fc1565");
             } else if (galaxyLink.getValue().toString().equalsIgnoreCase("https://galaxy-uio.bioinfo.no/main/")) {

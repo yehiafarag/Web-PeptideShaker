@@ -42,7 +42,7 @@ public abstract class WorkFlowLayout extends Panel {
     /**
      * Constructor to initialize the main attributes.
      */
-    public WorkFlowLayout() {
+    public WorkFlowLayout(SearchParameters searchParam) {
         WorkFlowLayout.this.setWidth(100, Unit.PERCENTAGE);
         WorkFlowLayout.this.setHeight(100, Unit.PERCENTAGE);
 
@@ -57,6 +57,8 @@ public abstract class WorkFlowLayout extends Panel {
         Label titleLabel = new Label("SearchGUI-PeptideShaker-WorkFlow");
         titleLabel.setStyleName("frametitle");
         content.addComponent(titleLabel);
+        
+        this.searchParam = searchParam;
 
         fastaFileList = new DropDownList("Protein Database (FASTA)");
         content.addComponent(fastaFileList);
@@ -80,17 +82,7 @@ public abstract class WorkFlowLayout extends Panel {
         HorizontalLayout bottomLayout = new HorizontalLayout();
         bottomLayout.setStyleName("bottomformlayout");
         bottomLayout.setSpacing(true);
-        content.addComponent(bottomLayout);
-        
-        String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
-            File file= new File(basepath + "/VAADIN/searchParam.par");
-        try {
-            this.searchParam =SearchParameters.getIdentificationParameters(file);
-        } catch (IOException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        }
-        System.out.println("at search param "+ searchParam.getMaxChargeSearched());
-       
+        content.addComponent(bottomLayout);       
         SearchSettingsLayout searchSettingsLayout=new SearchSettingsLayout(searchParam);
         
         PopupView advancedSearchOption = new PopupView("Search Settings", searchSettingsLayout);

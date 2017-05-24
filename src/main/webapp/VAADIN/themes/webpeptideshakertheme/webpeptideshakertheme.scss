@@ -607,7 +607,15 @@
         z-index:0 !important;
         overflow: hidden;
     }
-
+.smalltable div{
+	font-size:12px !important;
+}
+.smalltable .v-label-smalltable.v-label{
+	font-size: 12px !important;
+	font-weight:normal !important;
+	text-decoration:none !important;
+	padding-left:5px
+}
 
 
     /*    .horizontalcss .v-slot-rightsidebtncontainer {

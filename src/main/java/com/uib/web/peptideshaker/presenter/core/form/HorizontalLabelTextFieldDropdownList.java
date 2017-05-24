@@ -75,6 +75,7 @@ public class HorizontalLabelTextFieldDropdownList extends HorizontalLayout {
         list2.setHeight(25, Unit.PIXELS);
         list2.setStyleName(ValoTheme.COMBOBOX_SMALL);
         list2.addStyleName(ValoTheme.COMBOBOX_TINY);
+        list2.addStyleName(ValoTheme.COMBOBOX_ALIGN_CENTER);
 //        list.addStyleName("inline-label");
         list2.setNullSelectionAllowed(false);
 
@@ -94,6 +95,10 @@ public class HorizontalLabelTextFieldDropdownList extends HorizontalLayout {
     public String getSecondSelectedValue() {
         return list2.getValue().toString();
 
+    }
+    public void setSelected(Object objectId){
+        list2.select(objectId);
+    
     }
 
 }

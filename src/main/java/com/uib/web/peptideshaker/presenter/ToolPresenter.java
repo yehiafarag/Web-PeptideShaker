@@ -1,16 +1,20 @@
 package com.uib.web.peptideshaker.presenter;
 
+import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.uib.web.peptideshaker.galaxy.DataSet;
 import com.uib.web.peptideshaker.presenter.components.WorkFlowLayout;
 import com.uib.web.peptideshaker.presenter.core.BigSideBtn;
 import com.uib.web.peptideshaker.presenter.core.SmallSideBtn;
 import com.vaadin.event.LayoutEvents;
+import com.vaadin.server.VaadinService;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,8 +88,15 @@ public abstract class ToolPresenter extends VerticalLayout implements PresenterV
         btnContainer.setHeightUndefined();
         btnContainer.setSpacing(true);
         btnContainer.setMargin(new MarginInfo(false, false, true, false));
-
-        workflowLayout = new WorkFlowLayout() {
+        SearchParameters searchParam = null;
+        String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
+        File file = new File(basepath + "/VAADIN/searchParam.par");
+        try {
+            searchParam = SearchParameters.getIdentificationParameters(file);
+        } catch (IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        workflowLayout = new WorkFlowLayout(searchParam) {
             @Override
             public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList) {
                 ToolPresenter.this.executeWorkFlow(fastaFileId, mgfIdsList, searchEnginesList);

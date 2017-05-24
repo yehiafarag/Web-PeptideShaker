@@ -13579,6 +13579,17 @@ div.v-layout.v-horizontal.v-widget {
 	overflow: hidden;
 }
 
+.webpeptideshakertheme .smalltable div {
+	font-size: 12px !important;
+}
+
+.webpeptideshakertheme .smalltable .v-label-smalltable.v-label {
+	font-size: 12px !important;
+	font-weight: normal !important;
+	text-decoration: none !important;
+	padding-left: 5px;
+}
+
 .webpeptideshakertheme .v-horizontallayout-logocontainer {
 	margin-top: 30px !important;
 	left: 20px !important;

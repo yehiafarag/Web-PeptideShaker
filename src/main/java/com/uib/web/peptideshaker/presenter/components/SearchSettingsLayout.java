@@ -6,10 +6,12 @@ import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.uib.web.peptideshaker.presenter.core.CloseButton;
+import com.uib.web.peptideshaker.presenter.core.form.ColorLabel;
 import com.uib.web.peptideshaker.presenter.core.form.HorizontalLabel2DropdownList;
 import com.uib.web.peptideshaker.presenter.core.form.HorizontalLabelDropDounList;
 import com.uib.web.peptideshaker.presenter.core.form.HorizontalLabelTextField;
 import com.uib.web.peptideshaker.presenter.core.form.HorizontalLabelTextFieldDropdownList;
+import com.uib.web.peptideshaker.presenter.core.form.SparkLine;
 import com.vaadin.data.Property;
 import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.data.validator.IntegerRangeValidator;
@@ -19,6 +21,7 @@ import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -27,6 +30,9 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -60,7 +66,9 @@ public class SearchSettingsLayout extends VerticalLayout {
     /**
      * The post translational modifications factory.
      */
-    private PTMFactory ptmFactory = PTMFactory.getInstance();
+    private PTMFactory PTM = PTMFactory.getInstance();
+
+    private final Set<String> commonModificationIds;
 
     /**
      * Constructor to initialize the main setting parameters
@@ -72,6 +80,9 @@ public class SearchSettingsLayout extends VerticalLayout {
         HorizontalLayout titleLayout = new HorizontalLayout();
         titleLayout.setSizeFull();
 
+        this.commonModificationIds = new HashSet<>();
+        String mod = "Acetylation of K//Acetylation of protein N-term//Carbamidomethylation of C//Oxidation of M//Phosphorylation of S//Phosphorylation of T//Phosphorylation of Y//Arginine 13C6//Lysine 13C6//iTRAQ 4-plex of peptide N-term//iTRAQ 4-plex of K//iTRAQ 4-plex of Y//iTRAQ 8-plex of peptide N-term//iTRAQ 8-plex of K//iTRAQ 8-plex of Y//TMT 6-plex of peptide N-term//TMT 6-plex of K//TMT 10-plex of peptide N-term//TMT 10-plex of K//Pyrolidone from E//Pyrolidone from Q//Pyrolidone from carbamidomethylated C//Deamidation of N//Deamidation of Q";
+        commonModificationIds.addAll(Arrays.asList(mod.split("//")));
         this.searchParam = searchParam;
         SearchSettingsLayout.this.addComponent(titleLayout);
         Label setteingsLabel = new Label("Search Settings");
@@ -120,7 +131,6 @@ public class SearchSettingsLayout extends VerticalLayout {
 
         Table fixedModificationTable = initModificationTable("Fixed Modifications");
         leftTopLayout.addComponent(fixedModificationTable);
-
         HorizontalLayout leftBottomLayout = new HorizontalLayout();
         leftBottomLayout.setSizeFull();
         leftBottomLayout.setSpacing(true);
@@ -128,7 +138,6 @@ public class SearchSettingsLayout extends VerticalLayout {
         leftSideLayout.setExpandRatio(leftBottomLayout, 48);
 
         Table variableModificationTable = initModificationTable("Variable Modifications");
-
         leftBottomLayout.addComponent(variableModificationTable);
         leftBottomLayout.setExpandRatio(variableModificationTable, 80);
 
@@ -193,26 +202,45 @@ public class SearchSettingsLayout extends VerticalLayout {
         rightSideLayout.setComponentAlignment(modificationListControl, Alignment.MIDDLE_CENTER);
 
         Table mostUsedModificationsTable = initModificationTable("");
-        Map<Object, Object[]> mostUseModificationItems = new LinkedHashMap<>();
         Map<Object, Object[]> completeModificationItems = new LinkedHashMap<>();
-        PTMFactory PTM = PTMFactory.getInstance();
+        
         List<String> allModiList = PTM.getDefaultModifications();
+         // get the min and max values for the mass sparklines
+        double maxMass = Double.MIN_VALUE;
+        double minMass = Double.MAX_VALUE;
+
+        for (String ptm : PTM.getPTMs()) {
+            if (PTM.getPTM(ptm).getMass() > maxMass) {
+                maxMass = PTM.getPTM(ptm).getMass();
+            }
+            if (PTM.getPTM(ptm).getMass() < minMass) {
+                minMass = PTM.getPTM(ptm).getMass();
+            }
+        }
+        
         System.out.println("at all ------------------ param " + allModiList + "   ");
-        for (int x = 0; x < allModiList.size(); x++) {
-            Object[] modificationArr = new Object[]{1 + x, allModiList.get(x), PTM.getPTM(allModiList.get(x)).getMass()};
-            mostUseModificationItems.put(x, modificationArr);
-//            completeModificationItems.put(x, modificationArr);
-        }
-        for (int x = 0; x < allModiList.size(); x++) {
-            Object[] modificationArr = new Object[]{1 + x, allModiList.get(x), PTM.getPTM(allModiList.get(x)).getMass()};
-            completeModificationItems.put(x, modificationArr);
-        }
-        for (Object id : mostUseModificationItems.keySet()) {
-            mostUsedModificationsTable.addItem(mostUseModificationItems.get(id), id);
-        }
 
+//        for (int x = 0; x < allModiList.size(); x++) {
+//            Object[] modificationArr = new Object[]{1 + x, allModiList.get(x), PTM.getPTM(allModiList.get(x)).getMass()};
+//            mostUseModificationItems.put(x, modificationArr);
+//            
+////            completeModificationItems.put(x, modificationArr);
+//        }
+        for (int x = 0; x < allModiList.size(); x++) {
+            ColorLabel color = new ColorLabel(PTM.getColor(allModiList.get(x)));
+            SparkLine sLine = new SparkLine(PTM.getPTM(allModiList.get(x)).getMass(), minMass, maxMass);
+            Object[] modificationArr = new Object[]{color, allModiList.get(x),sLine };
+//            System.out.println("at ptm info     "+modificationArr[1]+" -- "+ PTM.get(modificationArr[1].toString()).g);
+            completeModificationItems.put(allModiList.get(x), modificationArr);
+        }
+//PTM.getPTM(allModiList.get(x)).getHtmlTooltip()
         rightSideLayout.addComponent(mostUsedModificationsTable);
-
+        for (Object id : completeModificationItems.keySet()) {
+            if (commonModificationIds.contains(id.toString())) {
+                mostUsedModificationsTable.addItem(completeModificationItems.get(id), id);
+            }
+        }
+        mostUsedModificationsTable.setVisible(false);
         rightSideLayout.setExpandRatio(mostUsedModificationsTable, 96);
         Table allModificationsTable = initModificationTable("");
         rightSideLayout.addComponent(allModificationsTable);
@@ -220,8 +248,9 @@ public class SearchSettingsLayout extends VerticalLayout {
         allModificationsTable.setVisible(false);
 
         modificationListControl.addValueChangeListener((Property.ValueChangeEvent event) -> {
-            if (modificationListControl.getValue().toString().equalsIgnoreCase("All Modifications")) {
-                allModificationsTable.removeAllItems();
+            allModificationsTable.removeAllItems();
+            mostUsedModificationsTable.removeAllItems();
+            if (modificationListControl.getValue().toString().equalsIgnoreCase("All Modifications")) {                
                 for (Object id : completeModificationItems.keySet()) {
                     if (fixedModificationTable.containsId(id) || variableModificationTable.containsId(id)) {
                         continue;
@@ -231,18 +260,21 @@ public class SearchSettingsLayout extends VerticalLayout {
                 allModificationsTable.setVisible(true);
                 mostUsedModificationsTable.setVisible(false);
 
-            } else {
-                mostUsedModificationsTable.removeAllItems();
-                for (Object id : mostUseModificationItems.keySet()) {
+            } else {                
+                for (Object id : completeModificationItems.keySet()) {
                     if (fixedModificationTable.containsId(id) || variableModificationTable.containsId(id)) {
                         continue;
                     }
-                    mostUsedModificationsTable.addItem(mostUseModificationItems.get(id), id);
+                    if (commonModificationIds.contains(id.toString())) {
+                        mostUsedModificationsTable.addItem(completeModificationItems.get(id), id);
+                    }
                 }
 
                 allModificationsTable.setVisible(false);
                 mostUsedModificationsTable.setVisible(true);
             }
+            allModificationsTable.sort(new Object[]{"name"}, new boolean[]{true});
+            mostUsedModificationsTable.sort(new Object[]{"name"}, new boolean[]{true});
         });
         toFixedModBtn.addClickListener((Button.ClickEvent event) -> {
             Table selectionTable;
@@ -251,13 +283,13 @@ public class SearchSettingsLayout extends VerticalLayout {
             } else {
                 selectionTable = mostUsedModificationsTable;
             }
-            System.out.println("at selected value " + ((Set<Object>) selectionTable.getValue()));
             Set<Object> selection = ((Set<Object>) selectionTable.getValue());
             for (Object id : selection) {
-                fixedModificationTable.addItem(mostUseModificationItems.get(id), id);
                 selectionTable.removeItem(id);
+                fixedModificationTable.addItem(completeModificationItems.get(id), id);
+                
             }
-            fixedModificationTable.sort(new Object[]{"color"}, new boolean[]{true});
+            fixedModificationTable.sort(new Object[]{"name"}, new boolean[]{true});
 
         });
         fromFixedModBtn.addClickListener((Button.ClickEvent event) -> {
@@ -267,13 +299,13 @@ public class SearchSettingsLayout extends VerticalLayout {
             } else {
                 selectionTable = mostUsedModificationsTable;
             }
-            System.out.println("at selected value " + ((Set<Object>) selectionTable.getValue()));
             Set<Object> selection = ((Set<Object>) fixedModificationTable.getValue());
             for (Object id : selection) {
-                selectionTable.addItem(mostUseModificationItems.get(id), id);
                 fixedModificationTable.removeItem(id);
+                selectionTable.addItem(completeModificationItems.get(id), id);
+                
             }
-            selectionTable.sort(new Object[]{"color"}, new boolean[]{true});
+            selectionTable.sort(new Object[]{"name"}, new boolean[]{true});
 
         });
         toVariableModBtn.addClickListener((Button.ClickEvent event) -> {
@@ -283,13 +315,13 @@ public class SearchSettingsLayout extends VerticalLayout {
             } else {
                 selectionTable = mostUsedModificationsTable;
             }
-            System.out.println("at selected value " + ((Set<Object>) selectionTable.getValue()));
             Set<Object> selection = ((Set<Object>) selectionTable.getValue());
             for (Object id : selection) {
-                variableModificationTable.addItem(mostUseModificationItems.get(id), id);
                 selectionTable.removeItem(id);
+                variableModificationTable.addItem(completeModificationItems.get(id), id);
+                
             }
-            variableModificationTable.sort(new Object[]{"color"}, new boolean[]{true});
+            variableModificationTable.sort(new Object[]{"name"}, new boolean[]{true});
 
         });
         fromVariableModBtn.addClickListener((Button.ClickEvent event) -> {
@@ -299,31 +331,51 @@ public class SearchSettingsLayout extends VerticalLayout {
             } else {
                 selectionTable = mostUsedModificationsTable;
             }
-            System.out.println("at selected value " + ((Set<Object>) selectionTable.getValue()));
             Set<Object> selection = ((Set<Object>) variableModificationTable.getValue());
             for (Object id : selection) {
-                selectionTable.addItem(mostUseModificationItems.get(id), id);
                 variableModificationTable.removeItem(id);
+                selectionTable.addItem(completeModificationItems.get(id), id);
+                
             }
-            selectionTable.sort(new Object[]{"color"}, new boolean[]{true});
+            selectionTable.sort(new Object[]{"name"}, new boolean[]{true});
 
         });
+        mostUsedModificationsTable.setVisible(true);
 
         return modificationContainer;
 
     }
 
     private Table initModificationTable(String cap) {
-        Table modificationsTable = new Table(cap);
+        Table modificationsTable = new Table(cap){
+           DecimalFormat df= new DecimalFormat("#.##");
+           @Override
+        protected String formatPropertyValue(Object rowId, Object colId,Property property) {
+                            Object v = property.getValue();
+                            if (v instanceof Double) {                             
+                                return df.format(v);
+                            }
+                            return super.formatPropertyValue(rowId, colId, property);
+                        }
+            
+        };
         modificationsTable.setSizeFull();
         modificationsTable.setStyleName(ValoTheme.TABLE_SMALL);
         modificationsTable.addStyleName(ValoTheme.TABLE_COMPACT);
         modificationsTable.addStyleName(ValoTheme.TABLE_NO_VERTICAL_LINES);
+        modificationsTable.addStyleName("smalltable");
         modificationsTable.setMultiSelect(true);
         modificationsTable.setSelectable(true);
-        modificationsTable.addContainerProperty("color", Integer.class, null, "", null, Table.Align.CENTER);
-        modificationsTable.addContainerProperty("name", String.class, null, "Name", null, Table.Align.CENTER);
-        modificationsTable.addContainerProperty("mass", Double.class, null, "Mass", null, Table.Align.CENTER);
+        modificationsTable.addContainerProperty("color", ColorLabel.class, null, "", null, Table.Align.CENTER);
+        modificationsTable.addContainerProperty("name", String.class, null, "Name", null, Table.Align.LEFT);
+        modificationsTable.addContainerProperty("mass", SparkLine.class, null, "Mass", null, Table.Align.LEFT);
+        modificationsTable.setColumnExpandRatio("color", 10);
+        modificationsTable.setColumnExpandRatio("name", 55);
+        modificationsTable.setColumnExpandRatio("mass", 35);
+        modificationsTable.sort(new Object[]{"name"}, new boolean[]{true});
+        modificationsTable.setSortEnabled(false);
+        modificationsTable.setItemDescriptionGenerator((Component source, Object itemId, Object propertyId) -> PTM.getPTM(itemId.toString()).getHtmlTooltip());
+                
 
         return modificationsTable;
     }
@@ -350,7 +402,30 @@ public class SearchSettingsLayout extends VerticalLayout {
         label.setSizeFull();
         proteaseFragmentationContainer.addComponent(label, 0, 0);
 
-        digestionList = new HorizontalLabelDropDounList("Digestion", new LinkedHashSet<>());
+        Set<String> digestionOptionList = new LinkedHashSet<>();
+        digestionOptionList.add("Enzyme");
+        digestionOptionList.add("Unspecific");
+        digestionOptionList.add("Whole Protein");
+
+        digestionList = new HorizontalLabelDropDounList("Digestion", digestionOptionList);
+        digestionList.addValueChangeListener((Property.ValueChangeEvent event) -> {
+            if (digestionList.getSelectedValue().equalsIgnoreCase("Enzyme")) {
+                enzymeList.setEnabled(true);
+                specificityList.setEnabled(true);
+                maxMissCleav.setEnabled(true);
+            } else if (digestionList.getSelectedValue().equalsIgnoreCase("Whole Protein")) {
+                maxMissCleav.setEnabled(false);
+                enzymeList.setEnabled(false);
+                specificityList.setEnabled(false);
+
+            } else {
+                enzymeList.setEnabled(false);
+                specificityList.setEnabled(false);
+                maxMissCleav.setEnabled(true);
+            }
+
+        });
+        
 
         Set<String> enzList = new LinkedHashSet<>();
         Enzyme enzyme = searchParam.getEnzyme();
@@ -369,10 +444,27 @@ public class SearchSettingsLayout extends VerticalLayout {
 
         enzymeList = new HorizontalLabelDropDounList("Enzyme", enzList);
 
-        specificityList = new HorizontalLabelDropDounList("Specificity", new LinkedHashSet<>());
-        maxMissCleav = new HorizontalLabelTextField("Max Missed Cleavages", 2, new IntegerRangeValidator("Error Value", Integer.MIN_VALUE, Integer.MAX_VALUE));
-        fragmentIonTypes = new HorizontalLabel2DropdownList("Fragment Ion Types", new LinkedHashSet<>(), new LinkedHashSet<>());
+        Set<String> specificityOptionList = new LinkedHashSet<>();
+        specificityOptionList.add("Specific");
+        specificityOptionList.add("Semi-Specific");
+        specificityOptionList.add("N-term Specific");
+        specificityOptionList.add("C-term Specific");
 
+        specificityList = new HorizontalLabelDropDounList("Specificity", specificityOptionList);       
+        maxMissCleav = new HorizontalLabelTextField("Max Missed Cleavages", 2, new IntegerRangeValidator("Error Value", Integer.MIN_VALUE, Integer.MAX_VALUE));
+
+        Set<String> ionListI = new LinkedHashSet<>();
+        ionListI.add("a");
+        ionListI.add("b");
+        ionListI.add("c");
+        Set<String> ionListII = new LinkedHashSet<>();
+        ionListII.add("x");
+        ionListII.add("y");
+        ionListII.add("z");
+        fragmentIonTypes = new HorizontalLabel2DropdownList("Fragment Ion Types", ionListI, ionListII);
+
+         
+        
         proteaseFragmentationContainer.addComponent(digestionList, 0, 1);
         proteaseFragmentationContainer.addComponent(enzymeList, 0, 2);
         proteaseFragmentationContainer.addComponent(specificityList, 0, 3);
@@ -380,9 +472,21 @@ public class SearchSettingsLayout extends VerticalLayout {
         proteaseFragmentationContainer.addComponent(maxMissCleav, 0, 4);
         proteaseFragmentationContainer.addComponent(fragmentIonTypes, 0, 5);
 
-        precursorTolerance = new HorizontalLabelTextFieldDropdownList("Precursor m/z Tolerance", 10.0, new LinkedHashSet<>(), new DoubleRangeValidator("Error Value", Double.MIN_VALUE, Double.MAX_VALUE));
-        fragmentTolerance = new HorizontalLabelTextFieldDropdownList("Fragment m/z Tolerance", 0.5, new LinkedHashSet<>(), new DoubleRangeValidator("Error Value", Double.MIN_VALUE, Double.MAX_VALUE));
+        Set<String> mzToleranceList = new LinkedHashSet<>();
+        mzToleranceList.add("ppm");
+        mzToleranceList.add("Da");
+        precursorTolerance = new HorizontalLabelTextFieldDropdownList("Precursor m/z Tolerance", 10.0, mzToleranceList, new DoubleRangeValidator("Error Value", Double.MIN_VALUE, Double.MAX_VALUE));
+        fragmentTolerance = new HorizontalLabelTextFieldDropdownList("Fragment m/z Tolerance", 0.5, mzToleranceList, new DoubleRangeValidator("Error Value", Double.MIN_VALUE, Double.MAX_VALUE));
 
+        digestionList.setSelected("Enzyme");
+        enzymeList.setSelected("Trypsin");
+        specificityList.setSelected("Specific");
+        fragmentIonTypes.setSelectedI("b");
+        fragmentIonTypes.setSelectedII("y");
+        precursorTolerance.setSelected("ppm");
+        fragmentTolerance.setSelected("Da");
+        
+        
         proteaseFragmentationContainer.addComponent(precursorTolerance, 1, 1);
         proteaseFragmentationContainer.addComponent(fragmentTolerance, 1, 2);
         proteaseFragmentationContainer.addComponent(initLabel2TextField("Precursor", "2", "4"), 1, 3);
