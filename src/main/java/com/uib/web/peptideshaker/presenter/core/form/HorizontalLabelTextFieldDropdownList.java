@@ -100,5 +100,13 @@ public class HorizontalLabelTextFieldDropdownList extends HorizontalLayout {
         list2.select(objectId);
     
     }
+     public boolean isValid(){
+        boolean check1 = textField.isValid();
+        
+        list2.setRequired(true);
+        boolean check2 = list2.isValid();
+        list2.setRequired(!check2);
+        return check1&&check2;
+    }
 
 }

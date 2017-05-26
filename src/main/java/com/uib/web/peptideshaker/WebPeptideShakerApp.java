@@ -74,9 +74,9 @@ public class WebPeptideShakerApp extends VerticalLayout {
             toolsView.getTopView().setEnabled(true);
             toolsView.getRightView().setDescription("Click to view the tools layout");
             toolsView.getTopView().setDescription("Click to view the tools layout");
-            toolsView.updateHistoryHandler(Galaxy_Layer.getFastaFilesMap(), Galaxy_Layer.getMgfFilesMap());
+            toolsView.updateHistoryHandler(Galaxy_Layer.getSearchSettingsFilesMap(),Galaxy_Layer.getFastaFilesMap(), Galaxy_Layer.getMgfFilesMap());
         } else {
-             toolsView.getRightView().setDescription("Tools are not available");
+            toolsView.getRightView().setDescription("Tools are not available");
             toolsView.getTopView().setDescription("Tools are not available");
             toolsView.getRightView().setEnabled(false);
             toolsView.getTopView().setEnabled(false);

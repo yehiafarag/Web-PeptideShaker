@@ -3,7 +3,9 @@ package com.uib.web.peptideshaker.galaxy;
 import com.github.jmchilton.blend4j.galaxy.HistoriesClient;
 import com.github.jmchilton.blend4j.galaxy.ToolsClient;
 import com.github.jmchilton.blend4j.galaxy.WorkflowsClient;
+import com.github.jmchilton.blend4j.galaxy.beans.OutputDataset;
 import com.github.jmchilton.blend4j.galaxy.beans.Tool;
+import com.github.jmchilton.blend4j.galaxy.beans.ToolExecution;
 import com.github.jmchilton.blend4j.galaxy.beans.ToolSection;
 import com.github.jmchilton.blend4j.galaxy.beans.Workflow;
 import com.github.jmchilton.blend4j.galaxy.beans.WorkflowInputs;
@@ -21,6 +23,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Set;
 
@@ -40,6 +43,10 @@ public class ToolsHandler {
      * The main galaxy Work-Flow Client on galaxy server.
      */
     private final HistoriesClient galaxyHistoriesClient;
+    /**
+     * The main galaxy Work-Flow Client on galaxy server.
+     */
+    private final ToolsClient galaxyToolClient;
 
     /**
      * Constructor to initialize the main data structure and other variables.
@@ -51,6 +58,7 @@ public class ToolsHandler {
 
         this.galaxyWorkFlowClient = galaxyWorkFlowClient;
         this.galaxyHistoriesClient = galaxyHistoriesClient;
+        this.galaxyToolClient = galaxyToolClient;
         /**
          * The SearchGUI tool on galaxy server.
          */
@@ -138,6 +146,36 @@ public class ToolsHandler {
         }
         return null;
 
+    }
+
+    /**
+     * Add default search parameter file to the user account
+     *
+     * @param workHistoryId the history id that the new re-indexed file will be
+     * stored in working history
+     *
+     * @return new re-indexed file id on galaxy
+     *
+     */
+    public DataSet storeSearchParamfile(String workHistoryId) {
+
+        String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
+        File file = new File(basepath + "/VAADIN/default_searching.par");
+        final ToolsClient.FileUploadRequest request = new ToolsClient.FileUploadRequest(workHistoryId, file);
+        SimpleDateFormat sdfDate = new SimpleDateFormat("MMM dd yyyy HH:mm");
+        String info = sdfDate.format(Page.getCurrent().getWebBrowser().getCurrentDate());
+        request.setDatasetName("Search settings (" + info + ").par");
+        List<OutputDataset> excList = galaxyToolClient.upload(request).getOutputs();
+        if (excList != null && !excList.isEmpty()) {
+            OutputDataset oDs = excList.get(0);
+            DataSet ds = new DataSet();
+            ds.setName(oDs.getName());
+            ds.setHistoryId(workHistoryId);
+            ds.setGalaxyId(oDs.getId());
+            ds.setDownloadUrl(oDs.getFullDownloadUrl());
+            return ds;
+        }
+        return null;
     }
 
     /**

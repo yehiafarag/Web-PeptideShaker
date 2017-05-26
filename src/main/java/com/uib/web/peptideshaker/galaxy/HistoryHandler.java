@@ -32,7 +32,11 @@ public abstract class HistoryHandler {
      */
     private final GalaxyInstance Galaxy_Instance;
     /**
-     * The main Fasta File Map.
+     * The main Search settings .par File Map.
+     */
+    private final Map<String, DataSet> searchSetiingsFilesMap;
+    /**
+     * The main FASTA File Map.
      */
     private final Map<String, DataSet> fastaFilesMap;
     /**
@@ -75,6 +79,7 @@ public abstract class HistoryHandler {
      */
     public HistoryHandler(GalaxyInstance Galaxy_Instance) {
         this.Galaxy_Instance = Galaxy_Instance;
+        this.searchSetiingsFilesMap = new LinkedHashMap<>();
         this.fastaFilesMap = new LinkedHashMap<>();
         this.mgfFilesMap = new LinkedHashMap<>();
         this.peptideShakerVisualizationMap = new LinkedHashMap<>();
@@ -101,7 +106,16 @@ public abstract class HistoryHandler {
     }
 
     /**
-     * Get the main Fasta files Map
+     * Get the main Search settings par files Map
+     *
+     * @return searchSetiingsFilesMap
+     */
+    public Map<String, DataSet> getSearchSettingsFilesMap() {
+        return searchSetiingsFilesMap;
+    }
+
+    /**
+     * Get the main FASTA files Map
      *
      * @return fastaFilesMap
      */
@@ -130,6 +144,7 @@ public abstract class HistoryHandler {
             mgfFilesMap.clear();
             searchGUIFilesMap.clear();
             peptideShakerVisualizationMap.clear();
+            searchSetiingsFilesMap.clear();
             HistoriesClient galaxyHistoriesClient = Galaxy_Instance.getHistoriesClient();
             HistoriesClient loopGalaxyHistoriesClient = Galaxy_Instance.getHistoriesClient();
 
@@ -167,7 +182,6 @@ public abstract class HistoryHandler {
                         if (map.get("purged").toString().equalsIgnoreCase("true") || map.get("deleted").toString().equalsIgnoreCase("true")) {
                             continue;
                         }
-                        System.out.println("at type " + map.get("name").toString());
                         if (map.get("data_type").toString().equalsIgnoreCase("galaxy.datatypes.binary.SearchGuiArchive")) {
                             HistoryContentsProvenance prov = loopGalaxyHistoriesClient.showProvenance(workingHistory.getId(), map.get("id").toString());
                             searchGUIFilesMap.put(map.get("id").toString(), prov);
@@ -197,6 +211,12 @@ public abstract class HistoryHandler {
                             } else {
                                 workHistoryData.put(map.get("name").toString(), map);
                             }
+                        } else if (map.get("data_type").toString().equalsIgnoreCase("galaxy.datatypes.text.Json") && map.get("name").toString().endsWith(".par")) {
+                            DataSet ds = new DataSet();
+                            ds.setName(map.get("name").toString());
+                            ds.setHistoryId(history.getId());
+                            ds.setGalaxyId(map.get("id").toString());
+                            this.searchSetiingsFilesMap.put(ds.getGalaxyId(), ds);
                         }
 
                     }
@@ -214,6 +234,8 @@ public abstract class HistoryHandler {
                             this.fastaFilesMap.put(ds.getGalaxyId(), ds);
                         } else if (map.get("data_type").toString().equalsIgnoreCase("galaxy.datatypes.proteomics.Mgf")) {
                             this.mgfFilesMap.put(ds.getGalaxyId(), ds);
+                        } else if (map.get("data_type").toString().equalsIgnoreCase("galaxy.datatypes.text.Json") && map.get("name").toString().endsWith(".par")) {
+                            this.searchSetiingsFilesMap.put(ds.getGalaxyId(), ds);
                         }
 //                    if(map.get("purged").)
 //                    for (String key : map.keySet()) {
@@ -243,17 +265,11 @@ public abstract class HistoryHandler {
                 }
             }
             System.out.println("at --- hList is stage 2 ");
-//            loopGalaxyHistoriesClient = Galaxy_Instance.getHistoriesClient();
-//            Map<String, Dataset> fulldsMap = new HashMap<>();
-//            List<HistoryContents> contents = galaxyHistoriesClient.showHistoryContents(workingHistory.getId());
-//
-//            for (HistoryContents content : contents) {
-//                if (content.isDeleted() || content.isPurged()) {
-//                    continue;
-//                }
-//                Dataset ds = loopGalaxyHistoriesClient.showDataset(workingHistory.getId(), content.getId());
-//                fulldsMap.put(ds.getId(), ds);
-//
+
+            //if no search param file exist add default search param file 
+//            if (searchSetiingsFilesMap.isEmpty()) {
+//                DataSet ds = this.storeSearchParamfile(workingHistory.getId());
+//                 this.searchSetiingsFilesMap.put(ds.getGalaxyId(), ds);
 //            }
 //            // check Fasta and MGF files need re-indexing
 //
@@ -394,6 +410,17 @@ public abstract class HistoryHandler {
      *
      */
     public abstract String reIndexFile(String id, String historyId, String workHistoryId);
+
+    /**
+     * Add default search parameter file to the user account
+     *
+     * @param workHistoryId the history id that the new re-indexed file will be
+     * stored in working history
+     *
+     * @return new dataset file from galaxy
+     *
+     */
+    public abstract DataSet storeSearchParamfile(String workHistoryId);
 
     private void notReadyHistory(String name) {
         if (name == null) {

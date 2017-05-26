@@ -27,7 +27,7 @@ public class HorizontalLabelDropDounList extends HorizontalLayout {
      * @param caption title
      * @param values the drop-down list values
      */
-    public HorizontalLabelDropDounList(String caption, Set<String> values) {
+    public HorizontalLabelDropDounList(String caption) {
         HorizontalLabelDropDounList.this.setSizeFull();
         Label cap = new Label(caption);
         cap.addStyleName(ValoTheme.LABEL_TINY);
@@ -35,37 +35,50 @@ public class HorizontalLabelDropDounList extends HorizontalLayout {
         cap.addStyleName("smallundecorated");
         HorizontalLabelDropDounList.this.addComponent(cap);
         HorizontalLabelDropDounList.this.setExpandRatio(cap, 45);
+
+        list = new ComboBox();
+        list.setWidth(100, Unit.PERCENTAGE);
+        list.setHeight(25, Unit.PIXELS);
+        list.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        list.addStyleName(ValoTheme.COMBOBOX_TINY);
+        list.addStyleName(ValoTheme.COMBOBOX_ALIGN_CENTER);
+        list.setNullSelectionAllowed(false);
+
+        HorizontalLabelDropDounList.this.addComponent(list);
+        HorizontalLabelDropDounList.this.setExpandRatio(list, 55);
+    }
+
+    public void updateData(Set<String> values) {
         if (values == null) {
             values = new HashSet<>();
         }
         if (values.isEmpty()) {
             values.add("N/A");
         }
-        list = new ComboBox();
-        list.setWidth(100, Unit.PERCENTAGE);
-        list.setHeight(25, Unit.PIXELS);
-        list.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        list.addStyleName(ValoTheme.COMBOBOX_TINY);
-         list.addStyleName(ValoTheme.COMBOBOX_ALIGN_CENTER);
-        list.setNullSelectionAllowed(false);
         for (String str : values) {
             list.addItem(str);
         }
         list.setValue(values.toArray()[0]);
-        HorizontalLabelDropDounList.this.addComponent(list);
-        HorizontalLabelDropDounList.this.setExpandRatio(list, 55);
     }
 
     public String getSelectedValue() {
         return list.getValue().toString();
 
     }
-    public void addValueChangeListener(Property.ValueChangeListener listener){
+
+    public void addValueChangeListener(Property.ValueChangeListener listener) {
         this.list.addValueChangeListener(listener);
     }
-    public void setSelected(Object objectId){
+
+    public void setSelected(Object objectId) {
         list.select(objectId);
-    
+
+    }
+    public boolean isValid(){
+        list.setRequired(true);
+        boolean check = list.isValid();
+        list.setRequired(!check);
+        return check;
     }
 
 }

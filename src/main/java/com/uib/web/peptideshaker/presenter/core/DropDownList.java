@@ -1,5 +1,7 @@
 package com.uib.web.peptideshaker.presenter.core;
 
+import com.vaadin.data.Property;
+import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.VerticalLayout;
 import java.util.Map;
@@ -76,5 +78,22 @@ public class DropDownList extends VerticalLayout {
         list.addStyleName("error");
         return null;
     }
+   
+    public void addValueChangeListener(Property.ValueChangeListener listener){
+        this.list.addValueChangeListener(listener);
+    }
+    public void setSelected(Object objectId){
+        list.select(objectId);
+    
+    }
+     public void addNewItemHandler(AbstractSelect.NewItemHandler newItemHandler,String message){
+         this.list.setInputPrompt(message);
+        this.list.setNewItemsAllowed(true);
+        this.list.setNewItemHandler(newItemHandler);
+    }
+     public void addItem(String itemId){
+         this.list.addItem(itemId);
+         this.setSelected(itemId);
+     }
 
 }

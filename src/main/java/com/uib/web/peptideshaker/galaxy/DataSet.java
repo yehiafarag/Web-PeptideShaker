@@ -1,18 +1,26 @@
-
 package com.uib.web.peptideshaker.galaxy;
 
-import com.github.jmchilton.blend4j.galaxy.beans.Dataset;
-
 /**
- *This class represents the Galaxy Dataset in the application
+ * This class represents the Galaxy Dataset in the application
+ *
  * @author Yehia Farag
  */
-public class DataSet{
+public class DataSet {
+
     private String name;
     private String galaxyId;
     private String historyId;
     private String reIndexedId;
     private String reIndexedHistoryId;
+      private String downloadUrl;
+
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
+    }
 
     public String getName() {
         return name;
@@ -53,5 +61,5 @@ public class DataSet{
     public void setReIndexedHistoryId(String reIndexedHistoryId) {
         this.reIndexedHistoryId = reIndexedHistoryId;
     }
-    
+
 }

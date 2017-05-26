@@ -29,7 +29,7 @@ public class HorizontalLabelTextField extends HorizontalLayout {
      * @param caption title
      * @param values the drop-down list values
      */
-    public HorizontalLabelTextField(String caption, Object defaultValue,Validator validator) {
+    public HorizontalLabelTextField(String caption, Object defaultValue, Validator validator) {
         HorizontalLabelTextField.this.setSizeFull();
         Label cap = new Label(caption);
         cap.addStyleName(ValoTheme.LABEL_TINY);
@@ -41,11 +41,11 @@ public class HorizontalLabelTextField extends HorizontalLayout {
         if (defaultValue == null) {
             defaultValue = 0;
         }
-        
+
         textField = new TextField();
         textField.setValidationVisible(true);
         textField.setConverter(Integer.class);
-     
+
         textField.addValidator(validator);
         textField.addStyleName(ValoTheme.TEXTFIELD_ALIGN_CENTER);
         textField.setWidth(100, Unit.PERCENTAGE);
@@ -57,10 +57,12 @@ public class HorizontalLabelTextField extends HorizontalLayout {
         HorizontalLabelTextField.this.setExpandRatio(textField, 55);
     }
 
-     public Boolean isValid() {
-        return textField.isValid();
+    public boolean isValid() {
+        boolean check = textField.isValid();
+        return check;
 
     }
+
     public String getSelectedValue() {
         return textField.getValue();
 

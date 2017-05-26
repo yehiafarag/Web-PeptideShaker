@@ -103,5 +103,15 @@ public class HorizontalLabel2DropdownList extends HorizontalLayout {
      public void setSelectedII(Object objectId){
     list2.select(objectId);
     }
+      public boolean isValid(){
+        list1.setRequired(true);
+        boolean check1 = list1.isValid();
+        list1.setRequired(!check1);
+        
+        list2.setRequired(true);
+        boolean check2 = list2.isValid();
+        list2.setRequired(!check2);
+        return check1&&check2;
+    }
 
 }

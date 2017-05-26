@@ -106,12 +106,18 @@ public abstract class GalaxyLayer {
                 try {
                     if (Galaxy_Instance != null) {
                         System.out.println("at not null galaxy");
-                     toolsHandler = new ToolsHandler(Galaxy_Instance.getToolsClient(), Galaxy_Instance.getWorkflowsClient(), Galaxy_Instance.getHistoriesClient());
+                        toolsHandler = new ToolsHandler(Galaxy_Instance.getToolsClient(), Galaxy_Instance.getWorkflowsClient(), Galaxy_Instance.getHistoriesClient());
                         historyHandler = new HistoryHandler(Galaxy_Instance) {
                             @Override
                             public String reIndexFile(String id, String historyId, String workHistoryId) {
                                 return GalaxyLayer.this.reIndexFile(id, historyId, workHistoryId);
                             }
+
+                            @Override
+                            public DataSet storeSearchParamfile(String workHistoryId) {
+                                return GalaxyLayer.this.storeSearchParamfile(workHistoryId);
+                            }
+
                         };//                        
                         connectionBtn.setCaption("Disconnect");
                         connectionBtn.addStyleName("disconnect");
@@ -126,7 +132,7 @@ public abstract class GalaxyLayer {
                     }
 //
                     connectionBtn.setEnabled(true);
-                } catch (Exception exp) {
+                } catch (Exception exp) {                  
                     System.out.println("at err .connectedToGalaxy()");
                     historyHandler = null;
                     toolsHandler = null;
@@ -197,7 +203,20 @@ public abstract class GalaxyLayer {
     public abstract void systemDisconnected();
 
     /**
-     * Get the main Fasta files Map
+     * Get the main search settings .par files Map
+     *
+     * @return searchSettingsFilesMap
+     */
+    public Map<String, DataSet> getSearchSettingsFilesMap() {
+        if (historyHandler != null) {
+            return historyHandler.getSearchSettingsFilesMap();
+        } else {
+            return new HashMap<>();
+        }
+    }
+
+    /**
+     * Get the main FASTA files Map
      *
      * @return fastaFilesMap
      */
@@ -243,6 +262,24 @@ public abstract class GalaxyLayer {
 
         if (toolsHandler != null) {
             return toolsHandler.reIndexFile(id, historyId, workHistoryId);
+        }
+
+        return null;
+    }
+
+    /**
+     * Add default search parameter file to the user account
+     *
+     * @param workHistoryId the history id that the new re-indexed file will be
+     * stored in working history
+     *
+     * @return new re-indexed file id on galaxy
+     *
+     */
+    public DataSet storeSearchParamfile(String workHistoryId) {
+
+        if (toolsHandler != null) {
+            return toolsHandler.storeSearchParamfile(workHistoryId);
         }
 
         return null;

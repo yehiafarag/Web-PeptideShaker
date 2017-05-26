@@ -21,7 +21,7 @@ public class SparkLine extends HorizontalLayout {
     public SparkLine(double value, double min, double max) {
 
         SparkLine.this.setWidth(100, Unit.PERCENTAGE);
-        SparkLine.this.setHeight(15, Unit.PIXELS);
+        SparkLine.this.setHeight(10, Unit.PIXELS);
         Label label = new Label(df.format(value));
         label.setStyleName("smalltable");
         SparkLine.this.setSpacing(true);
