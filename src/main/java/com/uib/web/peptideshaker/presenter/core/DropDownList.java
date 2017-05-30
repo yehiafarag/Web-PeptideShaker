@@ -87,6 +87,7 @@ public class DropDownList extends VerticalLayout {
     
     }
      public void addNewItemHandler(AbstractSelect.NewItemHandler newItemHandler,String message){
+         this.list.setDescription("Select or Enter New");
          this.list.setInputPrompt(message);
         this.list.setNewItemsAllowed(true);
         this.list.setNewItemHandler(newItemHandler);

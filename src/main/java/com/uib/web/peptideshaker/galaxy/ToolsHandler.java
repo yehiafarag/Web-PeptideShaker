@@ -1,5 +1,6 @@
 package com.uib.web.peptideshaker.galaxy;
 
+import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.github.jmchilton.blend4j.galaxy.HistoriesClient;
 import com.github.jmchilton.blend4j.galaxy.ToolsClient;
 import com.github.jmchilton.blend4j.galaxy.WorkflowsClient;
@@ -26,6 +27,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class responsible for interaction with tools on Galaxy server
@@ -149,22 +152,29 @@ public class ToolsHandler {
     }
 
     /**
-     * Add default search parameter file to the user account
+     * Save search settings file into galaxy
      *
-     * @param workHistoryId the history id that the new re-indexed file will be
-     * stored in working history
-     *
-     * @return new re-indexed file id on galaxy
-     *
+     * @param fileName search parameters file name
+     * @param searchParameters searchParameters .par file
      */
-    public DataSet storeSearchParamfile(String workHistoryId) {
+    public void saveSearchGUIParameters(String workHistoryId, SearchParameters searchParameters, String fileName) {
 
-        String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
-        File file = new File(basepath + "/VAADIN/default_searching.par");
+        File file = new File(fileName + ".par");
+
+        if (file.exists()) {
+            file.delete();
+        }
+        try {
+            file.createNewFile();
+            SearchParameters.saveIdentificationParameters(searchParameters,file);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
         final ToolsClient.FileUploadRequest request = new ToolsClient.FileUploadRequest(workHistoryId, file);
         SimpleDateFormat sdfDate = new SimpleDateFormat("MMM dd yyyy HH:mm");
         String info = sdfDate.format(Page.getCurrent().getWebBrowser().getCurrentDate());
-        request.setDatasetName("Search settings (" + info + ").par");
+        request.setDatasetName(fileName.toUpperCase() + " - Search settings (" + info + ").par");
         List<OutputDataset> excList = galaxyToolClient.upload(request).getOutputs();
         if (excList != null && !excList.isEmpty()) {
             OutputDataset oDs = excList.get(0);
@@ -173,9 +183,7 @@ public class ToolsHandler {
             ds.setHistoryId(workHistoryId);
             ds.setGalaxyId(oDs.getId());
             ds.setDownloadUrl(oDs.getFullDownloadUrl());
-            return ds;
         }
-        return null;
     }
 
     /**

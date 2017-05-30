@@ -3,11 +3,14 @@ package com.uib.web.peptideshaker.presenter.components;
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
-import com.uib.web.peptideshaker.presenter.core.CloseButton;
+import com.compomics.util.experiment.massspectrometry.Charge;
+import com.compomics.util.preferences.DigestionPreferences;
 import com.uib.web.peptideshaker.presenter.core.form.ColorLabel;
 import com.uib.web.peptideshaker.presenter.core.form.HorizontalLabel2DropdownList;
+import com.uib.web.peptideshaker.presenter.core.form.HorizontalLabel2TextField;
 import com.uib.web.peptideshaker.presenter.core.form.HorizontalLabelDropDounList;
 import com.uib.web.peptideshaker.presenter.core.form.HorizontalLabelTextField;
 import com.uib.web.peptideshaker.presenter.core.form.HorizontalLabelTextFieldDropdownList;
@@ -15,8 +18,8 @@ import com.uib.web.peptideshaker.presenter.core.form.SparkLine;
 import com.vaadin.data.Property;
 import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.data.validator.IntegerRangeValidator;
-import com.vaadin.event.LayoutEvents;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.VaadinService;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -25,12 +28,14 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.PopupView;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
+import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -44,9 +49,9 @@ import java.util.Set;
  *
  * @author Yehia Farag
  */
-public class SearchSettingsLayout extends VerticalLayout {
+public abstract class SearchSettingsLayout extends VerticalLayout {
 
-//    private final SearchParameters searchParam;
+//    private final SearchParameters searchParameters;
     /**
      * The sequence factory.
      */
@@ -58,17 +63,19 @@ public class SearchSettingsLayout extends VerticalLayout {
     /**
      * Convenience array for forward ion type selection.
      */
-    private String[] forwardIons = {"a", "b", "c"};
+    private List<String> forwardIons = new ArrayList(Arrays.asList(new String[]{"a", "b", "c"}));
     /**
      * Convenience array for rewind ion type selection.
      */
-    private String[] rewindIons = {"x", "y", "z"};
+    private List<String> rewindIons = new ArrayList(Arrays.asList(new String[]{"x", "y", "z"}));
     /**
      * The post translational modifications factory.
      */
     private PTMFactory PTM = PTMFactory.getInstance();
 
     private final Set<String> commonModificationIds;
+    private Table fixedModificationTable;
+    private Table variableModificationTable;
 
     /**
      * Constructor to initialize the main setting parameters
@@ -88,13 +95,7 @@ public class SearchSettingsLayout extends VerticalLayout {
         Label setteingsLabel = new Label("Search Settings");
         titleLayout.addComponent(setteingsLabel);
 
-        CloseButton closeBtn = new CloseButton();
-        titleLayout.addComponent(closeBtn);
-        titleLayout.setComponentAlignment(closeBtn, Alignment.TOP_RIGHT);
-        closeBtn.addLayoutClickListener((LayoutEvents.LayoutClickEvent event) -> {
-            ((PopupView) SearchSettingsLayout.this.getParent()).setPopupVisible(false);
-        });
-
+;
         HorizontalLayout modificationContainer = inititModificationLayout();
         SearchSettingsLayout.this.addComponent(modificationContainer);
 
@@ -129,15 +130,14 @@ public class SearchSettingsLayout extends VerticalLayout {
         leftSideLayout.addComponent(leftTopLayout);
         leftSideLayout.setExpandRatio(leftTopLayout, 48);
 
-        Table fixedModificationTable = initModificationTable("Fixed Modifications");
+        fixedModificationTable = initModificationTable("Fixed Modifications");
         leftTopLayout.addComponent(fixedModificationTable);
         HorizontalLayout leftBottomLayout = new HorizontalLayout();
         leftBottomLayout.setSizeFull();
         leftBottomLayout.setSpacing(true);
         leftSideLayout.addComponent(leftBottomLayout);
         leftSideLayout.setExpandRatio(leftBottomLayout, 48);
-
-        Table variableModificationTable = initModificationTable("Variable Modifications");
+        variableModificationTable = initModificationTable("Variable Modifications");
         leftBottomLayout.addComponent(variableModificationTable);
         leftBottomLayout.setExpandRatio(variableModificationTable, 80);
 
@@ -387,6 +387,9 @@ public class SearchSettingsLayout extends VerticalLayout {
     private HorizontalLabel2DropdownList fragmentIonTypes;
     private HorizontalLabelTextFieldDropdownList precursorTolerance;
     private HorizontalLabelTextFieldDropdownList fragmentTolerance;
+    private HorizontalLabel2TextField precursorCharge;
+    private HorizontalLabel2TextField isotopes;
+    private SearchParameters searchParameters ;
 
     private GridLayout inititProteaseFragmentationLayout() {
         GridLayout proteaseFragmentationContainer = new GridLayout(2, 6);
@@ -437,7 +440,7 @@ public class SearchSettingsLayout extends VerticalLayout {
 
         specificityList = new HorizontalLabelDropDounList("Specificity");
         specificityList.updateData(specificityOptionList);
-        maxMissCleav = new HorizontalLabelTextField("Max Missed Cleavages", 2, new IntegerRangeValidator("Error Value", Integer.MIN_VALUE, Integer.MAX_VALUE));
+        maxMissCleav = new HorizontalLabelTextField("Max Missed Cleavages", 2, new IntegerRangeValidator("Error", Integer.MIN_VALUE, Integer.MAX_VALUE));
 
         Set<String> ionListI = new LinkedHashSet<>();
         ionListI.add("a");
@@ -459,19 +462,24 @@ public class SearchSettingsLayout extends VerticalLayout {
         Set<String> mzToleranceList = new LinkedHashSet<>();
         mzToleranceList.add("ppm");
         mzToleranceList.add("Da");
-        precursorTolerance = new HorizontalLabelTextFieldDropdownList("Precursor m/z Tolerance", 10.0, mzToleranceList, new DoubleRangeValidator("Error Value", Double.MIN_VALUE, Double.MAX_VALUE));
-        fragmentTolerance = new HorizontalLabelTextFieldDropdownList("Fragment m/z Tolerance", 0.5, mzToleranceList, new DoubleRangeValidator("Error Value", Double.MIN_VALUE, Double.MAX_VALUE));
+        precursorTolerance = new HorizontalLabelTextFieldDropdownList("Precursor m/z Tolerance", 10.0, mzToleranceList, new DoubleRangeValidator("Error ", Double.MIN_VALUE, Double.MAX_VALUE));
+        fragmentTolerance = new HorizontalLabelTextFieldDropdownList("Fragment m/z Tolerance", 0.5, mzToleranceList, new DoubleRangeValidator("Error ", Double.MIN_VALUE, Double.MAX_VALUE));
 
         proteaseFragmentationContainer.addComponent(precursorTolerance, 1, 1);
         proteaseFragmentationContainer.addComponent(fragmentTolerance, 1, 2);
-        proteaseFragmentationContainer.addComponent(initLabel2TextField("Precursor", "2", "4"), 1, 3);
-        proteaseFragmentationContainer.addComponent(initLabel2TextField("Isotopes", "0", "1"), 1, 4);
-        Button closeBtn = new Button("Close");
+        precursorCharge = new HorizontalLabel2TextField("Precursor Charge", 2, 4, new IntegerRangeValidator("Error ", Integer.MIN_VALUE, Integer.MAX_VALUE));
+        proteaseFragmentationContainer.addComponent(precursorCharge, 1, 3);
+        isotopes = new HorizontalLabel2TextField("Isotopes", 0, 1, new IntegerRangeValidator("Error", Integer.MIN_VALUE, Integer.MAX_VALUE));
+        proteaseFragmentationContainer.addComponent(isotopes, 1, 4);
+        Button closeBtn = new Button("Save & Close");
         closeBtn.setStyleName(ValoTheme.BUTTON_SMALL);
         closeBtn.addStyleName(ValoTheme.BUTTON_TINY);
         closeBtn.setHeight(25, Unit.PIXELS);
         closeBtn.addClickListener((Button.ClickEvent event) -> {
-            ((PopupView) SearchSettingsLayout.this.getParent()).setPopupVisible(false);
+            if (this.isValidForm()) {
+                saveSearchingFile(updateSearchingFile());
+                ((Window) SearchSettingsLayout.this.getParent()).setVisible(false);
+            }
         });
         proteaseFragmentationContainer.addComponent(closeBtn, 1, 5);
         proteaseFragmentationContainer.setComponentAlignment(closeBtn, Alignment.BOTTOM_RIGHT);
@@ -480,69 +488,42 @@ public class SearchSettingsLayout extends VerticalLayout {
 
     }
 
-    public void updateForms(SearchParameters searchParam) {
+    public void updateForms(SearchParameters searchParameters) {
+        this.searchParameters = searchParameters;
         Set<String> enzList = new LinkedHashSet<>();
-        Enzyme enzyme = searchParam.getEnzyme();
-        String enzymeName = null;
-        if (enzyme != null) {
-            enzymeName = enzyme.getName();
-            if (!enzymeFactory.enzymeLoaded(enzymeName)) {
-                enzymeFactory.addEnzyme(searchParam.getEnzyme());
-            }
-            enzList.add(enzymeName);
-        }
+
         List<Enzyme> enzObjList = enzymeFactory.getEnzymes();
         for (Enzyme enz : enzObjList) {
             enzList.add(enz.getName());
         }
-        if (enzymeName == null && !enzList.isEmpty()) {
-            enzymeName = "Trypsin";
-        }
-
         enzymeList.updateData(enzList);
-        enzymeList.setSelected(enzymeName);
 
-        digestionList.setSelected("Enzyme");
-        specificityList.setSelected("Specific");
-        fragmentIonTypes.setSelectedI("b");
-        fragmentIonTypes.setSelectedII("y");
-        precursorTolerance.setSelected("ppm");
-        fragmentTolerance.setSelected("Da");
+        if (searchParameters.getDigestionPreferences() != null) {
+            digestionList.setSelected(searchParameters.getDigestionPreferences().getCleavagePreference().toString());
+            enzymeList.setSelected(searchParameters.getDigestionPreferences().getEnzymes().get(0).getName());
+            specificityList.setSelected(searchParameters.getDigestionPreferences().getSpecificity(searchParameters.getDigestionPreferences().getEnzymes().get(0).getName()));
+            maxMissCleav.setSelectedValue(searchParameters.getDigestionPreferences().getnMissedCleavages(searchParameters.getDigestionPreferences().getEnzymes().get(0).getName()));
+            fragmentIonTypes.setSelectedI(forwardIons.get(searchParameters.getForwardIons().get(0)));
+            fragmentIonTypes.setSelectedII(rewindIons.get(searchParameters.getRewindIons().get(0)));
+            precursorTolerance.setTextValue(searchParameters.getPrecursorAccuracy());
+            precursorTolerance.setSelected(searchParameters.getPrecursorAccuracyType().toString());
+            fragmentTolerance.setTextValue(searchParameters.getFragmentIonAccuracy());
+            fragmentTolerance.setSelected(searchParameters.getFragmentAccuracyType().toString());
+            precursorCharge.setFirstSelectedValue(searchParameters.getMinChargeSearched().value);
+            precursorCharge.setSecondSelectedValue(searchParameters.getMaxChargeSearched().value);
+            isotopes.setFirstSelectedValue(searchParameters.getMinIsotopicCorrection());
+            isotopes.setSecondSelectedValue(searchParameters.getMaxIsotopicCorrection());
 
-    }
+        } else {
+            enzymeList.setSelected("Trypsin");
+            digestionList.setSelected("Enzyme");
+            specificityList.setSelected("Specific");
+            fragmentIonTypes.setSelectedI("b");
+            fragmentIonTypes.setSelectedII("y");
+            precursorTolerance.setSelected("ppm");
+            fragmentTolerance.setSelected("Da");
 
-    private HorizontalLayout initLabel2TextField(String title, String defaultValue1, String defaultValue2) {
-        HorizontalLayout container = new HorizontalLayout();
-        container.setSizeFull();
-        Label cap = new Label(title);
-        cap.addStyleName(ValoTheme.LABEL_TINY);
-        cap.addStyleName(ValoTheme.LABEL_SMALL);
-        cap.addStyleName("smallundecorated");
-        container.addComponent(cap);
-        container.setExpandRatio(cap, 45);
-
-        TextField textField = new TextField();
-        textField.setValue(defaultValue1);
-        textField.addStyleName(ValoTheme.TEXTFIELD_ALIGN_CENTER);
-        textField.setWidth(100, Unit.PERCENTAGE);
-        textField.addStyleName(ValoTheme.TEXTFIELD_TINY);
-        textField.setNullRepresentation(defaultValue1);
-        textField.setWidth(100, Unit.PERCENTAGE);
-        textField.setHeight(25, Unit.PIXELS);
-        container.addComponent(textField);
-        container.setExpandRatio(textField, 27.5f);
-
-        TextField textField2 = new TextField();
-        textField2.setValue(defaultValue2);
-        textField2.addStyleName(ValoTheme.TEXTFIELD_ALIGN_CENTER);
-        textField2.setWidth(100, Unit.PERCENTAGE);
-        textField2.addStyleName(ValoTheme.TEXTFIELD_TINY);
-        textField2.setNullRepresentation(defaultValue1);
-        textField2.setWidth(100, Unit.PERCENTAGE);
-        textField2.setHeight(25, Unit.PIXELS);
-        container.addComponent(textField2);
-        container.setExpandRatio(textField2, 27.5f);
-        return container;
+        }
 
     }
 
@@ -553,7 +534,48 @@ public class SearchSettingsLayout extends VerticalLayout {
                 && maxMissCleav.isValid()
                 && fragmentIonTypes.isValid()
                 && precursorTolerance.isValid()
-                && fragmentTolerance.isValid()};
+                && fragmentTolerance.isValid()
+                && precursorCharge.isValid() && isotopes.isValid();
+    }
+
+    private SearchParameters updateSearchingFile() {
+        PtmSettings ptmSettings = new PtmSettings();
+        for (Object modificationId : fixedModificationTable.getItemIds()) {
+            ptmSettings.addFixedModification(PTM.getPTM(modificationId.toString()));
+        }
+        for (Object modificationId : variableModificationTable.getItemIds()) {
+            ptmSettings.addVariableModification(PTM.getPTM(modificationId.toString()));
+        }
+        searchParameters.setPtmSettings(ptmSettings);
+        DigestionPreferences digPref = new DigestionPreferences();
+        ArrayList<Enzyme> enzymes = new ArrayList<>();
+        enzymes.add(enzymeFactory.getEnzyme(enzymeList.getSelectedValue()));
+        digPref.setEnzymes(enzymes);
+        digPref.setSpecificity(enzymeList.getSelectedValue(), DigestionPreferences.Specificity.valueOf(specificityList.getSelectedValue().toLowerCase()));
+        digPref.setnMissedCleavages(enzymeList.getSelectedValue(), Integer.valueOf(maxMissCleav.getSelectedValue()));
+        digPref.setCleavagePreference(DigestionPreferences.CleavagePreference.valueOf(digestionList.getSelectedValue().toLowerCase()));
+        searchParameters.setDigestionPreferences(digPref);
+        ArrayList<Integer> forwardIonsv = new ArrayList<>();
+        forwardIonsv.add(forwardIons.indexOf(fragmentIonTypes.getFirstSelectedValue()));
+        searchParameters.setForwardIons(forwardIonsv);
+        ArrayList<Integer> rewindIonsv = new ArrayList<>();
+        rewindIonsv.add(rewindIons.indexOf(fragmentIonTypes.getSecondSelectedValue()));
+        searchParameters.setRewindIons(rewindIonsv);
+        searchParameters.setPrecursorAccuracy(Double.valueOf(precursorTolerance.getFirstSelectedValue()));
+        searchParameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.valueOf(precursorTolerance.getSecondSelectedValue().toUpperCase()));
+        searchParameters.setFragmentIonAccuracy(Double.valueOf(fragmentTolerance.getFirstSelectedValue()));
+        searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.valueOf(fragmentTolerance.getSecondSelectedValue().toUpperCase()));
+
+        searchParameters.setMinChargeSearched(new Charge(Charge.PLUS, Integer.valueOf(precursorCharge.getFirstSelectedValue())));
+        searchParameters.setMaxChargeSearched(new Charge(Charge.PLUS, Integer.valueOf(precursorCharge.getSecondSelectedValue())));
+
+        searchParameters.setMinIsotopicCorrection(Integer.valueOf(isotopes.getSecondSelectedValue()));
+        searchParameters.setMaxIsotopicCorrection(Integer.valueOf(isotopes.getSecondSelectedValue()));
+
+        return searchParameters;
 
     }
+
+    public abstract void saveSearchingFile(SearchParameters searchParameters);
+
 }

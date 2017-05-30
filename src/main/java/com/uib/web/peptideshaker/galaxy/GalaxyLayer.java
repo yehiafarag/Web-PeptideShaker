@@ -1,5 +1,6 @@
 package com.uib.web.peptideshaker.galaxy;
 
+import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.github.jmchilton.blend4j.galaxy.GalaxyInstance;
 import com.uib.web.peptideshaker.presenter.components.GalaxyConnectionPanelLayout;
 import com.vaadin.server.Page;
@@ -111,12 +112,7 @@ public abstract class GalaxyLayer {
                             @Override
                             public String reIndexFile(String id, String historyId, String workHistoryId) {
                                 return GalaxyLayer.this.reIndexFile(id, historyId, workHistoryId);
-                            }
-
-                            @Override
-                            public DataSet storeSearchParamfile(String workHistoryId) {
-                                return GalaxyLayer.this.storeSearchParamfile(workHistoryId);
-                            }
+                            }                           
 
                         };//                        
                         connectionBtn.setCaption("Disconnect");
@@ -267,22 +263,18 @@ public abstract class GalaxyLayer {
         return null;
     }
 
-    /**
-     * Add default search parameter file to the user account
+   /**
+     * Save search settings file into galaxy
      *
-     * @param workHistoryId the history id that the new re-indexed file will be
-     * stored in working history
-     *
-     * @return new re-indexed file id on galaxy
-     *
+     * @param fileName search parameters file name
+     * @param searchParameters searchParameters .par file
      */
-    public DataSet storeSearchParamfile(String workHistoryId) {
+    public  void saveSearchGUIParameters(SearchParameters searchParameters,String fileName){
 
         if (toolsHandler != null) {
-            return toolsHandler.storeSearchParamfile(workHistoryId);
+             toolsHandler.saveSearchGUIParameters(historyHandler.getWorkingHistoryId(),searchParameters, fileName);
         }
 
-        return null;
     }
 
     /**

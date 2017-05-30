@@ -1,5 +1,6 @@
 package com.uib.web.peptideshaker;
 
+import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.uib.web.peptideshaker.galaxy.GalaxyLayer;
 import com.uib.web.peptideshaker.galaxy.HistoryHandler;
 import com.uib.web.peptideshaker.presenter.PeptideShakerViewPresenter;
@@ -58,6 +59,11 @@ public class WebPeptideShakerApp extends VerticalLayout {
             @Override
             public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList) {
                 Galaxy_Layer.executeWorkFlow(fastaFileId, mgfIdsList, searchEnginesList);
+            }
+
+            @Override
+            public void saveSearchGUIParameters(SearchParameters searchParameters, String fileName) {
+                Galaxy_Layer.saveSearchGUIParameters( searchParameters,  fileName);
             }
 
         };

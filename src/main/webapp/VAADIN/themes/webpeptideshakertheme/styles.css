@@ -13527,6 +13527,17 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: normal !important;
 }
 
+.webpeptideshakertheme .windowtitle {
+	font-size: 13px;
+	font-weight: bold;
+	color: #3d84dc;
+	cursor: pointer;
+}
+
+.webpeptideshakertheme .popupwindow {
+	border: 2px solid gray;
+}
+
 .webpeptideshakertheme .horizontalcss .v-slot-leftsidebtncontainer {
 	width: 1% !important;
 	background-color: white;

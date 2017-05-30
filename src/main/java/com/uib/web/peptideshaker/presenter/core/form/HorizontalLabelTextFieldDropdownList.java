@@ -26,6 +26,7 @@ public class HorizontalLabelTextFieldDropdownList extends HorizontalLayout {
      * Second drop-down list.
      */
     private final ComboBox list2;
+    private final String defaultValue;
 
     /**
      * Constructor to initialize the main attributes
@@ -33,7 +34,7 @@ public class HorizontalLabelTextFieldDropdownList extends HorizontalLayout {
      * @param caption title
      * @param values the drop-down list values
      */
-    public HorizontalLabelTextFieldDropdownList(String title, Object defaultValue, Set<String> values,Validator validator) {
+    public HorizontalLabelTextFieldDropdownList(String title, Object defaultValue, Set<String> values, Validator validator) {
 
         HorizontalLabelTextFieldDropdownList.this.setSizeFull();
         Label cap = new Label(title);
@@ -44,27 +45,24 @@ public class HorizontalLabelTextFieldDropdownList extends HorizontalLayout {
         HorizontalLabelTextFieldDropdownList.this.setExpandRatio(cap, 45);
 
         if (defaultValue == null) {
-            defaultValue = 0.0;
+            this.defaultValue = "0.0";
+        } else {
+            this.defaultValue = defaultValue.toString();
         }
-       
+
         if (values == null) {
             values = new HashSet<>();
         }
-        if (values.isEmpty()) {
-            values.add("N/A");
-            values.add("x");
-            values.add("y");
-            values.add("z");
-        }
+
         textField = new TextField();
         textField.setValidationVisible(true);
         textField.setConverter(Double.class);
-     
+
         textField.addValidator(validator);
         textField.addStyleName(ValoTheme.TEXTFIELD_ALIGN_CENTER);
         textField.setWidth(100, Unit.PERCENTAGE);
         textField.addStyleName(ValoTheme.TEXTFIELD_TINY);
-        textField.setNullRepresentation(defaultValue.toString());
+        textField.setNullRepresentation(this.defaultValue);
         textField.setWidth(100, Unit.PERCENTAGE);
         textField.setHeight(25, Unit.PIXELS);
         HorizontalLabelTextFieldDropdownList.this.addComponent(textField);
@@ -88,6 +86,10 @@ public class HorizontalLabelTextFieldDropdownList extends HorizontalLayout {
     }
 
     public String getFirstSelectedValue() {
+        if (textField.getValue() == null) {
+            return this.defaultValue;
+        
+        }
         return textField.getValue();
 
     }
@@ -96,17 +98,22 @@ public class HorizontalLabelTextFieldDropdownList extends HorizontalLayout {
         return list2.getValue().toString();
 
     }
-    public void setSelected(Object objectId){
-        list2.select(objectId);
-    
+
+    public void setTextValue(Object value){
+        this.textField.setValue(value.toString());
     }
-     public boolean isValid(){
+    public void setSelected(Object objectId) {
+        list2.select(objectId);
+
+    }
+
+    public boolean isValid() {
         boolean check1 = textField.isValid();
-        
+
         list2.setRequired(true);
         boolean check2 = list2.isValid();
         list2.setRequired(!check2);
-        return check1&&check2;
+        return check1 && check2;
     }
 
 }

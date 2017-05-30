@@ -22,6 +22,7 @@ public class HorizontalLabelTextField extends HorizontalLayout {
      * Main drop-down list.
      */
     private final TextField textField;
+    private String defaultValue;
 
     /**
      * Constructor to initialize the main attributes
@@ -39,7 +40,9 @@ public class HorizontalLabelTextField extends HorizontalLayout {
         HorizontalLabelTextField.this.setExpandRatio(cap, 45);
 
         if (defaultValue == null) {
-            defaultValue = 0;
+            this.defaultValue = "0";
+        } else {
+            this.defaultValue = defaultValue.toString();
         }
 
         textField = new TextField();
@@ -63,7 +66,15 @@ public class HorizontalLabelTextField extends HorizontalLayout {
 
     }
 
+    public void setSelectedValue(Object value){
+        textField.setValue(value+"");
+    
+    }
     public String getSelectedValue() {
+        if (textField.getValue() == null) {
+            return defaultValue;
+        
+        }
         return textField.getValue();
 
     }

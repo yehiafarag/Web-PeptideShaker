@@ -1,5 +1,6 @@
 package com.uib.web.peptideshaker.presenter;
 
+import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.uib.web.peptideshaker.galaxy.DataSet;
 import com.uib.web.peptideshaker.presenter.components.WorkFlowLayout;
 import com.uib.web.peptideshaker.presenter.core.BigSideBtn;
@@ -66,13 +67,15 @@ public abstract class ToolPresenter extends VerticalLayout implements PresenterV
     }
 
     /**
-     * Update the work-flow input files     *
-     *@param  searchSettingsMap search settings .par files map
+     * Update the work-flow input files
+     *
+     *
+     * @param searchSettingsMap search settings .par files map
      * @param fastaFilesMap The main FASTA File Map (ID to Name).
      * @param mgfFilesMap The main MGF File Map (ID to Name).
      */
-    public void updateHistoryHandler(Map<String, DataSet> searchSettingsMap,Map<String, DataSet> fastaFilesMap, Map<String, DataSet> mgfFilesMap) {
-        workflowLayout.updateForm(searchSettingsMap,fastaFilesMap, mgfFilesMap);
+    public void updateHistoryHandler(Map<String, DataSet> searchSettingsMap, Map<String, DataSet> fastaFilesMap, Map<String, DataSet> mgfFilesMap) {
+        workflowLayout.updateForm(searchSettingsMap, fastaFilesMap, mgfFilesMap);
     }
 
     private void initLayout() {
@@ -83,11 +86,16 @@ public abstract class ToolPresenter extends VerticalLayout implements PresenterV
         btnContainer.setHeightUndefined();
         btnContainer.setSpacing(true);
         btnContainer.setMargin(new MarginInfo(false, false, true, false));
-       
+
         workflowLayout = new WorkFlowLayout() {
             @Override
             public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList) {
                 ToolPresenter.this.executeWorkFlow(fastaFileId, mgfIdsList, searchEnginesList);
+            }
+
+            @Override
+            public void saveSearchGUIParameters(SearchParameters searchParameters,String fileName) {
+                ToolPresenter.this.saveSearchGUIParameters(searchParameters, fileName);
             }
 
         };
@@ -253,5 +261,13 @@ public abstract class ToolPresenter extends VerticalLayout implements PresenterV
      * @param historyId galaxy history id that will store the results
      */
     public abstract void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList);
+    
+     /**
+     * Save search settings file into galaxy
+     *
+     * @param fileName search parameters file name
+     * @param searchParameters searchParameters .par file
+     */
+    public abstract void saveSearchGUIParameters(SearchParameters searchParameters,String fileName);
 
 }

@@ -218,6 +218,9 @@ public abstract class HistoryHandler {
                             ds.setGalaxyId(map.get("id").toString());
                             this.searchSetiingsFilesMap.put(ds.getGalaxyId(), ds);
                         }
+                        if(map.get("name").toString().endsWith(".par")){
+                            System.out.println("at the file bta3y "+map.get("data_type").toString());
+                        }
 
                     }
                 } else {
@@ -237,6 +240,7 @@ public abstract class HistoryHandler {
                         } else if (map.get("data_type").toString().equalsIgnoreCase("galaxy.datatypes.text.Json") && map.get("name").toString().endsWith(".par")) {
                             this.searchSetiingsFilesMap.put(ds.getGalaxyId(), ds);
                         }
+                        
 //                    if(map.get("purged").)
 //                    for (String key : map.keySet()) {
 //                        System.err.println("searching resilts " + key);
@@ -411,16 +415,16 @@ public abstract class HistoryHandler {
      */
     public abstract String reIndexFile(String id, String historyId, String workHistoryId);
 
-    /**
-     * Add default search parameter file to the user account
-     *
-     * @param workHistoryId the history id that the new re-indexed file will be
-     * stored in working history
-     *
-     * @return new dataset file from galaxy
-     *
-     */
-    public abstract DataSet storeSearchParamfile(String workHistoryId);
+//    /**
+//     * Add default search parameter file to the user account
+//     *
+//     * @param workHistoryId the history id that the new re-indexed file will be
+//     * stored in working history
+//     *
+//     * @return new dataset file from galaxy
+//     *
+//     */
+//    public abstract DataSet storeSearchParamfile(String workHistoryId);
 
     private void notReadyHistory(String name) {
         if (name == null) {

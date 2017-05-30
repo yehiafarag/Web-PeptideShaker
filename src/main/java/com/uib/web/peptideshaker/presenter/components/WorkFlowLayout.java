@@ -4,6 +4,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Se
 import com.uib.web.peptideshaker.galaxy.DataSet;
 import com.uib.web.peptideshaker.presenter.core.DropDownList;
 import com.uib.web.peptideshaker.presenter.core.MultiSelectOptionGroup;
+import com.uib.web.peptideshaker.presenter.core.PopupWindow;
 import com.vaadin.data.Property;
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.server.VaadinService;
@@ -42,6 +43,8 @@ public abstract class WorkFlowLayout extends Panel {
      */
     private final MultiSelectOptionGroup mgfFileList;
 
+    private final SearchSettingsLayout searchSettingsLayout;
+
     /**
      * Constructor to initialize the main attributes.
      */
@@ -61,7 +64,7 @@ public abstract class WorkFlowLayout extends Panel {
         titleLabel.setStyleName("frametitle");
         content.addComponent(titleLabel);
 
-        searchSettingsFileList = new DropDownList("Search Settings");
+        searchSettingsFileList = new DropDownList("Search Settings (Select or Enter New Name)");
         content.addComponent(searchSettingsFileList);
 
         fastaFileList = new DropDownList("Protein Database (FASTA)");
@@ -87,13 +90,29 @@ public abstract class WorkFlowLayout extends Panel {
         bottomLayout.setStyleName("bottomformlayout");
         bottomLayout.setSpacing(true);
         content.addComponent(bottomLayout);
-        SearchSettingsLayout searchSettingsLayout = new SearchSettingsLayout();
+        searchSettingsLayout = new SearchSettingsLayout() {
+            @Override
+            public void saveSearchingFile(SearchParameters searchParameters) {
+                checkAndSaveSearchSettingsFile(searchParameters);
 
-        PopupView advancedSearchOption = new PopupView("Edit Search Settings", searchSettingsLayout);
+            }
 
+        };
+
+        PopupWindow editSearchOption = new PopupWindow("Edit Search Settings", searchSettingsLayout);
+
+//        PopupView advancedSearchOption = new PopupView("Edit Search Settings", searchSettingsLayout);
+        editSearchOption.setSizeFull();
+        editSearchOption.addStyleName("centerwindow");
+//        advancedSearchOption.setHideOnMouseOut(false);
+        bottomLayout.addComponent(editSearchOption);
+
+        PopupWindow advancedSearchOption = new PopupWindow("Advanced Search Settings", new VerticalLayout());
+
+//        PopupView advancedSearchOption = new PopupView("Edit Search Settings", searchSettingsLayout);
         advancedSearchOption.setSizeFull();
         advancedSearchOption.addStyleName("centerwindow");
-        advancedSearchOption.setHideOnMouseOut(false);
+//        advancedSearchOption.setHideOnMouseOut(false);
         bottomLayout.addComponent(advancedSearchOption);
 
         Button executeWorkFlow = new Button("Execute");
@@ -101,22 +120,21 @@ public abstract class WorkFlowLayout extends Panel {
         executeWorkFlow.addStyleName(ValoTheme.BUTTON_TINY);
         bottomLayout.addComponent(executeWorkFlow);
 
-        advancedSearchOption.addPopupVisibilityListener((PopupView.PopupVisibilityEvent event) -> {
-            if (event.isPopupVisible()) {
-                return;
-            }
-            if (!searchSettingsLayout.isValidForm()) {
-                advancedSearchOption.addStyleName("error");
-                executeWorkFlow.setEnabled(false);
-            } else {
-                System.out.println("at check the file and save it");
-                checkAndSaveSettingFile(advancedSearchOption.getData() + "");
-                advancedSearchOption.setData(null);
-                executeWorkFlow.setEnabled(true);
-
-            }
-        });
-
+//        advancedSearchOption.addPopupVisibilityListener((PopupView.PopupVisibilityEvent event) -> {
+//            if (event.isPopupVisible()) {
+//                return;
+//            }
+//            if (!searchSettingsLayout.isValidForm()) {
+//                advancedSearchOption.addStyleName("error");
+//                executeWorkFlow.setEnabled(false);
+//            } else {
+//                System.out.println("at check the file and save it");
+//                checkAndSaveSettingFile(advancedSearchOption.getData() + "");
+//                advancedSearchOption.setData(null);
+//                executeWorkFlow.setEnabled(true);
+//
+//            }
+//        });
         executeWorkFlow.addClickListener((Button.ClickEvent event) -> {
             String fastFileId = fastaFileList.getSelectedValue();
             Set<String> spectrumIds = mgfFileList.getSelectedValue();
@@ -131,6 +149,7 @@ public abstract class WorkFlowLayout extends Panel {
         mgfFileList.setEnabled(false);
         searchEngines.setEnabled(false);
         advancedSearchOption.setEnabled(false);
+        editSearchOption.setEnabled(false);
         executeWorkFlow.setEnabled(false);
         searchSettingsFileList.addValueChangeListener((Property.ValueChangeEvent event) -> {
             if (searchSettingsFileList.getSelectedValue() != null) {
@@ -138,24 +157,30 @@ public abstract class WorkFlowLayout extends Panel {
                 mgfFileList.setEnabled(true);
                 searchEngines.setEnabled(true);
                 advancedSearchOption.setEnabled(true);
+                editSearchOption.setEnabled(true);
                 executeWorkFlow.setEnabled(true);
-                String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
-                File file = new File(basepath + "/VAADIN/default_searching.par");
-                SearchParameters searchParam = null;
-                try {
-                    searchParam = SearchParameters.getIdentificationParameters(file);
-                } catch (IOException | ClassNotFoundException ex) {
-                    ex.printStackTrace();
-                }
-                searchSettingsLayout.updateForms(searchParam);
 
             }
         });
         searchSettingsFileList.addNewItemHandler((String newItemCaption) -> {
             searchSettingsFileList.addItem(newItemCaption);
+            editSearchOption.setEnabled(true);
             advancedSearchOption.setEnabled(true);
-            advancedSearchOption.setPopupVisible(true);
-            advancedSearchOption.setData(newItemCaption);
+            editSearchOption.setPopupVisible(true);
+            editSearchOption.setData(newItemCaption);
+            String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
+            File file = new File(basepath + "/VAADIN/default_searching.par");
+            SearchParameters searchParameters;
+            try {
+                searchParameters = SearchParameters.getIdentificationParameters(file);
+            } catch (IOException | ClassNotFoundException ex) {
+
+                ex.printStackTrace();
+                return;
+            }
+            searchParameters.setDefaultAdvancedSettings();
+            searchSettingsLayout.updateForms(searchParameters);
+
         }, "Add new settings name");
 
     }
@@ -200,9 +225,18 @@ public abstract class WorkFlowLayout extends Panel {
      */
     public abstract void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList);
 
-    private void checkAndSaveSettingFile(String settingId) {
-        if (searchSettingsMap != null && !searchSettingsMap.containsKey(settingId)) {
+    /**
+     * Save search settings file into galaxy
+     *
+     * @param fileName search parameters file name
+     * @param searchParameters searchParameters .par file
+     */
+    public abstract void saveSearchGUIParameters(SearchParameters searchParameters, String fileName);
+
+    private void checkAndSaveSearchSettingsFile(SearchParameters searchParameters) {
+        if (searchSettingsMap != null && !searchSettingsMap.containsKey(searchSettingsFileList.getSelectedValue())) {
             System.out.println("at bing lets save it :-D ");
+            saveSearchGUIParameters(searchParameters, searchSettingsFileList.getSelectedValue());
         }
 
     }
