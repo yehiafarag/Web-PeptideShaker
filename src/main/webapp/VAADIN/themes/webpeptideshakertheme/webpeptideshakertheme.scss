@@ -546,6 +546,12 @@
     .popupwindow{
         border:2px solid gray;
     }
+    .focos .v-filterselect-input{
+        border:2px solid  rgba(18, 120, 239, 0.96)!important;
+    }
+    .focos .v-filterselect[class*="prompt"] > [class*="input"]{
+        color:rgba(18, 120, 239, 0.96);
+    }
     /*    .v-has-caption.v-has-width > .inline-label.v-widget {
             width: 50% !important;
             float: right;

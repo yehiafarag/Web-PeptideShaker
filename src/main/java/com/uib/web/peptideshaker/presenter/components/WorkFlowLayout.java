@@ -2,6 +2,7 @@ package com.uib.web.peptideshaker.presenter.components;
 
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.uib.web.peptideshaker.galaxy.DataSet;
+import com.uib.web.peptideshaker.galaxy.GalaxyFile;
 import com.uib.web.peptideshaker.presenter.core.DropDownList;
 import com.uib.web.peptideshaker.presenter.core.MultiSelectOptionGroup;
 import com.uib.web.peptideshaker.presenter.core.PopupWindow;
@@ -44,6 +45,7 @@ public abstract class WorkFlowLayout extends Panel {
     private final MultiSelectOptionGroup mgfFileList;
 
     private final SearchSettingsLayout searchSettingsLayout;
+    private final PopupWindow editSearchOption;
 
     /**
      * Constructor to initialize the main attributes.
@@ -66,6 +68,7 @@ public abstract class WorkFlowLayout extends Panel {
 
         searchSettingsFileList = new DropDownList("Search Settings (Select or Enter New Name)");
         content.addComponent(searchSettingsFileList);
+        searchSettingsFileList.setFocous();
 
         fastaFileList = new DropDownList("Protein Database (FASTA)");
         content.addComponent(fastaFileList);
@@ -94,12 +97,12 @@ public abstract class WorkFlowLayout extends Panel {
             @Override
             public void saveSearchingFile(SearchParameters searchParameters) {
                 checkAndSaveSearchSettingsFile(searchParameters);
-
+                editSearchOption.setPopupVisible(false);
             }
 
         };
 
-        PopupWindow editSearchOption = new PopupWindow("Edit Search Settings", searchSettingsLayout);
+        editSearchOption = new PopupWindow("Edit Search Settings", searchSettingsLayout);
 
 //        PopupView advancedSearchOption = new PopupView("Edit Search Settings", searchSettingsLayout);
         editSearchOption.setSizeFull();
@@ -159,14 +162,26 @@ public abstract class WorkFlowLayout extends Panel {
                 advancedSearchOption.setEnabled(true);
                 editSearchOption.setEnabled(true);
                 executeWorkFlow.setEnabled(true);
+                File file = searchSettingsMap.get(searchSettingsFileList.getSelectedValue()).getFile();
+                SearchParameters searchParameters;
+                try {
+                    searchParameters = SearchParameters.getIdentificationParameters(file);
+                } catch (IOException | ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                    return;
+                }
+                searchSettingsLayout.updateForms(searchParameters);
 
             }
         });
         searchSettingsFileList.addNewItemHandler((String newItemCaption) -> {
+            for (GalaxyFile gf : searchSettingsMap.values()) {
+                if (gf.getDataset().getName().contains(newItemCaption)) {
+                    return;
+                }              
+
+            }
             searchSettingsFileList.addItem(newItemCaption);
-            editSearchOption.setEnabled(true);
-            advancedSearchOption.setEnabled(true);
-            editSearchOption.setPopupVisible(true);
             editSearchOption.setData(newItemCaption);
             String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
             File file = new File(basepath + "/VAADIN/default_searching.par");
@@ -181,10 +196,15 @@ public abstract class WorkFlowLayout extends Panel {
             searchParameters.setDefaultAdvancedSettings();
             searchSettingsLayout.updateForms(searchParameters);
 
+            editSearchOption.setEnabled(true);
+            advancedSearchOption.setEnabled(true);
+            editSearchOption.setPopupVisible(true);
+            searchSettingsFileList.setSelected(newItemCaption);
+
         }, "Add new settings name");
 
     }
-    private Map<String, DataSet> searchSettingsMap;
+    private Map<String, GalaxyFile> searchSettingsMap;
 
     /**
      * Update the tools input forms
@@ -193,20 +213,25 @@ public abstract class WorkFlowLayout extends Panel {
      * @param fastaFilesMap FASTA files map
      * @param mgfFilesMap MGF file map
      */
-    public void updateForm(Map<String, DataSet> searchSettingsMap, Map<String, DataSet> fastaFilesMap, Map<String, DataSet> mgfFilesMap) {
+    public void updateForm(Map<String, GalaxyFile> searchSettingsMap, Map<String, DataSet> fastaFilesMap, Map<String, DataSet> mgfFilesMap) {
 
         this.searchSettingsMap = searchSettingsMap;
         Map<String, String> searchSettingsFileIdToNameMap = new LinkedHashMap<>();
+        Object selectedId = "";
         for (String id : searchSettingsMap.keySet()) {
-            searchSettingsFileIdToNameMap.put(id, searchSettingsMap.get(id).getName().replace(".par", ""));
+            searchSettingsFileIdToNameMap.put(id, searchSettingsMap.get(id).getDataset().getName().replace(".par", ""));
+            selectedId = id;
         }
         searchSettingsFileList.updateList(searchSettingsFileIdToNameMap);
+        searchSettingsFileList.setSelected(selectedId);
 
         Map<String, String> fastaFileIdToNameMap = new LinkedHashMap<>();
         for (String id : fastaFilesMap.keySet()) {
             fastaFileIdToNameMap.put(id, fastaFilesMap.get(id).getName());
+            selectedId = id;
         }
         fastaFileList.updateList(fastaFileIdToNameMap);
+        fastaFileList.setSelected(selectedId);
         Map<String, String> mgfFileIdToNameMap = new LinkedHashMap<>();
         for (String id : mgfFilesMap.keySet()) {
             mgfFileIdToNameMap.put(id, mgfFilesMap.get(id).getName());
@@ -231,12 +256,19 @@ public abstract class WorkFlowLayout extends Panel {
      * @param fileName search parameters file name
      * @param searchParameters searchParameters .par file
      */
-    public abstract void saveSearchGUIParameters(SearchParameters searchParameters, String fileName);
+    public abstract Map<String, GalaxyFile> saveSearchGUIParameters(SearchParameters searchParameters, String fileName);
 
     private void checkAndSaveSearchSettingsFile(SearchParameters searchParameters) {
-        if (searchSettingsMap != null && !searchSettingsMap.containsKey(searchSettingsFileList.getSelectedValue())) {
-            System.out.println("at bing lets save it :-D ");
-            saveSearchGUIParameters(searchParameters, searchSettingsFileList.getSelectedValue());
+        searchSettingsMap = saveSearchGUIParameters(searchParameters, searchSettingsFileList.getSelectedValue());
+        if (searchSettingsMap != null && !searchSettingsMap.containsKey(searchSettingsFileList.getSelectedValue())) {            
+            Map<String, String> searchSettingsFileIdToNameMap = new LinkedHashMap<>();
+            String objectId = "";
+            for (String id : searchSettingsMap.keySet()) {
+                searchSettingsFileIdToNameMap.put(id, searchSettingsMap.get(id).getDataset().getName().replace(".par", ""));
+                objectId = id;
+            }
+            searchSettingsFileList.updateList(searchSettingsFileIdToNameMap);
+            searchSettingsFileList.setSelected(objectId);
         }
 
     }

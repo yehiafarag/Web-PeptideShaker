@@ -14,6 +14,7 @@ import com.vaadin.ui.Notification;
 
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ public abstract class HistoryHandler {
     /**
      * The main Search settings .par File Map.
      */
-    private final Map<String, DataSet> searchSetiingsFilesMap;
+    private final Map<String, GalaxyFile> searchSetiingsFilesMap;
     /**
      * The main FASTA File Map.
      */
@@ -77,7 +78,7 @@ public abstract class HistoryHandler {
      * @param Galaxy_Instance the main Galaxy instance in the system
      *
      */
-    public HistoryHandler(GalaxyInstance Galaxy_Instance) {
+    public HistoryHandler(GalaxyInstance Galaxy_Instance, File userFolder) {
         this.Galaxy_Instance = Galaxy_Instance;
         this.searchSetiingsFilesMap = new LinkedHashMap<>();
         this.fastaFilesMap = new LinkedHashMap<>();
@@ -101,7 +102,7 @@ public abstract class HistoryHandler {
         progressWindow.setVisible(false);
         UI.getCurrent().addWindow(progressWindow);
 
-        this.updateHistoryDatastructure();
+        this.updateHistoryDatastructure(userFolder);
 
     }
 
@@ -110,7 +111,7 @@ public abstract class HistoryHandler {
      *
      * @return searchSetiingsFilesMap
      */
-    public Map<String, DataSet> getSearchSettingsFilesMap() {
+    public Map<String, GalaxyFile> getSearchSettingsFilesMap() {
         return searchSetiingsFilesMap;
     }
 
@@ -137,7 +138,7 @@ public abstract class HistoryHandler {
      *
      * @return mgfFilesMap
      */
-    public final void updateHistoryDatastructure() {
+    public final void updateHistoryDatastructure(File userFolder) {
         try {
 
             fastaFilesMap.clear();
@@ -216,7 +217,9 @@ public abstract class HistoryHandler {
                             ds.setName(map.get("name").toString());
                             ds.setHistoryId(history.getId());
                             ds.setGalaxyId(map.get("id").toString());
-                            this.searchSetiingsFilesMap.put(ds.getGalaxyId(), ds);
+                            ds.setDownloadUrl(Galaxy_Instance.getGalaxyUrl()+"/datasets/"+ds.getGalaxyId()+"/display");
+                            GalaxyFile file = new GalaxyFile(userFolder, ds);
+                            this.searchSetiingsFilesMap.put(ds.getGalaxyId(), file);
                         }
                         if(map.get("name").toString().endsWith(".par")){
                             System.out.println("at the file bta3y "+map.get("data_type").toString());
@@ -237,8 +240,10 @@ public abstract class HistoryHandler {
                             this.fastaFilesMap.put(ds.getGalaxyId(), ds);
                         } else if (map.get("data_type").toString().equalsIgnoreCase("galaxy.datatypes.proteomics.Mgf")) {
                             this.mgfFilesMap.put(ds.getGalaxyId(), ds);
-                        } else if (map.get("data_type").toString().equalsIgnoreCase("galaxy.datatypes.text.Json") && map.get("name").toString().endsWith(".par")) {
-                            this.searchSetiingsFilesMap.put(ds.getGalaxyId(), ds);
+                        } else if (map.get("data_type").toString().equalsIgnoreCase("galaxy.datatypes.text.Json") && map.get("name").toString().endsWith(".par")) {   
+                            ds.setDownloadUrl(Galaxy_Instance.getGalaxyUrl()+"/datasets/"+ds.getGalaxyId()+"/display");
+                            GalaxyFile file = new GalaxyFile(userFolder, ds);
+                            this.searchSetiingsFilesMap.put(ds.getGalaxyId(), file);
                         }
                         
 //                    if(map.get("purged").)

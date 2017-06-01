@@ -19,7 +19,6 @@ import com.vaadin.data.Property;
 import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.VaadinService;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -30,10 +29,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
-import java.io.File;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,6 +72,13 @@ public abstract class SearchSettingsLayout extends VerticalLayout {
     private final Set<String> commonModificationIds;
     private Table fixedModificationTable;
     private Table variableModificationTable;
+    private Table allModificationsTable;
+    private Table mostUsedModificationsTable;
+    private Button toFixedModBtn;
+    private Button toVariableModBtn;
+    private Button fromVariableModBtn;
+    private Button fromFixedModBtn;
+    private final  Map<Object, Object[]> completeModificationItems = new LinkedHashMap<>();;
 
     /**
      * Constructor to initialize the main setting parameters
@@ -94,8 +97,7 @@ public abstract class SearchSettingsLayout extends VerticalLayout {
         SearchSettingsLayout.this.addComponent(titleLayout);
         Label setteingsLabel = new Label("Search Settings");
         titleLayout.addComponent(setteingsLabel);
-
-;
+        ;
         HorizontalLayout modificationContainer = inititModificationLayout();
         SearchSettingsLayout.this.addComponent(modificationContainer);
 
@@ -157,12 +159,12 @@ public abstract class SearchSettingsLayout extends VerticalLayout {
         middleSideLayout.setComponentAlignment(sideTopButtons, Alignment.BOTTOM_CENTER);
         middleSideLayout.setExpandRatio(sideTopButtons, 48);
 
-        Button toFixedModBtn = new Button(VaadinIcons.ARROW_LEFT);
+        toFixedModBtn = new Button(VaadinIcons.ARROW_LEFT);
         toFixedModBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         sideTopButtons.addComponent(toFixedModBtn);
         sideTopButtons.setComponentAlignment(toFixedModBtn, Alignment.BOTTOM_CENTER);
 
-        Button fromFixedModBtn = new Button(VaadinIcons.ARROW_RIGHT);
+        fromFixedModBtn = new Button(VaadinIcons.ARROW_RIGHT);
         fromFixedModBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         sideTopButtons.addComponent(fromFixedModBtn);
         sideTopButtons.setComponentAlignment(fromFixedModBtn, Alignment.MIDDLE_CENTER);
@@ -172,12 +174,12 @@ public abstract class SearchSettingsLayout extends VerticalLayout {
         middleSideLayout.setComponentAlignment(sideBottomButtons, Alignment.BOTTOM_CENTER);
         middleSideLayout.setExpandRatio(sideBottomButtons, 48);
 
-        Button toVariableModBtn = new Button(VaadinIcons.ARROW_LEFT);
+        toVariableModBtn = new Button(VaadinIcons.ARROW_LEFT);
         toVariableModBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         sideBottomButtons.addComponent(toVariableModBtn);
         sideBottomButtons.setComponentAlignment(toVariableModBtn, Alignment.MIDDLE_CENTER);
 
-        Button fromVariableModBtn = new Button(VaadinIcons.ARROW_RIGHT);
+        fromVariableModBtn = new Button(VaadinIcons.ARROW_RIGHT);
         fromVariableModBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         sideBottomButtons.addComponent(fromVariableModBtn);
         sideBottomButtons.setComponentAlignment(fromVariableModBtn, Alignment.MIDDLE_CENTER);
@@ -201,8 +203,8 @@ public abstract class SearchSettingsLayout extends VerticalLayout {
         rightSideLayout.setExpandRatio(modificationListControl, 4);
         rightSideLayout.setComponentAlignment(modificationListControl, Alignment.MIDDLE_CENTER);
 
-        Table mostUsedModificationsTable = initModificationTable("");
-        Map<Object, Object[]> completeModificationItems = new LinkedHashMap<>();
+        mostUsedModificationsTable = initModificationTable("");
+       
 
         List<String> allModiList = PTM.getDefaultModifications();
         // get the min and max values for the mass sparklines
@@ -218,22 +220,12 @@ public abstract class SearchSettingsLayout extends VerticalLayout {
             }
         }
 
-        System.out.println("at all ------------------ param " + allModiList + "   ");
-
-//        for (int x = 0; x < allModiList.size(); x++) {
-//            Object[] modificationArr = new Object[]{1 + x, allModiList.get(x), PTM.getPTM(allModiList.get(x)).getMass()};
-//            mostUseModificationItems.put(x, modificationArr);
-//            
-////            completeModificationItems.put(x, modificationArr);
-//        }
         for (int x = 0; x < allModiList.size(); x++) {
             ColorLabel color = new ColorLabel(PTM.getColor(allModiList.get(x)));
             SparkLine sLine = new SparkLine(PTM.getPTM(allModiList.get(x)).getMass(), minMass, maxMass);
             Object[] modificationArr = new Object[]{color, allModiList.get(x), sLine};
-//            System.out.println("at ptm info     "+modificationArr[1]+" -- "+ PTM.get(modificationArr[1].toString()).g);
             completeModificationItems.put(allModiList.get(x), modificationArr);
         }
-//PTM.getPTM(allModiList.get(x)).getHtmlTooltip()
         rightSideLayout.addComponent(mostUsedModificationsTable);
         for (Object id : completeModificationItems.keySet()) {
             if (commonModificationIds.contains(id.toString())) {
@@ -242,7 +234,7 @@ public abstract class SearchSettingsLayout extends VerticalLayout {
         }
         mostUsedModificationsTable.setVisible(false);
         rightSideLayout.setExpandRatio(mostUsedModificationsTable, 96);
-        Table allModificationsTable = initModificationTable("");
+        allModificationsTable = initModificationTable("");
         rightSideLayout.addComponent(allModificationsTable);
         rightSideLayout.setExpandRatio(allModificationsTable, 96);
         allModificationsTable.setVisible(false);
@@ -376,7 +368,6 @@ public abstract class SearchSettingsLayout extends VerticalLayout {
         modificationsTable.sort(new Object[]{"name"}, new boolean[]{true});
         modificationsTable.setSortEnabled(false);
         modificationsTable.setItemDescriptionGenerator((Component source, Object itemId, Object propertyId) -> PTM.getPTM(itemId.toString()).getHtmlTooltip());
-
         return modificationsTable;
     }
 
@@ -389,7 +380,7 @@ public abstract class SearchSettingsLayout extends VerticalLayout {
     private HorizontalLabelTextFieldDropdownList fragmentTolerance;
     private HorizontalLabel2TextField precursorCharge;
     private HorizontalLabel2TextField isotopes;
-    private SearchParameters searchParameters ;
+    private SearchParameters searchParameters;
 
     private GridLayout inititProteaseFragmentationLayout() {
         GridLayout proteaseFragmentationContainer = new GridLayout(2, 6);
@@ -421,7 +412,6 @@ public abstract class SearchSettingsLayout extends VerticalLayout {
                 maxMissCleav.setEnabled(false);
                 enzymeList.setEnabled(false);
                 specificityList.setEnabled(false);
-
             } else {
                 enzymeList.setEnabled(false);
                 specificityList.setEnabled(false);
@@ -431,7 +421,12 @@ public abstract class SearchSettingsLayout extends VerticalLayout {
         });
 
         enzymeList = new HorizontalLabelDropDounList("Enzyme");
-
+        Set<String> enzList = new LinkedHashSet<>();
+        List<Enzyme> enzObjList = enzymeFactory.getEnzymes();
+        for (Enzyme enz : enzObjList) {
+            enzList.add(enz.getName());
+        }
+        enzymeList.updateData(enzList);
         Set<String> specificityOptionList = new LinkedHashSet<>();
         specificityOptionList.add("Specific");
         specificityOptionList.add("Semi-Specific");
@@ -478,7 +473,6 @@ public abstract class SearchSettingsLayout extends VerticalLayout {
         closeBtn.addClickListener((Button.ClickEvent event) -> {
             if (this.isValidForm()) {
                 saveSearchingFile(updateSearchingFile());
-                ((Window) SearchSettingsLayout.this.getParent()).setVisible(false);
             }
         });
         proteaseFragmentationContainer.addComponent(closeBtn, 1, 5);
@@ -490,13 +484,6 @@ public abstract class SearchSettingsLayout extends VerticalLayout {
 
     public void updateForms(SearchParameters searchParameters) {
         this.searchParameters = searchParameters;
-        Set<String> enzList = new LinkedHashSet<>();
-
-        List<Enzyme> enzObjList = enzymeFactory.getEnzymes();
-        for (Enzyme enz : enzObjList) {
-            enzList.add(enz.getName());
-        }
-        enzymeList.updateData(enzList);
 
         if (searchParameters.getDigestionPreferences() != null) {
             digestionList.setSelected(searchParameters.getDigestionPreferences().getCleavagePreference().toString());
@@ -514,7 +501,32 @@ public abstract class SearchSettingsLayout extends VerticalLayout {
             isotopes.setFirstSelectedValue(searchParameters.getMinIsotopicCorrection());
             isotopes.setSecondSelectedValue(searchParameters.getMaxIsotopicCorrection());
 
+            mostUsedModificationsTable.removeAllItems();
+            variableModificationTable.removeAllItems();
+            fixedModificationTable.removeAllItems();
+            for (Object id : completeModificationItems.keySet()) {
+                if (commonModificationIds.contains(id.toString())) {
+                    mostUsedModificationsTable.addItem(completeModificationItems.get(id), id);
+                }
+            }
+            
+
+            ArrayList<String> vm = searchParameters.getPtmSettings().getVariableModifications();
+            mostUsedModificationsTable.setValue(vm);
+            toVariableModBtn.click();
+            ArrayList<String> fm = searchParameters.getPtmSettings().getFixedModifications();
+            mostUsedModificationsTable.setValue(fm);
+            toFixedModBtn.click();
+
         } else {
+             variableModificationTable.removeAllItems();
+            fixedModificationTable.removeAllItems();
+            mostUsedModificationsTable.removeAllItems();
+            for (Object id : completeModificationItems.keySet()) {
+                if (commonModificationIds.contains(id.toString())) {
+                    mostUsedModificationsTable.addItem(completeModificationItems.get(id), id);
+                }
+            }
             enzymeList.setSelected("Trypsin");
             digestionList.setSelected("Enzyme");
             specificityList.setSelected("Specific");
@@ -553,7 +565,7 @@ public abstract class SearchSettingsLayout extends VerticalLayout {
         digPref.setEnzymes(enzymes);
         digPref.setSpecificity(enzymeList.getSelectedValue(), DigestionPreferences.Specificity.valueOf(specificityList.getSelectedValue().toLowerCase()));
         digPref.setnMissedCleavages(enzymeList.getSelectedValue(), Integer.valueOf(maxMissCleav.getSelectedValue()));
-        digPref.setCleavagePreference(DigestionPreferences.CleavagePreference.valueOf(digestionList.getSelectedValue().toLowerCase()));
+        digPref.setCleavagePreference(DigestionPreferences.CleavagePreference.valueOf(digestionList.getSelectedValue().toLowerCase().replace("uns", "unS").replace("le p", "leP")));
         searchParameters.setDigestionPreferences(digPref);
         ArrayList<Integer> forwardIonsv = new ArrayList<>();
         forwardIonsv.add(forwardIons.indexOf(fragmentIonTypes.getFirstSelectedValue()));

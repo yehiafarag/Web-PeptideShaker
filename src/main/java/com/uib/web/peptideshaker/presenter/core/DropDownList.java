@@ -17,6 +17,7 @@ public class DropDownList extends VerticalLayout {
      * Drop down list component.
      */
     private final ComboBox list;
+    private Property.ValueChangeListener listener;
 
     /**
      * Constructor to initialize the main attributes.
@@ -49,20 +50,32 @@ public class DropDownList extends VerticalLayout {
 
     }
 
+    public void setFocous() {
+        this.addStyleName("focos");
+    }
+
     /**
      * Update the drop down list
      *
      * @param idToCaptionMap list of ids and names
      */
     public void updateList(Map<String, String> idToCaptionMap) {
+        if (listener != null) {
+            list.removeValueChangeListener(listener);
+        }
         list.removeAllItems();
         list.clear();
         for (String id : idToCaptionMap.keySet()) {
             list.addItem(id);
             list.setItemCaption(id, idToCaptionMap.get(id));
-            list.setValue(id);
+//            list.setValue(id);
         }
-
+        if (listener != null) {
+            list.addValueChangeListener(listener);
+        }
+        if (!list.getItemIds().isEmpty()) {
+            this.removeStyleName("focos");
+        }
     }
 
     /**
@@ -78,23 +91,34 @@ public class DropDownList extends VerticalLayout {
         list.addStyleName("error");
         return null;
     }
-   
-    public void addValueChangeListener(Property.ValueChangeListener listener){
+
+    public void addValueChangeListener(Property.ValueChangeListener listener) {
+        this.listener = listener;
         this.list.addValueChangeListener(listener);
     }
-    public void setSelected(Object objectId){
+
+    public void setSelected(Object objectId) {
         list.select(objectId);
-    
+
     }
-     public void addNewItemHandler(AbstractSelect.NewItemHandler newItemHandler,String message){
-         this.list.setDescription("Select or Enter New");
-         this.list.setInputPrompt(message);
+
+    public void addNewItemHandler(AbstractSelect.NewItemHandler newItemHandler, String message) {
+        this.list.setDescription("Select or Enter New");
+        this.list.setInputPrompt(message);
         this.list.setNewItemsAllowed(true);
         this.list.setNewItemHandler(newItemHandler);
     }
-     public void addItem(String itemId){
-         this.list.addItem(itemId);
-         this.setSelected(itemId);
-     }
+
+    public void addItem(String itemId) {
+        if (listener != null) {
+            list.removeValueChangeListener(listener);
+        }
+        this.list.addItem(itemId);
+        this.list.select(itemId);
+        if (listener != null) {
+            list.addValueChangeListener(listener);
+        }
+
+    }
 
 }

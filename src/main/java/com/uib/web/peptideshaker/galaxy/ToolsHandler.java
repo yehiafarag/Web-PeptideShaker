@@ -6,7 +6,6 @@ import com.github.jmchilton.blend4j.galaxy.ToolsClient;
 import com.github.jmchilton.blend4j.galaxy.WorkflowsClient;
 import com.github.jmchilton.blend4j.galaxy.beans.OutputDataset;
 import com.github.jmchilton.blend4j.galaxy.beans.Tool;
-import com.github.jmchilton.blend4j.galaxy.beans.ToolExecution;
 import com.github.jmchilton.blend4j.galaxy.beans.ToolSection;
 import com.github.jmchilton.blend4j.galaxy.beans.Workflow;
 import com.github.jmchilton.blend4j.galaxy.beans.WorkflowInputs;
@@ -26,9 +25,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.commons.io.FileUtils;
 
 /**
  * This class responsible for interaction with tools on Galaxy server
@@ -93,9 +92,7 @@ public class ToolsHandler {
                 if (validToolsAvailable) {
                     break;
                 }
-
             }
-
         } catch (Exception e) {
             if (e.toString().contains("Service Temporarily Unavailable")) {
                 Notification.show("Service Temporarily Unavailable", Notification.Type.ERROR_MESSAGE);
@@ -135,6 +132,7 @@ public class ToolsHandler {
         File file = new File(basepath + "/VAADIN/Galaxy-Workflow-convertMGF.ga");
         String json = readWorkflowFile(file).replace("updated_MGF", id);
         Workflow selectedWf = galaxyWorkFlowClient.importWorkflow(json);
+
         try {
             WorkflowInputs workflowInputs = new WorkflowInputs();
             workflowInputs.setWorkflowId(selectedWf.getId());
@@ -154,27 +152,34 @@ public class ToolsHandler {
     /**
      * Save search settings file into galaxy
      *
-     * @param fileName search parameters file name
+     * @param fileId search parameters file name
      * @param searchParameters searchParameters .par file
      */
-    public void saveSearchGUIParameters(String workHistoryId, SearchParameters searchParameters, String fileName) {
+    public Map<String, GalaxyFile> saveSearchGUIParameters(String galaxyURL, File userFolder, Map<String, GalaxyFile> searchSetiingsFilesMap, String workHistoryId, SearchParameters searchParameters, String fileId) {
+        SimpleDateFormat sdfDate = new SimpleDateFormat("MMM dd yyyy HH:mm");
+        String info = sdfDate.format(Page.getCurrent().getWebBrowser().getCurrentDate());
+        String fileName = "";
+        if (searchSetiingsFilesMap.keySet().contains(fileId)) {
+            String[] nameArr = searchSetiingsFilesMap.get(fileId).getDataset().getName().split(" - Search settings ");
+            fileName = nameArr[0] + " - Search settings ( " + info + " ).par";
+        } else {
+            fileName = fileId.toUpperCase() + " - Search settings ( " + info + " ).par";
+        }
 
-        File file = new File(fileName + ".par");
+        File file = new File(userFolder, fileId);
 
         if (file.exists()) {
             file.delete();
         }
         try {
             file.createNewFile();
-            SearchParameters.saveIdentificationParameters(searchParameters,file);
+            SearchParameters.saveIdentificationParameters(searchParameters, file);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
 
         final ToolsClient.FileUploadRequest request = new ToolsClient.FileUploadRequest(workHistoryId, file);
-        SimpleDateFormat sdfDate = new SimpleDateFormat("MMM dd yyyy HH:mm");
-        String info = sdfDate.format(Page.getCurrent().getWebBrowser().getCurrentDate());
-        request.setDatasetName(fileName.toUpperCase() + " - Search settings (" + info + ").par");
+        request.setDatasetName(fileName);
         List<OutputDataset> excList = galaxyToolClient.upload(request).getOutputs();
         if (excList != null && !excList.isEmpty()) {
             OutputDataset oDs = excList.get(0);
@@ -182,8 +187,20 @@ public class ToolsHandler {
             ds.setName(oDs.getName());
             ds.setHistoryId(workHistoryId);
             ds.setGalaxyId(oDs.getId());
-            ds.setDownloadUrl(oDs.getFullDownloadUrl());
+            ds.setDownloadUrl(galaxyURL + "/datasets/" + ds.getGalaxyId() + "/display");
+            GalaxyFile userFolderfile = new GalaxyFile(userFolder, ds);
+            searchSetiingsFilesMap.put(ds.getGalaxyId(), userFolderfile);
+            File updated = new File(userFolder, ds.getGalaxyId());
+            try {
+                updated.createNewFile();
+                FileUtils.copyFile(file, updated);
+                file.delete();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
+
+        return searchSetiingsFilesMap;
     }
 
     /**
@@ -247,21 +264,12 @@ public class ToolsHandler {
 
             workflowInputs.setInput("0", input);
             workflowInputs.setInput("1", input2);
-//        workflowInputs.setToolParameter(galaxyPeptideShakerToolId, new ToolParameter("outputs", "cps"));
             final WorkflowOutputs output = galaxyWorkFlowClient.runWorkflow(workflowInputs);
-//            galaxyWorkFlowClient.deleteWorkflowRequest(selectedWf.getId());
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("at --------------- work flow runing  is  done with runing");
 
-//        List<Dataset> newDss = new ArrayList<>();
-//        for (String oDs : output.getOutputIds()) {
-//            newDss.add(Galaxy_Instance.getHistoriesClient().showDataset(historyId, oDs));
-//        }
-//        updateGalaxyHistory(newDss);
-//        checkHistory();
     }
 
     /**
@@ -276,7 +284,6 @@ public class ToolsHandler {
         CollectionResponse collectionResponse = constructFileCollectionList(historyId, dsIds);
         return new WorkflowInputs.WorkflowInput(collectionResponse.getId(),
                 inputSource);
-
     }
 
     /**
@@ -295,10 +302,8 @@ public class ToolsHandler {
             HistoryDatasetElement element = new HistoryDatasetElement();
             element.setId(inputId);
             element.setName(inputId);
-
             collectionDescription.addDatasetElement(element);
         }
-
         return galaxyHistoriesClient.createDatasetCollection(historyId, collectionDescription);
     }
 

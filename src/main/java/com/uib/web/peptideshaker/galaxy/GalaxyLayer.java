@@ -16,6 +16,7 @@ import com.vaadin.ui.PopupView;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -53,6 +54,10 @@ public abstract class GalaxyLayer {
      *
      */
     private ToolsHandler toolsHandler;
+    
+    private File userFolder;
+    
+    private String galaxyURL;
 
     /**
      * Constructor to initialize Galaxy layer.
@@ -107,12 +112,33 @@ public abstract class GalaxyLayer {
                 try {
                     if (Galaxy_Instance != null) {
                         System.out.println("at not null galaxy");
+
+                        
+                        if (VaadinSession.getCurrent().getSession().getAttribute("ApiKey") != null) {
+                            String APIKey = VaadinSession.getCurrent().getSession().getAttribute("ApiKey").toString();
+                            if (!APIKey.equalsIgnoreCase(Galaxy_Instance.getApiKey())) {
+                                //clean history and create new folder
+                                userFolder = new File(APIKey);
+                                if (userFolder.exists()) {
+                                    for (File tFile : userFolder.listFiles()) {
+                                        tFile.delete();
+                                    }
+                                }
+                                userFolder.delete();
+                            }
+                        }
+                        userFolder = new File(Galaxy_Instance.getApiKey() + "");
+                        userFolder.mkdir();
+                        VaadinSession.getCurrent().getSession().setAttribute("ApiKey", Galaxy_Instance.getApiKey() + "");
+                        
+                        galaxyURL= Galaxy_Instance.getGalaxyUrl();
+
                         toolsHandler = new ToolsHandler(Galaxy_Instance.getToolsClient(), Galaxy_Instance.getWorkflowsClient(), Galaxy_Instance.getHistoriesClient());
-                        historyHandler = new HistoryHandler(Galaxy_Instance) {
+                        historyHandler = new HistoryHandler(Galaxy_Instance,userFolder) {
                             @Override
                             public String reIndexFile(String id, String historyId, String workHistoryId) {
                                 return GalaxyLayer.this.reIndexFile(id, historyId, workHistoryId);
-                            }                           
+                            }
 
                         };//                        
                         connectionBtn.setCaption("Disconnect");
@@ -128,7 +154,7 @@ public abstract class GalaxyLayer {
                     }
 //
                     connectionBtn.setEnabled(true);
-                } catch (Exception exp) {                  
+                } catch (Exception exp) {
                     System.out.println("at err .connectedToGalaxy()");
                     historyHandler = null;
                     toolsHandler = null;
@@ -203,7 +229,7 @@ public abstract class GalaxyLayer {
      *
      * @return searchSettingsFilesMap
      */
-    public Map<String, DataSet> getSearchSettingsFilesMap() {
+    public Map<String, GalaxyFile> getSearchSettingsFilesMap() {
         if (historyHandler != null) {
             return historyHandler.getSearchSettingsFilesMap();
         } else {
@@ -263,17 +289,18 @@ public abstract class GalaxyLayer {
         return null;
     }
 
-   /**
+    /**
      * Save search settings file into galaxy
      *
      * @param fileName search parameters file name
      * @param searchParameters searchParameters .par file
      */
-    public  void saveSearchGUIParameters(SearchParameters searchParameters,String fileName){
+    public Map<String, GalaxyFile> saveSearchGUIParameters(SearchParameters searchParameters, String fileName) {
 
         if (toolsHandler != null) {
-             toolsHandler.saveSearchGUIParameters(historyHandler.getWorkingHistoryId(),searchParameters, fileName);
+            return toolsHandler.saveSearchGUIParameters(galaxyURL, userFolder,historyHandler.getSearchSettingsFilesMap(), historyHandler.getWorkingHistoryId(), searchParameters, fileName);
         }
+        return null;
 
     }
 
@@ -287,7 +314,7 @@ public abstract class GalaxyLayer {
      */
     public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList) {
         toolsHandler.executeWorkFlow(fastaFileId, mgfIdsList, searchEnginesList, historyHandler.getWorkingHistoryId());
-        historyHandler.updateHistoryDatastructure();
+        historyHandler.updateHistoryDatastructure(userFolder);
     }
 
 }

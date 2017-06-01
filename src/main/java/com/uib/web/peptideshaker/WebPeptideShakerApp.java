@@ -1,13 +1,15 @@
 package com.uib.web.peptideshaker;
 
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
+import com.uib.web.peptideshaker.galaxy.DataSet;
+import com.uib.web.peptideshaker.galaxy.GalaxyFile;
 import com.uib.web.peptideshaker.galaxy.GalaxyLayer;
-import com.uib.web.peptideshaker.galaxy.HistoryHandler;
 import com.uib.web.peptideshaker.presenter.PeptideShakerViewPresenter;
 import com.uib.web.peptideshaker.presenter.ToolPresenter;
 import com.uib.web.peptideshaker.presenter.WelcomePage;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.VerticalLayout;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -62,8 +64,9 @@ public class WebPeptideShakerApp extends VerticalLayout {
             }
 
             @Override
-            public void saveSearchGUIParameters(SearchParameters searchParameters, String fileName) {
-                Galaxy_Layer.saveSearchGUIParameters( searchParameters,  fileName);
+            public Map<String, GalaxyFile>  saveSearchGUIParameters(SearchParameters searchParameters, String fileName) {
+                return Galaxy_Layer.saveSearchGUIParameters( searchParameters,  fileName);
+                 
             }
 
         };

@@ -36,7 +36,7 @@ public class PopupWindow extends VerticalLayout implements LayoutEvents.LayoutCl
         window.center();
         window.setWindowMode(WindowMode.NORMAL);
         window.setStyleName("popupwindow");
-        window.setClosable(true);
+        window.setClosable(false);
         window.setModal(true);
         window.setResizable(false);
         window.setDraggable(false);

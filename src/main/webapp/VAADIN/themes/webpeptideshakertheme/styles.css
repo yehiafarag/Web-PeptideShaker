@@ -13538,6 +13538,14 @@ div.v-layout.v-horizontal.v-widget {
 	border: 2px solid gray;
 }
 
+.webpeptideshakertheme .focos .v-filterselect-input {
+	border: 2px solid rgba(18, 120, 239, 0.96) !important;
+}
+
+.webpeptideshakertheme .focos .v-filterselect[class*="prompt"] > [class*="input"] {
+	color: rgba(18, 120, 239, 0.96);
+}
+
 .webpeptideshakertheme .horizontalcss .v-slot-leftsidebtncontainer {
 	width: 1% !important;
 	background-color: white;
