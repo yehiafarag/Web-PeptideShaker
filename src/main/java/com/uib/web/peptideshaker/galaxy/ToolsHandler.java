@@ -247,13 +247,14 @@ public class ToolsHandler {
             File file;
             WorkflowInputs.WorkflowInput input2;
             if (mgfIdsList.size() > 1) {
-                file = new File(basepath + "/VAADIN/Galaxy-Workflow-onlinepeptideshaker_collection.ga");
+                file = new File(basepath + "/VAADIN/Galaxy-Workflow-onlinepeptideshaker_collection-updated.ga");
                 input2 = prepareWorkflowCollectionList(WorkflowInputs.InputSourceType.HDCA, mgfIdsList, historyId);
             } else {
-                file = new File(basepath + "/VAADIN/Galaxy-Workflow-onlinepeptideshaker.ga");
+                file = new File(basepath + "/VAADIN/Galaxy-Workflow-onlinepeptideshaker-updated.ga");
                 input2 = new WorkflowInputs.WorkflowInput(mgfIdsList.iterator().next(), WorkflowInputs.InputSourceType.HDA);
             }
             String json = readWorkflowFile(file);
+
             selectedWf = galaxyWorkFlowClient.importWorkflow(json);
 
             WorkflowInputs workflowInputs = new WorkflowInputs();
@@ -261,10 +262,16 @@ public class ToolsHandler {
             workflowInputs.setDestination(new WorkflowInputs.ExistingHistory(historyId));
 
             WorkflowInputs.WorkflowInput input = new WorkflowInputs.WorkflowInput(fastaFileId, WorkflowInputs.InputSourceType.HDA);
-
             workflowInputs.setInput("0", input);
             workflowInputs.setInput("1", input2);
-            final WorkflowOutputs output = galaxyWorkFlowClient.runWorkflow(workflowInputs);
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("at run workflow thread ");
+                    galaxyWorkFlowClient.runWorkflow(workflowInputs);
+                }
+            });
+            t.start();
 
         } catch (Exception e) {
             e.printStackTrace();

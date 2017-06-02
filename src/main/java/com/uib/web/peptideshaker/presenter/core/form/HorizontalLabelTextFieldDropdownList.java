@@ -63,8 +63,12 @@ public class HorizontalLabelTextFieldDropdownList extends HorizontalLayout {
         textField.setWidth(100, Unit.PERCENTAGE);
         textField.addStyleName(ValoTheme.TEXTFIELD_TINY);
         textField.setNullRepresentation(this.defaultValue);
+        
         textField.setWidth(100, Unit.PERCENTAGE);
         textField.setHeight(25, Unit.PIXELS);
+        textField.setValue(this.defaultValue);
+        textField.setData(this.defaultValue);
+       
         HorizontalLabelTextFieldDropdownList.this.addComponent(textField);
         HorizontalLabelTextFieldDropdownList.this.setExpandRatio(textField, 27.5f);
 
@@ -81,6 +85,7 @@ public class HorizontalLabelTextFieldDropdownList extends HorizontalLayout {
             list2.addItem(str);
         }
         list2.setValue(values.toArray()[0]);
+        list2.setData(list2.getValue());
         HorizontalLabelTextFieldDropdownList.this.addComponent(list2);
         HorizontalLabelTextFieldDropdownList.this.setExpandRatio(list2, 27.5f);
     }
@@ -101,9 +106,11 @@ public class HorizontalLabelTextFieldDropdownList extends HorizontalLayout {
 
     public void setTextValue(Object value){
         this.textField.setValue(value.toString());
+        textField.setData(textField.getValue());
     }
     public void setSelected(Object objectId) {
         list2.select(objectId);
+        list2.setData(objectId);
 
     }
 
@@ -114,6 +121,10 @@ public class HorizontalLabelTextFieldDropdownList extends HorizontalLayout {
         boolean check2 = list2.isValid();
         list2.setRequired(!check2);
         return check1 && check2;
+    }
+     public boolean isModified() {
+         return (!textField.getValue().equalsIgnoreCase(textField.getData()+"")) || (!list2.getValue().toString().equalsIgnoreCase(list2.getData()+""));
+    
     }
 
 }

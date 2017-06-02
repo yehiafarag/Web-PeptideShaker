@@ -43,6 +43,7 @@ public class HorizontalLabelDropDounList extends HorizontalLayout {
         list.addStyleName(ValoTheme.COMBOBOX_TINY);
         list.addStyleName(ValoTheme.COMBOBOX_ALIGN_CENTER);
         list.setNullSelectionAllowed(false);
+        list.setImmediate(true);
 
         HorizontalLabelDropDounList.this.addComponent(list);
         HorizontalLabelDropDounList.this.setExpandRatio(list, 55);
@@ -59,7 +60,8 @@ public class HorizontalLabelDropDounList extends HorizontalLayout {
             list.addItem(str);
         }
         list.setValue(values.toArray()[0]);
-    }
+         list.commit();
+        }
 
     public String getSelectedValue() {
         return list.getValue().toString();
@@ -72,13 +74,17 @@ public class HorizontalLabelDropDounList extends HorizontalLayout {
 
     public void setSelected(Object objectId) {
         list.select(objectId);
+        list.setData(objectId);
 
     }
     public boolean isValid(){
-        list.setRequired(true);
+        list.setRequired(true);        
         boolean check = list.isValid();
         list.setRequired(!check);
         return check;
+    }
+    public boolean isModified() {    
+        return !list.getValue().toString().equalsIgnoreCase(list.getData()+"");
     }
 
 }

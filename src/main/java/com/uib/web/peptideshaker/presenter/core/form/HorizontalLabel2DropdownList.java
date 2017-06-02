@@ -81,7 +81,8 @@ public class HorizontalLabel2DropdownList extends HorizontalLayout {
         list2.setNullSelectionAllowed(false);
 
         for (String str : values2) {
-            list2.addItem(str);        }
+            list2.addItem(str);
+        }
         list2.setValue(values2.toArray()[0]);
         HorizontalLabel2DropdownList.this.addComponent(list2);
         HorizontalLabel2DropdownList.this.setExpandRatio(list2, 27.5f);
@@ -96,22 +97,31 @@ public class HorizontalLabel2DropdownList extends HorizontalLayout {
         return list2.getValue().toString();
 
     }
-    public void setSelectedI(Object objectId){
+
+    public void setSelectedI(Object objectId) {
         list1.select(objectId);
-    
+        list1.setData(objectId);
+
     }
-     public void setSelectedII(Object objectId){
-    list2.select(objectId);
+
+    public void setSelectedII(Object objectId) {
+        list2.select(objectId);
+        list2.setData(objectId);
     }
-      public boolean isValid(){
+
+    public boolean isValid() {
         list1.setRequired(true);
         boolean check1 = list1.isValid();
         list1.setRequired(!check1);
-        
+
         list2.setRequired(true);
         boolean check2 = list2.isValid();
         list2.setRequired(!check2);
-        return check1&&check2;
+        return check1 && check2;
     }
 
+    public boolean isModified() {
+
+        return (!list1.getValue().toString().equalsIgnoreCase(list1.getData()+"")) || (!list2.getValue().toString().equalsIgnoreCase(list2.getData()+""));
+    }
 }

@@ -100,6 +100,11 @@ public abstract class WorkFlowLayout extends Panel {
                 editSearchOption.setPopupVisible(false);
             }
 
+            @Override
+            public void cancel() {
+                editSearchOption.setPopupVisible(false);
+            }
+
         };
 
         editSearchOption = new PopupWindow("Edit Search Settings", searchSettingsLayout);
@@ -178,7 +183,7 @@ public abstract class WorkFlowLayout extends Panel {
             for (GalaxyFile gf : searchSettingsMap.values()) {
                 if (gf.getDataset().getName().contains(newItemCaption)) {
                     return;
-                }              
+                }
 
             }
             searchSettingsFileList.addItem(newItemCaption);
@@ -250,6 +255,19 @@ public abstract class WorkFlowLayout extends Panel {
      */
     public abstract void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList);
 
+    private void checkAndSaveSearchSettingsFile(SearchParameters searchParameters) {
+        searchSettingsMap = saveSearchGUIParameters(searchParameters, searchSettingsFileList.getSelectedValue());
+        Map<String, String> searchSettingsFileIdToNameMap = new LinkedHashMap<>();
+        String objectId = "";
+        for (String id : searchSettingsMap.keySet()) {
+            searchSettingsFileIdToNameMap.put(id, searchSettingsMap.get(id).getDataset().getName().replace(".par", ""));
+            objectId = id;
+        }
+        searchSettingsFileList.updateList(searchSettingsFileIdToNameMap);
+        searchSettingsFileList.setSelected(objectId);
+
+    }
+
     /**
      * Save search settings file into galaxy
      *
@@ -257,20 +275,4 @@ public abstract class WorkFlowLayout extends Panel {
      * @param searchParameters searchParameters .par file
      */
     public abstract Map<String, GalaxyFile> saveSearchGUIParameters(SearchParameters searchParameters, String fileName);
-
-    private void checkAndSaveSearchSettingsFile(SearchParameters searchParameters) {
-        searchSettingsMap = saveSearchGUIParameters(searchParameters, searchSettingsFileList.getSelectedValue());
-        if (searchSettingsMap != null && !searchSettingsMap.containsKey(searchSettingsFileList.getSelectedValue())) {            
-            Map<String, String> searchSettingsFileIdToNameMap = new LinkedHashMap<>();
-            String objectId = "";
-            for (String id : searchSettingsMap.keySet()) {
-                searchSettingsFileIdToNameMap.put(id, searchSettingsMap.get(id).getDataset().getName().replace(".par", ""));
-                objectId = id;
-            }
-            searchSettingsFileList.updateList(searchSettingsFileIdToNameMap);
-            searchSettingsFileList.setSelected(objectId);
-        }
-
-    }
-
 }

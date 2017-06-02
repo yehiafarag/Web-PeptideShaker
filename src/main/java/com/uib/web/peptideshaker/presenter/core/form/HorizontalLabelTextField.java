@@ -65,9 +65,13 @@ public class HorizontalLabelTextField extends HorizontalLayout {
         return check;
 
     }
+    public boolean isModified() {
+          return !textField.getValue().equalsIgnoreCase(textField.getData()+"");
+    }
 
     public void setSelectedValue(Object value){
         textField.setValue(value+"");
+        textField.setData(value);
     
     }
     public String getSelectedValue() {
