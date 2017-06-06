@@ -11,13 +11,17 @@ import com.vaadin.ui.Image;
  * @author Yehia Farag
  */
 public class SmallSideBtn extends AbsoluteLayout {
+    private final  Image icon ;
 
     public SmallSideBtn(String iconUrl) {
-        Image icon = new Image();
+        icon = new Image();
         icon.setSource(new ThemeResource(iconUrl));
         icon.setSizeFull();
         SmallSideBtn.this.addComponent(icon);
         SmallSideBtn.this.setStyleName("smallmenubtn");
+    }
+    public void updateIconURL(String iconUrl){
+        icon.setSource(new ThemeResource(iconUrl));
     }
 
     public void setSelected(boolean selected) {

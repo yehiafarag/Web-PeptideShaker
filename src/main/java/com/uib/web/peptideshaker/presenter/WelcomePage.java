@@ -185,10 +185,10 @@ public class WelcomePage extends VerticalLayout implements PresenterViewable {
 //            }
 //
 //        });
-        homeBtn = new SmallSideBtn("img/home-o.png");
+        homeBtn = new SmallSideBtn("img/home-o.svg");
         homeBtn.setData(WelcomePage.this.getViewId());
         
-        topHomeBtn = new SmallSideBtn("img/home-o.png");
+        topHomeBtn = new SmallSideBtn("img/home-o.svg");
         topHomeBtn.setData(WelcomePage.this.getViewId());
 
     }

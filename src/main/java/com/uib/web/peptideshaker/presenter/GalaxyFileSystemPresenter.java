@@ -20,7 +20,7 @@ import java.util.Set;
  *
  * @author Yehia Farag
  */
-public class PeptideShakerViewPresenter extends VerticalLayout implements PresenterViewable, LayoutEvents.LayoutClickListener {
+public class GalaxyFileSystemPresenter extends VerticalLayout implements PresenterViewable, LayoutEvents.LayoutClickListener {
 
     /**
      * The small side button.
@@ -39,19 +39,29 @@ public class PeptideShakerViewPresenter extends VerticalLayout implements Presen
      *
      * @param searchGUITool SearchGUI web tool
      */
-    public PeptideShakerViewPresenter() {
-        PeptideShakerViewPresenter.this.setSizeFull();
-        PeptideShakerViewPresenter.this.setStyleName("activelayout");
-        this.toolsBtn = new SmallSideBtn("img/cluster.svg");
-        this.toolsBtn.setData(PeptideShakerViewPresenter.this.getViewId());
+    public GalaxyFileSystemPresenter() {
+        GalaxyFileSystemPresenter.this.setSizeFull();
+        GalaxyFileSystemPresenter.this.setStyleName("activelayout");
+        this.toolsBtn = new SmallSideBtn("img/records.png");
+        this.toolsBtn.setData(GalaxyFileSystemPresenter.this.getViewId());
 
-        this.topToolsBtn = new SmallSideBtn("img/cluster.svg");
-                this.topToolsBtn.setData(PeptideShakerViewPresenter.this.getViewId());
+        this.topToolsBtn = new SmallSideBtn("img/records.png");
+        this.topToolsBtn.setData(GalaxyFileSystemPresenter.this.getViewId());
 
         this.btnsLayoutMap = new LinkedHashMap<>();
         this.initLayout();
-        PeptideShakerViewPresenter.this.minimizeView();
+        GalaxyFileSystemPresenter.this.minimizeView();
 
+    }
+
+    public void setBusy(boolean busy) {
+        if (busy) {
+            toolsBtn.updateIconURL("img/loading.gif");
+            topToolsBtn.updateIconURL("img/loading.gif");
+        } else {
+            toolsBtn.updateIconURL("img/records.png");
+            topToolsBtn.updateIconURL("img/records.png");
+        }
     }
 
     private void initLayout() {
@@ -66,29 +76,27 @@ public class PeptideShakerViewPresenter extends VerticalLayout implements Presen
         datasetsOverviewBtn.setData("datasetoverview");
         btnContainer.addComponent(datasetsOverviewBtn);
         btnContainer.setComponentAlignment(datasetsOverviewBtn, Alignment.TOP_CENTER);
-        datasetsOverviewBtn.addLayoutClickListener(PeptideShakerViewPresenter.this);
+        datasetsOverviewBtn.addLayoutClickListener(GalaxyFileSystemPresenter.this);
 
-        VerticalLayout datasetOverviewLayout = new VerticalLayout();
-        btnsLayoutMap.put(datasetsOverviewBtn, datasetOverviewLayout);
-
-        BigSideBtn proteinsOverviewBtn = new BigSideBtn("img/proteins.png", "Get Data");
-        proteinsOverviewBtn.setData("proteinoverview");
-        btnContainer.addComponent(proteinsOverviewBtn);
-        btnContainer.setComponentAlignment(proteinsOverviewBtn, Alignment.TOP_CENTER);
-        proteinsOverviewBtn.addLayoutClickListener(PeptideShakerViewPresenter.this);
-
-        VerticalLayout proteinsOverviewLayout = new VerticalLayout();
-        btnsLayoutMap.put(proteinsOverviewBtn, proteinsOverviewLayout);
-
-        BigSideBtn peptidesOverviewBtn = new BigSideBtn("img/peptides.png", "Get Data");
-        peptidesOverviewBtn.setData("peptidesoverview");
-        btnContainer.addComponent(peptidesOverviewBtn);
-        btnContainer.setComponentAlignment(peptidesOverviewBtn, Alignment.TOP_CENTER);
-        peptidesOverviewBtn.addLayoutClickListener(PeptideShakerViewPresenter.this);
-
-        VerticalLayout peptidesOverviewLayout = new VerticalLayout();
-        btnsLayoutMap.put(peptidesOverviewBtn, peptidesOverviewLayout);
-
+//        VerticalLayout datasetOverviewLayout = new VerticalLayout();
+//        btnsLayoutMap.put(datasetsOverviewBtn, datasetOverviewLayout);
+//
+//        BigSideBtn proteinsOverviewBtn = new BigSideBtn("img/proteins.png", "Get Data");
+//        proteinsOverviewBtn.setData("proteinoverview");
+//        btnContainer.addComponent(proteinsOverviewBtn);
+//        btnContainer.setComponentAlignment(proteinsOverviewBtn, Alignment.TOP_CENTER);
+//        proteinsOverviewBtn.addLayoutClickListener(GalaxyFileSystemPresenter.this);
+//
+//        VerticalLayout proteinsOverviewLayout = new VerticalLayout();
+//        btnsLayoutMap.put(proteinsOverviewBtn, proteinsOverviewLayout);
+//
+//        BigSideBtn peptidesOverviewBtn = new BigSideBtn("img/peptides.png", "Get Data");
+//        peptidesOverviewBtn.setData("peptidesoverview");
+//        btnContainer.addComponent(peptidesOverviewBtn);
+//        btnContainer.setComponentAlignment(peptidesOverviewBtn, Alignment.TOP_CENTER);
+//        peptidesOverviewBtn.addLayoutClickListener(GalaxyFileSystemPresenter.this);
+//        VerticalLayout peptidesOverviewLayout = new VerticalLayout();
+//        btnsLayoutMap.put(peptidesOverviewBtn, peptidesOverviewLayout);
         VerticalLayout toolViewFrame = new VerticalLayout();
         toolViewFrame.setSizeFull();
         toolViewFrame.setStyleName("viewframe");
@@ -98,40 +106,39 @@ public class PeptideShakerViewPresenter extends VerticalLayout implements Presen
         AbsoluteLayout toolViewFrameContent = new AbsoluteLayout();
         toolViewFrameContent.addStyleName("viewframecontent");
         toolViewFrameContent.setSizeFull();
-        toolViewFrame.addComponent(datasetOverviewLayout);
-        toolViewFrameContent.addComponent(proteinsOverviewLayout);
-        toolViewFrameContent.addComponent(peptidesOverviewLayout);
-        
+//        toolViewFrame.addComponent(datasetOverviewLayout);
+//        toolViewFrameContent.addComponent(proteinsOverviewLayout);
+//        toolViewFrameContent.addComponent(peptidesOverviewLayout);
+
         mobilebtnContainer = new HorizontalLayout();
         mobilebtnContainer.setHeight(100, Unit.PERCENTAGE);
         mobilebtnContainer.setWidthUndefined();
         mobilebtnContainer.setSpacing(true);
         mobilebtnContainer.setStyleName("bottomsidebtncontainer");
 
-        BigSideBtn datasetsOverviewBtnM = new BigSideBtn("img/graph.png", "Work-Flow");
-        datasetsOverviewBtnM.setData("datasetoverview");
-        datasetsOverviewBtnM.addStyleName("zeropadding");
-        mobilebtnContainer.addComponent(datasetsOverviewBtnM);
-        mobilebtnContainer.setComponentAlignment(datasetsOverviewBtnM, Alignment.TOP_CENTER);
-        datasetsOverviewBtnM.addLayoutClickListener(PeptideShakerViewPresenter.this);
-        datasetsOverviewBtnM.setSelected(true);
-        
-         BigSideBtn proteinsOverviewBtnM = new BigSideBtn("img/proteins.png", "Work-Flow");
-        datasetsOverviewBtnM.setData("proteinsoverview");
-        datasetsOverviewBtnM.addStyleName("zeropadding");
-        mobilebtnContainer.addComponent(proteinsOverviewBtnM);
-        mobilebtnContainer.setComponentAlignment(proteinsOverviewBtnM, Alignment.TOP_CENTER);
-        proteinsOverviewBtnM.addLayoutClickListener(PeptideShakerViewPresenter.this);
-        
-        
-         BigSideBtn peptidesOverviewBtnM = new BigSideBtn("img/peptides.png", "Work-Flow");
-        peptidesOverviewBtnM.setData("peptidesoverview");
-        peptidesOverviewBtnM.addStyleName("zeropadding");
-        mobilebtnContainer.addComponent(peptidesOverviewBtnM);
-        mobilebtnContainer.setComponentAlignment(peptidesOverviewBtnM, Alignment.TOP_CENTER);
-        peptidesOverviewBtnM.addLayoutClickListener(PeptideShakerViewPresenter.this);
-        peptidesOverviewBtnM.setSelected(true);
-
+//        BigSideBtn datasetsOverviewBtnM = new BigSideBtn("img/graph.png", "Work-Flow");
+//        datasetsOverviewBtnM.setData("datasetoverview");
+//        datasetsOverviewBtnM.addStyleName("zeropadding");
+//        mobilebtnContainer.addComponent(datasetsOverviewBtnM);
+//        mobilebtnContainer.setComponentAlignment(datasetsOverviewBtnM, Alignment.TOP_CENTER);
+//        datasetsOverviewBtnM.addLayoutClickListener(GalaxyFileSystemPresenter.this);
+//        datasetsOverviewBtnM.setSelected(true);
+//        
+//         BigSideBtn proteinsOverviewBtnM = new BigSideBtn("img/proteins.png", "Work-Flow");
+//        datasetsOverviewBtnM.setData("proteinsoverview");
+//        datasetsOverviewBtnM.addStyleName("zeropadding");
+//        mobilebtnContainer.addComponent(proteinsOverviewBtnM);
+//        mobilebtnContainer.setComponentAlignment(proteinsOverviewBtnM, Alignment.TOP_CENTER);
+//        proteinsOverviewBtnM.addLayoutClickListener(GalaxyFileSystemPresenter.this);
+//        
+//        
+//         BigSideBtn peptidesOverviewBtnM = new BigSideBtn("img/peptides.png", "Work-Flow");
+//        peptidesOverviewBtnM.setData("peptidesoverview");
+//        peptidesOverviewBtnM.addStyleName("zeropadding");
+//        mobilebtnContainer.addComponent(peptidesOverviewBtnM);
+//        mobilebtnContainer.setComponentAlignment(peptidesOverviewBtnM, Alignment.TOP_CENTER);
+//        peptidesOverviewBtnM.addLayoutClickListener(GalaxyFileSystemPresenter.this);
+//        peptidesOverviewBtnM.setSelected(true);
     }
 
     @Override
@@ -146,7 +153,7 @@ public class PeptideShakerViewPresenter extends VerticalLayout implements Presen
 
     @Override
     public String getViewId() {
-        return PeptideShakerViewPresenter.class.getName();
+        return GalaxyFileSystemPresenter.class.getName();
     }
 
     /**

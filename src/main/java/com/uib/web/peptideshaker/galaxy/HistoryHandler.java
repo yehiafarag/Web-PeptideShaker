@@ -61,7 +61,7 @@ public abstract class HistoryHandler {
      * History progress icon
      *
      */
-    private final Window progressWindow;
+//    private final Window progressWindow;
     /**
      * Refresher to keep tracking history state in galaxy
      *
@@ -89,18 +89,31 @@ public abstract class HistoryHandler {
         REFRESHER = new Refresher();
         ((PeptidShakerUI) UI.getCurrent()).addExtension(REFRESHER);
 
-        this.progressWindow = new Window();
-        this.progressWindow.setWidth(30, Unit.PIXELS);
-        this.progressWindow.setHeight(30, Unit.PIXELS);
-        progressWindow.setStyleName("progress");
-        progressWindow.setPosition(-1, -1);
-        progressWindow.setWindowMode(WindowMode.NORMAL);
-        progressWindow.setClosable(false);
-        progressWindow.setResizable(false);
-        progressWindow.setDraggable(false);
-        progressWindow.setDescription("Galaxy is still processing data");
-        progressWindow.setVisible(false);
-        UI.getCurrent().addWindow(progressWindow);
+//        this.progressWindow = new Window() {
+//            @Override
+//            public void setVisible(boolean visible) {
+//                if (this.getStyleName().contains("blinkII")) {
+//                    this.removeStyleName("blinkII");
+//                    this.addStyleName("blink");
+//                } else {
+//                    this.removeStyleName("blink");
+//                    this.addStyleName("blinkII");
+//                }
+//                super.setVisible(visible); //To change body of generated methods, choose Tools | Templates.
+//            }
+//
+//        };
+//        this.progressWindow.setWidth(30, Unit.PIXELS);
+//        this.progressWindow.setHeight(30, Unit.PIXELS);
+//        progressWindow.setStyleName("progress");
+//        progressWindow.center();
+//        progressWindow.setWindowMode(WindowMode.NORMAL);
+//        progressWindow.setClosable(false);
+//        progressWindow.setResizable(false);
+//        progressWindow.setDraggable(false);
+//        progressWindow.setDescription("Galaxy is still processing data");
+//        progressWindow.setVisible(false);
+//        UI.getCurrent().addWindow(progressWindow);
 
         this.updateHistoryDatastructure(userFolder);
 
@@ -217,12 +230,12 @@ public abstract class HistoryHandler {
                             ds.setName(map.get("name").toString());
                             ds.setHistoryId(history.getId());
                             ds.setGalaxyId(map.get("id").toString());
-                            ds.setDownloadUrl(Galaxy_Instance.getGalaxyUrl()+"/datasets/"+ds.getGalaxyId()+"/display");
+                            ds.setDownloadUrl(Galaxy_Instance.getGalaxyUrl() + "/datasets/" + ds.getGalaxyId() + "/display");
                             GalaxyFile file = new GalaxyFile(userFolder, ds);
                             this.searchSetiingsFilesMap.put(ds.getGalaxyId(), file);
                         }
-                        if(map.get("name").toString().endsWith(".par")){
-                            System.out.println("at the file bta3y "+map.get("data_type").toString());
+                        if (map.get("name").toString().endsWith(".par")) {
+                            System.out.println("at the file bta3y " + map.get("data_type").toString());
                         }
 
                     }
@@ -240,12 +253,12 @@ public abstract class HistoryHandler {
                             this.fastaFilesMap.put(ds.getGalaxyId(), ds);
                         } else if (map.get("data_type").toString().equalsIgnoreCase("galaxy.datatypes.proteomics.Mgf")) {
                             this.mgfFilesMap.put(ds.getGalaxyId(), ds);
-                        } else if (map.get("data_type").toString().equalsIgnoreCase("galaxy.datatypes.text.Json") && map.get("name").toString().endsWith(".par")) {   
-                            ds.setDownloadUrl(Galaxy_Instance.getGalaxyUrl()+"/datasets/"+ds.getGalaxyId()+"/display");
+                        } else if (map.get("data_type").toString().equalsIgnoreCase("galaxy.datatypes.text.Json") && map.get("name").toString().endsWith(".par")) {
+                            ds.setDownloadUrl(Galaxy_Instance.getGalaxyUrl() + "/datasets/" + ds.getGalaxyId() + "/display");
                             GalaxyFile file = new GalaxyFile(userFolder, ds);
                             this.searchSetiingsFilesMap.put(ds.getGalaxyId(), file);
                         }
-                        
+
 //                    if(map.get("purged").)
 //                    for (String key : map.keySet()) {
 //                        System.err.println("searching resilts " + key);
@@ -382,6 +395,7 @@ public abstract class HistoryHandler {
 //            }
 //
 //            System.out.println("at --- hList is stage 6 ");
+            systemIsBusy(true);
             checkNotReadyHistory();
 //
 //            System.out.println("at --- hList is stage 7 ---- done ! ");
@@ -430,13 +444,13 @@ public abstract class HistoryHandler {
 //     *
 //     */
 //    public abstract DataSet storeSearchParamfile(String workHistoryId);
-
     private void notReadyHistory(String name) {
         if (name == null) {
-            progressWindow.setVisible(false);
+//            progressWindow.setVisible(false);
+            systemIsBusy(false);
             return;
         }
-        progressWindow.setVisible(true);
+//        progressWindow.setVisible(true);
         REFRESHER.setRefreshInterval(30000);
 
         HistoriesClient loopGalaxyHistoriesClient = Galaxy_Instance.getHistoriesClient();
@@ -448,7 +462,8 @@ public abstract class HistoryHandler {
                     REFRESHER.removeListener(this);
                     checkNotReadyHistory();
                 } else {
-                    System.out.println("--------------------- at the history not ready --------------------- " + name);
+//                    progressWindow.setVisible(false);
+                    System.out.println("--------------------- at the history not ready --------------------- " + name+ "   ");
 
                 }
             }
@@ -471,4 +486,5 @@ public abstract class HistoryHandler {
         notReadyHistory(null);
     }
 
+    public abstract void systemIsBusy(boolean busy);
 }

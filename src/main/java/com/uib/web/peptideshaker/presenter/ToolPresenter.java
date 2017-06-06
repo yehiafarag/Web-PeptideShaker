@@ -54,11 +54,11 @@ public abstract class ToolPresenter extends VerticalLayout implements PresenterV
         ToolPresenter.this.setSizeFull();
         ToolPresenter.this.setStyleName("activelayout");
 
-        this.toolsBtn = new SmallSideBtn("img/spectra.png");
+        this.toolsBtn = new SmallSideBtn("img/spectra2.png");//spectra2.png
         this.toolsBtn.setData(ToolPresenter.this.getViewId());
         this.toolsBtn.addStyleName("middilesmallbtn");
 
-        this.topToolsBtn = new SmallSideBtn("img/spectra.png");
+        this.topToolsBtn = new SmallSideBtn("img/spectra2.png");
         this.topToolsBtn.setData(ToolPresenter.this.getViewId());
 
         this.btnsLayoutMap = new HashMap<>();

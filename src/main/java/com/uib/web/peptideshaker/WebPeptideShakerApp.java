@@ -4,6 +4,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Se
 import com.uib.web.peptideshaker.galaxy.DataSet;
 import com.uib.web.peptideshaker.galaxy.GalaxyFile;
 import com.uib.web.peptideshaker.galaxy.GalaxyLayer;
+import com.uib.web.peptideshaker.presenter.GalaxyFileSystemPresenter;
 import com.uib.web.peptideshaker.presenter.PeptideShakerViewPresenter;
 import com.uib.web.peptideshaker.presenter.ToolPresenter;
 import com.uib.web.peptideshaker.presenter.WelcomePage;
@@ -27,6 +28,8 @@ public class WebPeptideShakerApp extends VerticalLayout {
      * The tools view component.
      */
     private final ToolPresenter toolsView;
+    
+    private final  GalaxyFileSystemPresenter fileSystemView;
 
     /**
      * Constructor to initialize the application.
@@ -51,6 +54,13 @@ public class WebPeptideShakerApp extends VerticalLayout {
                 presentationManager.setSideButtonsVisible(false);
             }
 
+            @Override
+            public void jobsInProgress(boolean inprogress) {
+                fileSystemView.setBusy(inprogress);
+                presentationManager.viewLayout(fileSystemView.getViewId());
+                
+            }
+
         };
 
         WelcomePage welcomePage = new WelcomePage(Galaxy_Layer.getGalaxyConnectionPanel());
@@ -72,6 +82,9 @@ public class WebPeptideShakerApp extends VerticalLayout {
         };
         presentationManager.registerView(toolsView);
 //         
+        fileSystemView = new GalaxyFileSystemPresenter();
+        presentationManager.registerView(fileSystemView);
+        
         PeptideShakerViewPresenter peptideShakerView = new PeptideShakerViewPresenter();
         presentationManager.registerView(peptideShakerView);
 

@@ -1607,6 +1607,28 @@ div.v-layout.v-horizontal.v-widget {
 	vertical-align: top;
 }
 
+@keyframes blink {
+		50% {
+		border-color: orange;
+		border-width: 2px;
+		-webkit-transition: all 0.5s ease-in-out;
+		-moz-transition: all 0.5s ease-in-out;
+		-o-transition: all 0.5s ease-in-out;
+		transition: all 0.5s ease-in-out;
+	}
+	}
+
+@keyframes blinkII {
+		50% {
+		border-color: orange;
+		border-width: 2px;
+		-webkit-transition: all 0.5s ease-in-out;
+		-moz-transition: all 0.5s ease-in-out;
+		-o-transition: all 0.5s ease-in-out;
+		transition: all 0.5s ease-in-out;
+	}
+	}
+
 @font-face {
 	font-family: "Vaadin-Icons";
 	src: url(../../../VAADIN/addons/vaadin-icons/fonts/Vaadin-Icons.eot);
@@ -13123,7 +13145,7 @@ div.v-layout.v-horizontal.v-widget {
 
 .webpeptideshakertheme .v-slot-rightsidebtncontainer {
 	margin-top: 30px;
-	max-height: 200px;
+	max-height: 250px;
 	width: 50px !important;
 	margin-left: -35px;
 	background-color: white;
@@ -13414,7 +13436,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .webpeptideshakertheme .v-verticallayout-integratedframe.hidepanel {
-	border-color: white;
+	border-width: 0px;
 }
 
 .webpeptideshakertheme .v-slot-bottomsidebtncontainer {
@@ -13464,10 +13486,6 @@ div.v-layout.v-horizontal.v-widget {
 	min-width: 10px !important;
 	max-width: 40px !important;
 	z-index: 2000000 !important;
-	left: 100% !important;
-	top: 100% !important;
-	margin-left: -68px !important;
-	margin-top: -53px !important;
 	position: fixed !important;
 	background-image: url("img/loading.gif");
 	background-size: 90% 90%;
@@ -13544,6 +13562,22 @@ div.v-layout.v-horizontal.v-widget {
 
 .webpeptideshakertheme .focos .v-filterselect[class*="prompt"] > [class*="input"] {
 	color: rgba(18, 120, 239, 0.96);
+}
+
+.webpeptideshakertheme .blink {
+	animation-name: blink !important;
+	animation-duration: 0.5s !important;
+	animation-timing-function: step-end !important;
+	animation-iteration-count: 12 !important;
+	animation-direction: alternate !important;
+}
+
+.webpeptideshakertheme .blinkII {
+	animation-name: blinkII !important;
+	animation-duration: 0.5s !important;
+	animation-timing-function: step-end !important;
+	animation-iteration-count: 12 !important;
+	animation-direction: alternate !important;
 }
 
 .webpeptideshakertheme .horizontalcss .v-slot-leftsidebtncontainer {
@@ -13653,7 +13687,7 @@ div.v-layout.v-horizontal.v-widget {
 .webpeptideshakertheme .horizontalcss .v-slot-topviewcontainer {
 	min-height: 60px;
 	visibility: visible !important;
-	max-width: 180px;
+	max-width: 220px;
 	position: relative !important;
 	top: 43px !important;
 	float: right;
