@@ -319,8 +319,8 @@ public abstract class GalaxyLayer {
      * @param searchEnginesList List of selected search engine names
      * @param historyId galaxy history id that will store the results
      */
-    public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList) {
-        toolsHandler.executeWorkFlow(fastaFileId, mgfIdsList, searchEnginesList, historyHandler.getWorkingHistoryId());
+    public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList, SearchParameters searchParameters,Map<String,Boolean>otherSearchParameters) {
+        toolsHandler.executeWorkFlow(fastaFileId, mgfIdsList, searchEnginesList, historyHandler.getWorkingHistoryId(),searchParameters,otherSearchParameters);
         historyHandler.updateHistoryDatastructure(userFolder);
     }
     

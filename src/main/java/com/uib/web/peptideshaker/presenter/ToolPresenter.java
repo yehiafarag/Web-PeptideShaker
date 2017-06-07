@@ -90,8 +90,8 @@ public abstract class ToolPresenter extends VerticalLayout implements PresenterV
 
         workflowLayout = new WorkFlowLayout() {
             @Override
-            public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList) {
-                ToolPresenter.this.executeWorkFlow(fastaFileId, mgfIdsList, searchEnginesList);
+            public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList,SearchParameters searchParam,Map<String,Boolean>otherSearchParameters) {
+                ToolPresenter.this.executeWorkFlow(fastaFileId, mgfIdsList, searchEnginesList,searchParam,otherSearchParameters);
             }
 
             @Override
@@ -261,7 +261,7 @@ public abstract class ToolPresenter extends VerticalLayout implements PresenterV
      * @param searchEnginesList List of selected search engine names
      * @param historyId galaxy history id that will store the results
      */
-    public abstract void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList);
+    public abstract void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList,SearchParameters searchParam,Map<String,Boolean>otherSearchParameters);
     
      /**
      * Save search settings file into galaxy

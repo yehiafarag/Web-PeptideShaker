@@ -2,6 +2,7 @@ package com.uib.web.peptideshaker.presenter.core.form;
 
 import com.vaadin.data.Validator;
 import com.vaadin.data.validator.IntegerRangeValidator;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -33,6 +34,7 @@ public class HorizontalLabelTextField extends HorizontalLayout {
     public HorizontalLabelTextField(String caption, Object defaultValue, Validator validator) {
         HorizontalLabelTextField.this.setSizeFull();
         Label cap = new Label(caption);
+        cap.setContentMode(ContentMode.HTML);
         cap.addStyleName(ValoTheme.LABEL_TINY);
         cap.addStyleName(ValoTheme.LABEL_SMALL);
         cap.addStyleName("smallundecorated");

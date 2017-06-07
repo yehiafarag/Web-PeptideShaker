@@ -13376,6 +13376,32 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: bold;
 	font-family: "Open Sans", sans-serif;
 	min-width: 200px !important;
+	cursor: pointer;
+}
+
+.webpeptideshakertheme .v-caption-hidelist div {
+	display: inline-block !important;
+	margin-right: 10px;
+}
+
+.webpeptideshakertheme .v-caption-showlist div {
+	-webkit-transform: rotate(90deg) !important;
+	-moz-transform: rotate(90deg) !important;
+	-o-transform: rotate(90deg) !important;
+	-ms-transform: rotate(90deg) !important;
+	transform: rotate(90deg) !important;
+	display: inline-block !important;
+	margin-right: 10px;
+}
+
+.webpeptideshakertheme .v-caption-hidelist {
+	display: inline-block !important;
+	max-height: 20px !important;
+}
+
+.webpeptideshakertheme .v-select-optiongroup-hidelist {
+	visibility: hidden !important;
+	max-height: 1px !important;
 }
 
 .webpeptideshakertheme .optiongroup {
@@ -13456,7 +13482,7 @@ div.v-layout.v-horizontal.v-widget {
 
 .webpeptideshakertheme .bottomformlayout {
 	margin-left: 20px;
-	min-height: 50px;
+	min-height: 30px;
 }
 
 .webpeptideshakertheme .bottomformlayout .v-popupview {
@@ -13578,6 +13604,10 @@ div.v-layout.v-horizontal.v-widget {
 	animation-timing-function: step-end !important;
 	animation-iteration-count: 12 !important;
 	animation-direction: alternate !important;
+}
+
+.webpeptideshakertheme .paddingleft-20 {
+	margin-left: -20px;
 }
 
 .webpeptideshakertheme .horizontalcss .v-slot-leftsidebtncontainer {

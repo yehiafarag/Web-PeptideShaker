@@ -409,8 +409,32 @@
         font-weight: bold;
         font-family: "Open Sans", sans-serif;
         min-width: 200px !important;
+        cursor: pointer;
     }
 
+    .v-caption-hidelist div {	
+        display: inline-block !important;
+        margin-right: 10px;
+    }
+    .v-caption-showlist div {
+        -webkit-transform: rotate(90deg) !important;
+        -moz-transform: rotate(90deg) !important;
+        -o-transform: rotate(90deg) !important;
+        -ms-transform: rotate(90deg) !important;
+        transform: rotate(90deg) !important;
+        display: inline-block !important;
+        margin-right: 10px;
+    }
+    .v-caption-hidelist  {
+        display: inline-block !important;
+        max-height:20px !important;
+    }
+
+    .v-select-optiongroup-hidelist {
+        visibility: hidden !important;
+        max-height: 1px !important;
+
+    }
     .optiongroup {
         padding-left: 20px;
         min-width: 200px !important;
@@ -468,7 +492,7 @@
         visibility: visible !important;
     }
     .v-verticallayout-integratedframe.hidepanel {
-	border-width:0px;
+        border-width:0px;
     }
     .v-slot-bottomsidebtncontainer{
         min-height:0px;	
@@ -485,7 +509,7 @@
 
     .bottomformlayout{
         margin-left:20px;
-        min-height:50px;
+        min-height:30px;
     }
     .bottomformlayout .v-popupview {
         text-decoration:none;
@@ -510,10 +534,10 @@
         min-width: 10px !important;
         max-width: 40px !important;
         z-index:2000000  !important;
-/*        left: 100% !important;
-        top: 100% !important;
-        margin-left: -68px !important;
-        margin-top: -53px !important;*/
+        /*        left: 100% !important;
+                top: 100% !important;
+                margin-left: -68px !important;
+                margin-top: -53px !important;*/
         position: fixed !important;
         background-image: url("img/loading.gif");
         background-size: 90% 90%;
@@ -594,8 +618,8 @@
             background-color:#cdc9ca;
             margin-top:5px !important;
         }*/
-    
-     .blink{ 
+
+    .blink{ 
         animation-name: blink !important;
         animation-duration: .5s !important;
         animation-timing-function: step-end !important;
@@ -611,19 +635,21 @@
         animation-direction: alternate !important;
 
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+.paddingleft-20 {	
+	margin-left: -20px;
+	}
+
+
+
+
+
+
+
+
     /****mobile css**/
     .horizontalcss .mainlayout {
 

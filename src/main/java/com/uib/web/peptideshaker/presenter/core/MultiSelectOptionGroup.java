@@ -1,5 +1,6 @@
 package com.uib.web.peptideshaker.presenter.core;
 
+import com.vaadin.event.LayoutEvents;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.VerticalLayout;
 import java.util.Map;
@@ -10,22 +11,34 @@ import java.util.Set;
  *
  * @author Yehia Farag
  */
-public class MultiSelectOptionGroup extends VerticalLayout {
+public class MultiSelectOptionGroup extends VerticalLayout implements LayoutEvents.LayoutClickListener {
 
     private final OptionGroup list;
+    private final boolean expandable;
 
     /**
      * Constructor to initialize the main attributes.
      */
-    public MultiSelectOptionGroup(String title) {
+    public MultiSelectOptionGroup(String title, boolean expandable) {
+        this.expandable=expandable;
         MultiSelectOptionGroup.this.setSizeUndefined();
         MultiSelectOptionGroup.this.setSpacing(true);
+        if (expandable) {
+            MultiSelectOptionGroup.this.addLayoutClickListener(MultiSelectOptionGroup.this);
+        }
         MultiSelectOptionGroup.this.setStyleName("optiongroupframe");
+        if (title != null) {
+            title = "<div>&#10148; </div>" + title;
+            list = new OptionGroup(title);
+        } else {
+            list = new OptionGroup();
+        }
 
-        list = new OptionGroup(title);
+        list.setCaptionAsHtml(true);
         list.setSizeUndefined();
         list.setMultiSelect(true);
         list.setStyleName("optiongroup");
+
         MultiSelectOptionGroup.this.addComponent(list);
 
     }
@@ -60,6 +73,24 @@ public class MultiSelectOptionGroup extends VerticalLayout {
     }
 
     /**
+     * Set selection value
+     *
+     * @return String id of the selected item
+     */
+    public void setSelectedValue(Set<String> values) {
+        list.setValue(values);
+    }
+
+    /**
+     * Set selection value
+     *
+     * @param String id of the selected item
+     */
+    public void setSelectedValue(String valueId) {
+        list.select(valueId);
+    }
+
+    /**
      * Set the list is required to have a value.
      *
      * @param required the selection is required
@@ -70,4 +101,36 @@ public class MultiSelectOptionGroup extends VerticalLayout {
         list.setRequiredError(requiredMessage);
 
     }
+
+    public void setViewList(boolean view) {
+        if (view || !expandable) {
+            list.removeStyleName("hidelist");
+            list.addStyleName("showlist");
+        } else {
+            list.addStyleName("hidelist");
+            list.removeStyleName("showlist");
+        }
+
+    }
+
+    @Override
+    public void layoutClick(LayoutEvents.LayoutClickEvent event) {
+        if (event.getClickedComponent() != null) {
+            if (list.getStyleName().contains("hidelist")) {
+                list.removeStyleName("hidelist");
+                list.addStyleName("showlist");
+            } else if (list.getStyleName().contains("hidelist")) {
+                list.addStyleName("hidelist");
+                list.removeStyleName("showlist");
+            }
+        } else if (list.getStyleName().contains("hidelist")) {
+            list.removeStyleName("hidelist");
+            list.addStyleName("showlist");
+        } else {
+            list.addStyleName("hidelist");
+            list.removeStyleName("showlist");
+
+        }
+    }
+
 }

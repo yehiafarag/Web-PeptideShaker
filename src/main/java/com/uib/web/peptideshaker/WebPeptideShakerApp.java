@@ -69,8 +69,8 @@ public class WebPeptideShakerApp extends VerticalLayout {
 
         toolsView = new ToolPresenter() {
             @Override
-            public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList) {
-                Galaxy_Layer.executeWorkFlow(fastaFileId, mgfIdsList, searchEnginesList);
+            public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList,SearchParameters searchParameters,Map<String,Boolean>otherSearchParameters) {
+                Galaxy_Layer.executeWorkFlow(fastaFileId, mgfIdsList, searchEnginesList,searchParameters,otherSearchParameters);
             }
 
             @Override

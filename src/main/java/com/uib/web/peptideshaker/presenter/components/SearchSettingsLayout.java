@@ -7,6 +7,9 @@ import com.compomics.util.experiment.identification.identification_parameters.Pt
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.preferences.DigestionPreferences;
+import com.uib.web.peptideshaker.galaxy.DataSet;
+import com.uib.web.peptideshaker.presenter.core.DropDownList;
+import com.uib.web.peptideshaker.presenter.core.MultiSelectOptionGroup;
 import com.uib.web.peptideshaker.presenter.core.form.ColorLabel;
 import com.uib.web.peptideshaker.presenter.core.form.HorizontalLabel2DropdownList;
 import com.uib.web.peptideshaker.presenter.core.form.HorizontalLabel2TextField;
@@ -29,6 +32,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,8 +82,16 @@ public abstract class SearchSettingsLayout extends VerticalLayout {
     private Button fromVariableModBtn;
     private Button fromFixedModBtn;
     private final Map<Object, Object[]> completeModificationItems = new LinkedHashMap<>();
+    /**
+     * Select FASTA file drop-down list .
+     */
+    private final DropDownList fastaFileList;
+    /**
+     * Create decoy database file list.
+     */
+    private final MultiSelectOptionGroup databaseOptionList;
 
-    ;
+    private HorizontalLabelTextField searchSettingsName;
 
     /**
      * Constructor to initialize the main setting parameters
@@ -99,11 +111,58 @@ public abstract class SearchSettingsLayout extends VerticalLayout {
         Label setteingsLabel = new Label("Search Settings");
         titleLayout.addComponent(setteingsLabel);
 
+        searchSettingsName = new HorizontalLabelTextField("<b>Search Settings Name</b>", "New Searching Settings", null);
+        searchSettingsName.setWidth(57,Unit.PERCENTAGE);
+        SearchSettingsLayout.this.addComponent(searchSettingsName);
+        
+        HorizontalLayout protDatabaseContainer = new HorizontalLayout();
+        protDatabaseContainer.setWidthUndefined();
+        protDatabaseContainer.setHeight(60, Unit.PIXELS);
+        SearchSettingsLayout.this.addComponent(protDatabaseContainer);
+        fastaFileList = new DropDownList("Protein Database (FASTA)");
+        protDatabaseContainer.addComponent(fastaFileList);
+        fastaFileList.setRequired(true, "Select FASTA file");
+        fastaFileList.addStyleName("paddingleft-20");
+        databaseOptionList = new MultiSelectOptionGroup(null, false);
+
+        protDatabaseContainer.addComponent(databaseOptionList);
+        protDatabaseContainer.setComponentAlignment(databaseOptionList, Alignment.BOTTOM_LEFT);
+        Map<String, String> paramMap = new LinkedHashMap<>();
+        paramMap.put("create_decoy", "Add Decoy Sequences");
+//        paramMap.put("use_gene_mapping", "Use Gene Mappings (UniProt databases only)");
+//        paramMap.put("update_gene_mapping", "Update gene mappings automatically from Ensembl (UniProt databases only)");
+
+        databaseOptionList.updateList(paramMap);
+        databaseOptionList.setSelectedValue("create_decoy");
+        databaseOptionList.setViewList(true);
+
+        VerticalLayout spacer = new VerticalLayout();
+        spacer.setWidth(100, Unit.PERCENTAGE);
+        spacer.setHeight(10, Unit.PIXELS);
+        SearchSettingsLayout.this.addComponent(spacer);
+
         HorizontalLayout modificationContainer = inititModificationLayout();
+//        modificationContainer.setMargin(new MarginInfo(true, false, false, false));
         SearchSettingsLayout.this.addComponent(modificationContainer);
 
         GridLayout proteaseFragmentationContainer = inititProteaseFragmentationLayout();
         SearchSettingsLayout.this.addComponent(proteaseFragmentationContainer);
+
+    }
+
+    public String getFataFileId() {
+        return fastaFileList.getSelectedValue();
+    }
+
+    public void updateFastaFileList(Map<String, DataSet> fastaFilesMap) {
+        Map<String, String> fastaFileIdToNameMap = new LinkedHashMap<>();
+        String selectedId = "";
+        for (String id : fastaFilesMap.keySet()) {
+            fastaFileIdToNameMap.put(id, fastaFilesMap.get(id).getName());
+            selectedId = id;
+        }
+        fastaFileList.updateList(fastaFileIdToNameMap);
+        fastaFileList.setSelected(selectedId);
 
     }
 
@@ -558,6 +617,11 @@ public abstract class SearchSettingsLayout extends VerticalLayout {
             fragmentTolerance.setSelected("Da");
 
         }
+        if (searchParameters.getFastaFile() != null) {
+            fastaFileList.setSelected(searchParameters.getFastaFile().getName());
+            System.out.println("at fsta file name " + searchParameters.getFastaFile().getName());
+
+        }
         Set<Object> idSet = (Set<Object>) variableModificationTable.getData();
         idSet.addAll(variableModificationTable.getItemIds());
         variableModificationTable.setData(idSet);
@@ -607,6 +671,7 @@ public abstract class SearchSettingsLayout extends VerticalLayout {
 
     private SearchParameters updateSearchingFile() {
 
+       
         PtmSettings ptmSettings = new PtmSettings();
         for (Object modificationId : fixedModificationTable.getItemIds()) {
             ptmSettings.addFixedModification(PTM.getPTM(modificationId.toString()));
@@ -639,9 +704,14 @@ public abstract class SearchSettingsLayout extends VerticalLayout {
 
         searchParameters.setMinIsotopicCorrection(Integer.valueOf(isotopes.getSecondSelectedValue()));
         searchParameters.setMaxIsotopicCorrection(Integer.valueOf(isotopes.getSecondSelectedValue()));
+        searchParameters.setFastaFile(new File(fastaFileList.getSelectedValue()));
 
         return searchParameters;
 
+    }
+    
+    public String getSettingsName(){
+        return searchSettingsName.getSelectedValue();
     }
 
     public abstract void saveSearchingFile(SearchParameters searchParameters);

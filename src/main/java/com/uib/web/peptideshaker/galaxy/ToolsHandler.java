@@ -49,6 +49,7 @@ public class ToolsHandler {
      * The main galaxy Work-Flow Client on galaxy server.
      */
     private final ToolsClient galaxyToolClient;
+    private final String search_GUI_Tool_Id="toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/search_gui/3.2.11";
 
     /**
      * Constructor to initialize the main data structure and other variables.
@@ -79,7 +80,7 @@ public class ToolsHandler {
                         if (tool.getId().equalsIgnoreCase("toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/peptide_shaker/1.16.3")) {
                             galaxyPeptideShakerToolId = tool.getId();
                             System.out.println("at tool " + tool.getId());
-                        } else if (tool.getId().equalsIgnoreCase("toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/search_gui/3.2.11")) {
+                        } else if (tool.getId().equalsIgnoreCase(search_GUI_Tool_Id)) {
                             galaxySearchGUIToolId = tool.getId();
                             System.out.println("at tool " + tool.getId());
                         }
@@ -240,7 +241,7 @@ public class ToolsHandler {
      * @param searchEnginesList List of selected search engine names
      * @param historyId galaxy history id that will store the results
      */
-    public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList, String historyId) {
+    public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList, String historyId, SearchParameters searchParameters, Map<String,Boolean>otherSearchParameters) {
         try {
             Workflow selectedWf;
             String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
@@ -254,7 +255,11 @@ public class ToolsHandler {
                 input2 = new WorkflowInputs.WorkflowInput(mgfIdsList.iterator().next(), WorkflowInputs.InputSourceType.HDA);
             }
             String json = readWorkflowFile(file);
-
+            
+           
+            json = json.replace("\"create_decoy\\\\\\\": \\\\\\\"true\\\\\\\"", "\"create_decoy\\\\\\\": \\\\\\\""+Boolean.FALSE+"\\\\\\\"");
+            
+            
             selectedWf = galaxyWorkFlowClient.importWorkflow(json);
 
             WorkflowInputs workflowInputs = new WorkflowInputs();
@@ -264,12 +269,29 @@ public class ToolsHandler {
             WorkflowInputs.WorkflowInput input = new WorkflowInputs.WorkflowInput(fastaFileId, WorkflowInputs.InputSourceType.HDA);
             workflowInputs.setInput("0", input);
             workflowInputs.setInput("1", input2);
-            Thread t = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    System.out.println("at run workflow thread ");
-                    galaxyWorkFlowClient.runWorkflow(workflowInputs);
-                }
+            
+//            workflowInputs.set(search_GUI_Tool_Id, "create_decoy", String.valueOf(Boolean.FALSE));
+
+//            Map<String, Object> parameters = new HashMap<>();
+//        parameters.put("create_decoy", String.valueOf(creatDecoyDB.getSelectedButtonValue().equalsIgnoreCase("Yes")));
+//        //create gene mapping
+//        parameters.put("use_gene_mapping", String.valueOf(geneMappingBtn.getSelectedButtonValue().equalsIgnoreCase("Yes")));
+//        //database search enginxml data type
+//        boolean selectAll = false;
+//        if (DBSearchEnginsSelect.getValue().toString().equalsIgnoreCase("[]")) {
+//            selectAll = true;
+//        }
+//
+//        parameters.put("X!Tandem", String.valueOf(DBSearchEnginsSelect.isSelected("X!Tandem") || selectAll));
+//        parameters.put("MSGF", String.valueOf(DBSearchEnginsSelect.isSelected("MS-GF+") || selectAll));
+//        parameters.put("OMSSA", String.valueOf(DBSearchEnginsSelect.isSelected("OMSSA") || selectAll));
+//        parameters.put("Comet", String.valueOf(DBSearchEnginsSelect.isSelected("Comet") || selectAll));
+//            ToolParameter searchGUISearchParam = new ToolParameter(basepath, basepath)
+//            workflowInputs.setToolParameter("1", input2);
+
+            Thread t = new Thread(() -> {
+                System.out.println("at run workflow thread ");
+                galaxyWorkFlowClient.runWorkflow(workflowInputs);
             });
             t.start();
 
