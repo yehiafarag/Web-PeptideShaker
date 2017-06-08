@@ -79,6 +79,7 @@ public class MultiSelectOptionGroup extends VerticalLayout implements LayoutEven
      */
     public void setSelectedValue(Set<String> values) {
         list.setValue(values);
+        list.setData(list.getValue());
     }
 
     /**
@@ -88,6 +89,7 @@ public class MultiSelectOptionGroup extends VerticalLayout implements LayoutEven
      */
     public void setSelectedValue(String valueId) {
         list.select(valueId);
+        list.setData(list.getValue());
     }
 
     /**
@@ -131,6 +133,17 @@ public class MultiSelectOptionGroup extends VerticalLayout implements LayoutEven
             list.removeStyleName("showlist");
 
         }
+    }
+    
+        public boolean isValid() {
+        list.setRequired(true);
+        boolean check = list.isValid();
+        list.setRequired(!check);
+        return check;
+    }
+
+    public boolean isModified() {
+        return !list.getValue().toString().equalsIgnoreCase(list.getData() + "");
     }
 
 }

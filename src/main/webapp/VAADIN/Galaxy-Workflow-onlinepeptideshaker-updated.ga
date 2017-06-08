@@ -2,7 +2,7 @@
     "a_galaxy_workflow": "true", 
     "annotation": "", 
     "format-version": "0.1", 
-    "name": "Galaxy-Workflow-onlinepeptideshaker", 
+    "name": "Galaxy-Workflow-onlinepeptideshaker (imported from uploaded file)", 
     "steps": {
         "0": {
             "annotation": "", 
@@ -104,7 +104,15 @@
                 "left": 389, 
                 "top": 169
             }, 
-            "post_job_actions": {}, 
+            "post_job_actions": {
+                "RenameDatasetActionsearchgui_results": {
+                    "action_arguments": {
+                        "newname": "SearchGUI_Label"
+                    }, 
+                    "action_type": "RenameDatasetAction", 
+                    "output_name": "searchgui_results"
+                }
+            }, 
             "tool_errors": null, 
             "tool_id": "toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/search_gui/3.2.11", 
             "tool_shed_repository": {
@@ -237,6 +245,34 @@
                     "action_arguments": {}, 
                     "action_type": "HideDatasetAction", 
                     "output_name": "output_zip"
+                }, 
+                "RenameDatasetActionoutput_cps": {
+                    "action_arguments": {
+                        "newname": "CPS_Label"
+                    }, 
+                    "action_type": "RenameDatasetAction", 
+                    "output_name": "output_cps"
+                }, 
+                "RenameDatasetActionoutput_peptides": {
+                    "action_arguments": {
+                        "newname": "Peptides_Label"
+                    }, 
+                    "action_type": "RenameDatasetAction", 
+                    "output_name": "output_peptides"
+                }, 
+                "RenameDatasetActionoutput_proteins": {
+                    "action_arguments": {
+                        "newname": "Proteins_Label"
+                    }, 
+                    "action_type": "RenameDatasetAction", 
+                    "output_name": "output_proteins"
+                }, 
+                "RenameDatasetActionoutput_psm": {
+                    "action_arguments": {
+                        "newname": "PSM_Label"
+                    }, 
+                    "action_type": "RenameDatasetAction", 
+                    "output_name": "output_psm"
                 }
             }, 
             "tool_errors": null, 
@@ -275,5 +311,5 @@
             ]
         }
     }, 
-    "uuid": "925f805c-a70c-4512-874b-ec79a976817d"
+    "uuid": "9c9f169d-5819-474c-982e-628dd5a8dfab"
 }

@@ -90,13 +90,13 @@ public abstract class ToolPresenter extends VerticalLayout implements PresenterV
 
         workflowLayout = new WorkFlowLayout() {
             @Override
-            public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList,SearchParameters searchParam,Map<String,Boolean>otherSearchParameters) {
-                ToolPresenter.this.executeWorkFlow(fastaFileId, mgfIdsList, searchEnginesList,searchParam,otherSearchParameters);
+            public void executeWorkFlow(String projectName,String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList,SearchParameters searchParam,Map<String,Boolean>otherSearchParameters) {
+                ToolPresenter.this.executeWorkFlow(projectName,fastaFileId, mgfIdsList, searchEnginesList,searchParam,otherSearchParameters);
             }
 
             @Override
-            public Map<String, GalaxyFile>  saveSearchGUIParameters(SearchParameters searchParameters,String fileName) {
-                return ToolPresenter.this.saveSearchGUIParameters(searchParameters, fileName);
+            public Map<String, GalaxyFile>  saveSearchGUIParameters(SearchParameters searchParameters,boolean editMode) {
+                return ToolPresenter.this.saveSearchGUIParameters(searchParameters,editMode);
             }
 
         };
@@ -261,7 +261,7 @@ public abstract class ToolPresenter extends VerticalLayout implements PresenterV
      * @param searchEnginesList List of selected search engine names
      * @param historyId galaxy history id that will store the results
      */
-    public abstract void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList,SearchParameters searchParam,Map<String,Boolean>otherSearchParameters);
+    public abstract void executeWorkFlow(String projectName,String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList,SearchParameters searchParam,Map<String,Boolean>otherSearchParameters);
     
      /**
      * Save search settings file into galaxy
@@ -269,6 +269,6 @@ public abstract class ToolPresenter extends VerticalLayout implements PresenterV
      * @param fileName search parameters file name
      * @param searchParameters searchParameters .par file
      */
-    public abstract Map<String, GalaxyFile>  saveSearchGUIParameters(SearchParameters searchParameters,String fileName);
+    public abstract Map<String, GalaxyFile>  saveSearchGUIParameters(SearchParameters searchParameters,boolean editMode);
 
 }

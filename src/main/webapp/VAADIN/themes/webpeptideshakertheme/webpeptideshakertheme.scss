@@ -445,7 +445,7 @@
         text-overflow:ellipsis !important;
     }
     .v-select-optiongroup-optiongroup {
-        max-height: 200px;
+        max-height: 260px;
         overflow-y: auto;
         overflow-x:hidden;
         text-overflow:ellipsis;
@@ -643,11 +643,22 @@
 	margin-left: -20px;
 	}
 
+.smallfontlongtext{
+	overflow-y: auto;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+	font-size: 12px;
+	font-family: "Open Sans", sans-serif;
+}
 
 
 
-
-
+.subpanelframe{
+	border:1px solid lightgray;
+	padding:5px;
+	border-radius:5px;
+	background-color:whitesmoke;
+}
 
 
     /****mobile css**/

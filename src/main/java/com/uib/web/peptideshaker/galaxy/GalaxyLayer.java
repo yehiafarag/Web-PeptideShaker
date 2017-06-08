@@ -302,10 +302,10 @@ public abstract class GalaxyLayer {
      * @param fileName search parameters file name
      * @param searchParameters searchParameters .par file
      */
-    public Map<String, GalaxyFile> saveSearchGUIParameters(SearchParameters searchParameters, String fileName) {
+    public Map<String, GalaxyFile> saveSearchGUIParameters(SearchParameters searchParameters,boolean editMode) {
 
         if (toolsHandler != null) {
-            return toolsHandler.saveSearchGUIParameters(galaxyURL, userFolder,historyHandler.getSearchSettingsFilesMap(), historyHandler.getWorkingHistoryId(), searchParameters, fileName);
+            return toolsHandler.saveSearchGUIParameters(galaxyURL, userFolder,historyHandler.getSearchSettingsFilesMap(), historyHandler.getWorkingHistoryId(), searchParameters,editMode);
         }
         return null;
 
@@ -319,8 +319,8 @@ public abstract class GalaxyLayer {
      * @param searchEnginesList List of selected search engine names
      * @param historyId galaxy history id that will store the results
      */
-    public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList, SearchParameters searchParameters,Map<String,Boolean>otherSearchParameters) {
-        toolsHandler.executeWorkFlow(fastaFileId, mgfIdsList, searchEnginesList, historyHandler.getWorkingHistoryId(),searchParameters,otherSearchParameters);
+    public void executeWorkFlow(String projectName,String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList, SearchParameters searchParameters,Map<String,Boolean>otherSearchParameters) {
+        toolsHandler.executeWorkFlow(projectName,fastaFileId, mgfIdsList, searchEnginesList, historyHandler.getWorkingHistoryId(),searchParameters,otherSearchParameters);
         historyHandler.updateHistoryDatastructure(userFolder);
     }
     

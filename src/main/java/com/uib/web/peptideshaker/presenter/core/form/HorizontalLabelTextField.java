@@ -49,17 +49,27 @@ public class HorizontalLabelTextField extends HorizontalLayout {
 
         textField = new TextField();
         textField.setValidationVisible(true);
-        textField.setConverter(Integer.class);
 
-        textField.addValidator(validator);
+        if (validator != null) {
+            textField.setConverter(Integer.class);
+            textField.addValidator(validator);
+        }
         textField.addStyleName(ValoTheme.TEXTFIELD_ALIGN_CENTER);
         textField.setWidth(100, Unit.PERCENTAGE);
         textField.addStyleName(ValoTheme.TEXTFIELD_TINY);
-        textField.setNullRepresentation(defaultValue.toString());
+//        textField.setNullRepresentation(this.defaultValue);
+        textField.setInputPrompt(this.defaultValue);
+//        textField.setValue(this.defaultValue);
+
         textField.setWidth(100, Unit.PERCENTAGE);
         textField.setHeight(25, Unit.PIXELS);
         HorizontalLabelTextField.this.addComponent(textField);
         HorizontalLabelTextField.this.setExpandRatio(textField, 55);
+    }
+
+    public void setRequired(boolean required) {
+        textField.setRequired(required);
+        textField.setRequiredError("Can not be empty");
     }
 
     public boolean isValid() {
@@ -67,19 +77,25 @@ public class HorizontalLabelTextField extends HorizontalLayout {
         return check;
 
     }
+
     public boolean isModified() {
-          return !textField.getValue().equalsIgnoreCase(textField.getData()+"");
+        return !textField.getValue().equalsIgnoreCase(textField.getData() + "");
     }
 
-    public void setSelectedValue(Object value){
-        textField.setValue(value+"");
+    public void setSelectedValue(Object value) {
+        if (value == null) {
+            textField.clear();
+            return;
+        }
+        textField.setValue(value + "");
         textField.setData(value);
-    
+
     }
+
     public String getSelectedValue() {
         if (textField.getValue() == null) {
             return defaultValue;
-        
+
         }
         return textField.getValue();
 

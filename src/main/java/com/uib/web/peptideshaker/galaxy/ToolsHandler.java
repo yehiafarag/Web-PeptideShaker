@@ -23,11 +23,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.io.FileUtils;
+import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  * This class responsible for interaction with tools on Galaxy server
@@ -49,7 +57,7 @@ public class ToolsHandler {
      * The main galaxy Work-Flow Client on galaxy server.
      */
     private final ToolsClient galaxyToolClient;
-    private final String search_GUI_Tool_Id="toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/search_gui/3.2.11";
+    private final String search_GUI_Tool_Id = "toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/search_gui/3.2.11";
 
     /**
      * Constructor to initialize the main data structure and other variables.
@@ -79,10 +87,8 @@ public class ToolsHandler {
                     for (Tool tool : tools) {
                         if (tool.getId().equalsIgnoreCase("toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/peptide_shaker/1.16.3")) {
                             galaxyPeptideShakerToolId = tool.getId();
-                            System.out.println("at tool " + tool.getId());
                         } else if (tool.getId().equalsIgnoreCase(search_GUI_Tool_Id)) {
                             galaxySearchGUIToolId = tool.getId();
-                            System.out.println("at tool " + tool.getId());
                         }
                         if (galaxyPeptideShakerToolId != null && galaxySearchGUIToolId != null) {
                             validToolsAvailable = true;
@@ -156,15 +162,20 @@ public class ToolsHandler {
      * @param fileId search parameters file name
      * @param searchParameters searchParameters .par file
      */
-    public Map<String, GalaxyFile> saveSearchGUIParameters(String galaxyURL, File userFolder, Map<String, GalaxyFile> searchSetiingsFilesMap, String workHistoryId, SearchParameters searchParameters, String fileId) {
-        SimpleDateFormat sdfDate = new SimpleDateFormat("MMM dd yyyy HH:mm");
-        String info = sdfDate.format(Page.getCurrent().getWebBrowser().getCurrentDate());
-        String fileName = "";
-        if (searchSetiingsFilesMap.keySet().contains(fileId)) {
-            String[] nameArr = searchSetiingsFilesMap.get(fileId).getDataset().getName().split(" - Search settings ");
-            fileName = nameArr[0] + " - Search settings ( " + info + " ).par";
+    public Map<String, GalaxyFile> saveSearchGUIParameters(String galaxyURL, File userFolder, Map<String, GalaxyFile> searchSetiingsFilesMap, String workHistoryId, SearchParameters searchParameters, boolean editMode) {
+
+        String fileName = searchParameters.getFastaFile().getName().split("__")[1] + ".par";
+        String fileId;
+        if (editMode) {
+            fileId = searchParameters.getFastaFile().getName().split("__")[3];
+            searchSetiingsFilesMap.remove(fileId);
+            //delete the file and make new one 
+            String userAPIKey = VaadinSession.getCurrent().getSession().getAttribute("ApiKey") + "";
+            String cookies = VaadinSession.getCurrent().getSession().getAttribute("cookies") + "";
+            this.deleteDataset(galaxyURL, workHistoryId, fileId, userAPIKey, cookies);
+
         } else {
-            fileName = fileId.toUpperCase() + " - Search settings ( " + info + " ).par";
+            fileId = fileName;
         }
 
         File file = new File(userFolder, fileId);
@@ -233,6 +244,54 @@ public class ToolsHandler {
         return json;
     }
 
+    private void deleteDataset(String galaxyURL, String historyId, String dsId, String userAPIKey, String cookiesRequestProperty) {
+        try {
+
+            URL url = new URL(galaxyURL + "/api/histories/" + historyId + "/contents/datasets/" + dsId + "?key=" + userAPIKey);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.addRequestProperty("Cookie", cookiesRequestProperty);
+            conn.addRequestProperty("Accept-Encoding", "gzip, deflate, sdch, br");
+            conn.addRequestProperty("Accept-Language", "ar,en-US;q=0.8,en;q=0.6,en-GB;q=0.4");
+            conn.addRequestProperty("Cache-Control", "no-cache");
+            conn.addRequestProperty("Connection", "keep-alive");
+            conn.addRequestProperty("DNT", "1");
+            conn.addRequestProperty("X-Requested-With", "XMLHttpRequest");
+            conn.addRequestProperty("Pragma", "no-cache");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+
+            conn.setRequestMethod("PUT");
+            conn.setRequestProperty("Accept", "application/json, text/javascript, */*; q=0.01");
+            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            try (OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream(), "UTF-8")) {
+                final ObjectMapper mapper = new ObjectMapper();
+                HashMap<String, Object> payLoadParamMap = new LinkedHashMap<>();
+                payLoadParamMap.put("deleted", Boolean.TRUE);
+//                if (purgeSupport) {
+//                    payLoadParamMap.put("purged", Boolean.TRUE);
+//                }
+                String payload = mapper.writer().writeValueAsString(payLoadParamMap);
+                writer.write(payload);
+            }
+            conn.connect();
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            StringBuilder jsonString = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                jsonString.append(line);
+            }
+            br.close();
+            conn.disconnect();
+            System.out.println("com.uib.onlinepeptideshaker.model.GalaxyDataUtil.permanentDeleteHistory()");
+
+        } catch (MalformedURLException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+
+        }
+    }
+
     /**
      * Run Online Peptide-Shaker work-flow
      *
@@ -241,7 +300,7 @@ public class ToolsHandler {
      * @param searchEnginesList List of selected search engine names
      * @param historyId galaxy history id that will store the results
      */
-    public void executeWorkFlow(String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList, String historyId, SearchParameters searchParameters, Map<String,Boolean>otherSearchParameters) {
+    public void executeWorkFlow(String projectName, String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList, String historyId, SearchParameters searchParameters, Map<String, Boolean> otherSearchParameters) {
         try {
             Workflow selectedWf;
             String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
@@ -255,11 +314,12 @@ public class ToolsHandler {
                 input2 = new WorkflowInputs.WorkflowInput(mgfIdsList.iterator().next(), WorkflowInputs.InputSourceType.HDA);
             }
             String json = readWorkflowFile(file);
-            
-           
-            json = json.replace("\"create_decoy\\\\\\\": \\\\\\\"true\\\\\\\"", "\"create_decoy\\\\\\\": \\\\\\\""+Boolean.FALSE+"\\\\\\\"");
-            
-            
+
+            if (Boolean.valueOf(searchParameters.getFastaFile().getName().split("__")[2])) {
+                json = json.replace("\"create_decoy\\\\\\\": \\\\\\\"true\\\\\\\"", "\"create_decoy\\\\\\\": \\\\\\\"" + Boolean.FALSE + "\\\\\\\"");
+            }
+            json = json.replace("SearchGUI_Label",projectName+" (SearchGUI Results)").replace("CPS_Label",projectName+" (CPS)").replace("PSM_Label",projectName+" (PSM)").replace("Proteins_Label",projectName+" (Proteins)").replace("Peptides_Label",projectName+" (Peptides)");
+
             selectedWf = galaxyWorkFlowClient.importWorkflow(json);
 
             WorkflowInputs workflowInputs = new WorkflowInputs();
@@ -269,9 +329,8 @@ public class ToolsHandler {
             WorkflowInputs.WorkflowInput input = new WorkflowInputs.WorkflowInput(fastaFileId, WorkflowInputs.InputSourceType.HDA);
             workflowInputs.setInput("0", input);
             workflowInputs.setInput("1", input2);
-            
-//            workflowInputs.set(search_GUI_Tool_Id, "create_decoy", String.valueOf(Boolean.FALSE));
 
+//            workflowInputs.set(search_GUI_Tool_Id, "create_decoy", String.valueOf(Boolean.FALSE));
 //            Map<String, Object> parameters = new HashMap<>();
 //        parameters.put("create_decoy", String.valueOf(creatDecoyDB.getSelectedButtonValue().equalsIgnoreCase("Yes")));
 //        //create gene mapping
@@ -288,7 +347,6 @@ public class ToolsHandler {
 //        parameters.put("Comet", String.valueOf(DBSearchEnginsSelect.isSelected("Comet") || selectAll));
 //            ToolParameter searchGUISearchParam = new ToolParameter(basepath, basepath)
 //            workflowInputs.setToolParameter("1", input2);
-
             Thread t = new Thread(() -> {
                 System.out.println("at run workflow thread ");
                 galaxyWorkFlowClient.runWorkflow(workflowInputs);
