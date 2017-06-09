@@ -9,7 +9,7 @@ import com.vaadin.ui.VerticalLayout;
  *This interface represents the minimum requirement for presenter components to be used as a view in web PeptideShaker application
  * @author Yehia Farag
  */
-public interface PresenterViewable {
+public interface ViewableFrame {
     
     VerticalLayout getLeftView();
     VerticalLayout getMainView();

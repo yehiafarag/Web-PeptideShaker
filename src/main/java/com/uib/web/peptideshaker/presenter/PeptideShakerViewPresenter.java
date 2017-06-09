@@ -20,7 +20,7 @@ import java.util.Set;
  *
  * @author Yehia Farag
  */
-public class PeptideShakerViewPresenter extends VerticalLayout implements PresenterViewable, LayoutEvents.LayoutClickListener {
+public class PeptideShakerViewPresenter extends VerticalLayout implements ViewableFrame, LayoutEvents.LayoutClickListener {
 
     /**
      * The small side button.

@@ -143,7 +143,6 @@ public abstract class GalaxyLayer {
                             @Override
                             public void systemIsBusy(boolean busy) {
                                //update history in the system 
-                                System.out.println("at **************--------------- busy system ?? "+busy);
                                 jobsInProgress(busy);
                             }
 

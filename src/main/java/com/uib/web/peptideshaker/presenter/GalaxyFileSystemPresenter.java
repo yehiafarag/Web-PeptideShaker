@@ -1,5 +1,7 @@
 package com.uib.web.peptideshaker.presenter;
 
+import com.uib.web.peptideshaker.presenter.components.DataViewLayout;
+import com.uib.web.peptideshaker.presenter.components.WorkFlowLayout;
 import com.uib.web.peptideshaker.presenter.core.BigSideBtn;
 import com.uib.web.peptideshaker.presenter.core.SmallSideBtn;
 import com.vaadin.event.LayoutEvents;
@@ -8,6 +10,7 @@ import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -20,7 +23,7 @@ import java.util.Set;
  *
  * @author Yehia Farag
  */
-public class GalaxyFileSystemPresenter extends VerticalLayout implements PresenterViewable, LayoutEvents.LayoutClickListener {
+public class GalaxyFileSystemPresenter extends VerticalLayout implements ViewableFrame, LayoutEvents.LayoutClickListener {
 
     /**
      * The small side button.
@@ -33,6 +36,7 @@ public class GalaxyFileSystemPresenter extends VerticalLayout implements Present
     private VerticalLayout btnContainer;
     private HorizontalLayout mobilebtnContainer;
     private final Map<BigSideBtn, Component> btnsLayoutMap;
+    private DataViewLayout dataLayout;
 
     /**
      * Initialize the web tool main attributes
@@ -42,28 +46,28 @@ public class GalaxyFileSystemPresenter extends VerticalLayout implements Present
     public GalaxyFileSystemPresenter() {
         GalaxyFileSystemPresenter.this.setSizeFull();
         GalaxyFileSystemPresenter.this.setStyleName("activelayout");
-        this.toolsBtn = new SmallSideBtn("img/records.png");
+        this.toolsBtn = new SmallSideBtn("img/jobs.png");
         this.toolsBtn.setData(GalaxyFileSystemPresenter.this.getViewId());
-
-        this.topToolsBtn = new SmallSideBtn("img/records.png");
+        
+        this.topToolsBtn = new SmallSideBtn("img/jobs.png");
         this.topToolsBtn.setData(GalaxyFileSystemPresenter.this.getViewId());
-
+        
         this.btnsLayoutMap = new LinkedHashMap<>();
         this.initLayout();
         GalaxyFileSystemPresenter.this.minimizeView();
-
+        
     }
-
+    
     public void setBusy(boolean busy) {
         if (busy) {
             toolsBtn.updateIconURL("img/loading.gif");
             topToolsBtn.updateIconURL("img/loading.gif");
         } else {
-            toolsBtn.updateIconURL("img/records.png");
-            topToolsBtn.updateIconURL("img/records.png");
+            toolsBtn.updateIconURL("img/jobs.png");
+            topToolsBtn.updateIconURL("img/jobs.png");
         }
     }
-
+    
     private void initLayout() {
         this.addStyleName("integratedframe");
         btnContainer = new VerticalLayout();
@@ -72,85 +76,55 @@ public class GalaxyFileSystemPresenter extends VerticalLayout implements Present
         btnContainer.setSpacing(true);
         btnContainer.setMargin(new MarginInfo(false, false, true, false));
 //
-        BigSideBtn datasetsOverviewBtn = new BigSideBtn("img/graph.png", "Get Data");
-        datasetsOverviewBtn.setData("datasetoverview");
-        btnContainer.addComponent(datasetsOverviewBtn);
-        btnContainer.setComponentAlignment(datasetsOverviewBtn, Alignment.TOP_CENTER);
-        datasetsOverviewBtn.addLayoutClickListener(GalaxyFileSystemPresenter.this);
-
-//        VerticalLayout datasetOverviewLayout = new VerticalLayout();
-//        btnsLayoutMap.put(datasetsOverviewBtn, datasetOverviewLayout);
-//
-//        BigSideBtn proteinsOverviewBtn = new BigSideBtn("img/proteins.png", "Get Data");
-//        proteinsOverviewBtn.setData("proteinoverview");
-//        btnContainer.addComponent(proteinsOverviewBtn);
-//        btnContainer.setComponentAlignment(proteinsOverviewBtn, Alignment.TOP_CENTER);
-//        proteinsOverviewBtn.addLayoutClickListener(GalaxyFileSystemPresenter.this);
-//
-//        VerticalLayout proteinsOverviewLayout = new VerticalLayout();
-//        btnsLayoutMap.put(proteinsOverviewBtn, proteinsOverviewLayout);
-//
-//        BigSideBtn peptidesOverviewBtn = new BigSideBtn("img/peptides.png", "Get Data");
-//        peptidesOverviewBtn.setData("peptidesoverview");
-//        btnContainer.addComponent(peptidesOverviewBtn);
-//        btnContainer.setComponentAlignment(peptidesOverviewBtn, Alignment.TOP_CENTER);
-//        peptidesOverviewBtn.addLayoutClickListener(GalaxyFileSystemPresenter.this);
-//        VerticalLayout peptidesOverviewLayout = new VerticalLayout();
-//        btnsLayoutMap.put(peptidesOverviewBtn, peptidesOverviewLayout);
-        VerticalLayout toolViewFrame = new VerticalLayout();
-        toolViewFrame.setSizeFull();
-        toolViewFrame.setStyleName("viewframe");
-
-        this.addComponent(toolViewFrame);
-        this.setExpandRatio(toolViewFrame, 100);
-        AbsoluteLayout toolViewFrameContent = new AbsoluteLayout();
-        toolViewFrameContent.addStyleName("viewframecontent");
-        toolViewFrameContent.setSizeFull();
-//        toolViewFrame.addComponent(datasetOverviewLayout);
-//        toolViewFrameContent.addComponent(proteinsOverviewLayout);
-//        toolViewFrameContent.addComponent(peptidesOverviewLayout);
-
+        BigSideBtn viewDataBtn = new BigSideBtn("img/jobs.png", "Show Data");
+        viewDataBtn.setData("datasetoverview");
+        btnContainer.addComponent(viewDataBtn);
+        btnContainer.setComponentAlignment(viewDataBtn, Alignment.TOP_CENTER);
+        viewDataBtn.addLayoutClickListener(GalaxyFileSystemPresenter.this);
+        
+        VerticalLayout dataContainerLayout = initDataViewLayout();
+        btnsLayoutMap.put(viewDataBtn, dataContainerLayout);
+        
+        VerticalLayout dataViewFrame = new VerticalLayout();
+        dataViewFrame.setSizeFull();
+        dataViewFrame.setStyleName("viewframe");
+        
+        this.addComponent(dataViewFrame);
+        this.setExpandRatio(dataViewFrame, 100);
+        AbsoluteLayout dataViewFrameContent = new AbsoluteLayout();
+        dataViewFrameContent.addStyleName("viewframecontent");
+        dataViewFrameContent.setSizeFull();
+        dataViewFrame.addComponent(dataViewFrameContent);
+        
+        dataViewFrameContent.addComponent(dataContainerLayout);
+        
         mobilebtnContainer = new HorizontalLayout();
         mobilebtnContainer.setHeight(100, Unit.PERCENTAGE);
         mobilebtnContainer.setWidthUndefined();
         mobilebtnContainer.setSpacing(true);
         mobilebtnContainer.setStyleName("bottomsidebtncontainer");
-
-//        BigSideBtn datasetsOverviewBtnM = new BigSideBtn("img/graph.png", "Work-Flow");
-//        datasetsOverviewBtnM.setData("datasetoverview");
-//        datasetsOverviewBtnM.addStyleName("zeropadding");
-//        mobilebtnContainer.addComponent(datasetsOverviewBtnM);
-//        mobilebtnContainer.setComponentAlignment(datasetsOverviewBtnM, Alignment.TOP_CENTER);
-//        datasetsOverviewBtnM.addLayoutClickListener(GalaxyFileSystemPresenter.this);
-//        datasetsOverviewBtnM.setSelected(true);
-//        
-//         BigSideBtn proteinsOverviewBtnM = new BigSideBtn("img/proteins.png", "Work-Flow");
-//        datasetsOverviewBtnM.setData("proteinsoverview");
-//        datasetsOverviewBtnM.addStyleName("zeropadding");
-//        mobilebtnContainer.addComponent(proteinsOverviewBtnM);
-//        mobilebtnContainer.setComponentAlignment(proteinsOverviewBtnM, Alignment.TOP_CENTER);
-//        proteinsOverviewBtnM.addLayoutClickListener(GalaxyFileSystemPresenter.this);
-//        
-//        
-//         BigSideBtn peptidesOverviewBtnM = new BigSideBtn("img/peptides.png", "Work-Flow");
-//        peptidesOverviewBtnM.setData("peptidesoverview");
-//        peptidesOverviewBtnM.addStyleName("zeropadding");
-//        mobilebtnContainer.addComponent(peptidesOverviewBtnM);
-//        mobilebtnContainer.setComponentAlignment(peptidesOverviewBtnM, Alignment.TOP_CENTER);
-//        peptidesOverviewBtnM.addLayoutClickListener(GalaxyFileSystemPresenter.this);
-//        peptidesOverviewBtnM.setSelected(true);
+        
+        BigSideBtn viewDataBtnM = new BigSideBtn("img/jobs.png", "Show Data");
+        viewDataBtnM.setData("datasetoverview");
+        viewDataBtnM.addStyleName("zeropadding");
+        mobilebtnContainer.addComponent(viewDataBtnM);
+        mobilebtnContainer.setComponentAlignment(viewDataBtnM, Alignment.TOP_CENTER);
+        viewDataBtnM.addLayoutClickListener(GalaxyFileSystemPresenter.this);
+        viewDataBtnM.setSelected(true);
+        viewDataBtn.setSelected(true);
+        
     }
-
+    
     @Override
     public VerticalLayout getMainView() {
         return this;
     }
-
+    
     @Override
     public SmallSideBtn getRightView() {
         return toolsBtn;
     }
-
+    
     @Override
     public String getViewId() {
         return GalaxyFileSystemPresenter.class.getName();
@@ -166,7 +140,7 @@ public class GalaxyFileSystemPresenter extends VerticalLayout implements Present
         this.addStyleName("hidepanel");
         this.btnContainer.removeStyleName("visible");
         this.mobilebtnContainer.addStyleName("hidepanel");
-
+        
     }
 
     /**
@@ -180,7 +154,7 @@ public class GalaxyFileSystemPresenter extends VerticalLayout implements Present
         this.mobilebtnContainer.removeStyleName("hidepanel");
         this.removeStyleName("hidepanel");
     }
-
+    
     @Override
     public void layoutClick(LayoutEvents.LayoutClickEvent event) {
         BigSideBtn comp = (BigSideBtn) event.getComponent();
@@ -196,20 +170,33 @@ public class GalaxyFileSystemPresenter extends VerticalLayout implements Present
         if (comp.getData().toString().equalsIgnoreCase("nels")) {
         }
     }
-
+    
     @Override
     public VerticalLayout getLeftView() {
         return btnContainer;
     }
-
+    
     @Override
     public HorizontalLayout getBottomView() {
         return mobilebtnContainer;
     }
-
+    
     @Override
     public SmallSideBtn getTopView() {
         return topToolsBtn;
     }
-
+    
+    private VerticalLayout initDataViewLayout() {
+        VerticalLayout container = new VerticalLayout();
+        container.setWidth(100,Unit.PERCENTAGE);
+         container.setHeight(100,Unit.PERCENTAGE);
+        container.setSpacing(true);
+        container.setStyleName("subframe");       
+       
+        dataLayout = new DataViewLayout();
+        container.addComponent(dataLayout);
+        
+        return container;
+    }
+    
 }

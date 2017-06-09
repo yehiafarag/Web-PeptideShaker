@@ -13,7 +13,6 @@ import com.github.jmchilton.blend4j.galaxy.beans.WorkflowOutputs;
 import com.github.jmchilton.blend4j.galaxy.beans.collection.request.CollectionDescription;
 import com.github.jmchilton.blend4j.galaxy.beans.collection.request.HistoryDatasetElement;
 import com.github.jmchilton.blend4j.galaxy.beans.collection.response.CollectionResponse;
-import com.vaadin.server.Page;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Notification;
@@ -28,12 +27,13 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -57,8 +57,10 @@ public class ToolsHandler {
      * The main galaxy Work-Flow Client on galaxy server.
      */
     private final ToolsClient galaxyToolClient;
-    private final String search_GUI_Tool_Id = "toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/search_gui/3.2.11";
+    private String search_GUI_Tool_Id = null;
+    private String peptideShaker_Tool_Id = null;
 
+    // , 
     /**
      * Constructor to initialize the main data structure and other variables.
      *
@@ -73,32 +75,43 @@ public class ToolsHandler {
         /**
          * The SearchGUI tool on galaxy server.
          */
-        String galaxySearchGUIToolId = null;
+//        String galaxySearchGUIToolId = null;
         /**
          * The PeptideShaker tool on galaxy server.
          */
-        String galaxyPeptideShakerToolId = null;
+//        String galaxyPeptideShakerToolId = null;
         try {
 
             List<ToolSection> toolSections = galaxyToolClient.getTools();
+            String PSVersion = "0.0.0";
+            String SGVersion = "0.0.0";
             for (ToolSection secion : toolSections) {
                 List<Tool> tools = secion.getElems();
                 if (tools != null && !validToolsAvailable) {
                     for (Tool tool : tools) {
-                        if (tool.getId().equalsIgnoreCase("toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/peptide_shaker/1.16.3")) {
-                            galaxyPeptideShakerToolId = tool.getId();
-                        } else if (tool.getId().equalsIgnoreCase(search_GUI_Tool_Id)) {
-                            galaxySearchGUIToolId = tool.getId();
+                        if (tool.getId().contains("toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/search_gui/")) {
+                            String version = tool.getId().split("toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/search_gui/")[1];
+                            if (isFirmwareNewer(version, SGVersion)) {
+                                SGVersion = version;
+                                search_GUI_Tool_Id = tool.getId();
+
+                            }
+                        } else if (tool.getId().contains("toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/peptide_shaker/")) {
+                            String version = tool.getId().split("toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/peptide_shaker/")[1];
+                            if (isFirmwareNewer(version, PSVersion)) {
+                                PSVersion = version;
+                                peptideShaker_Tool_Id = tool.getId();
+
+                            }
                         }
-                        if (galaxyPeptideShakerToolId != null && galaxySearchGUIToolId != null) {
-                            validToolsAvailable = true;
-                            break;
-                        }
+
                     }
                 }
-                if (validToolsAvailable) {
+                if (peptideShaker_Tool_Id != null && search_GUI_Tool_Id != null) {
+                    validToolsAvailable = true;
                     break;
                 }
+
             }
         } catch (Exception e) {
             if (e.toString().contains("Service Temporarily Unavailable")) {
@@ -108,9 +121,9 @@ public class ToolsHandler {
 
             } else {
                 System.out.println("at tools are not available");
-                UI.getCurrent().getSession().close();
-                VaadinSession.getCurrent().getSession().invalidate();
-                Page.getCurrent().reload();
+//                UI.getCurrent().getSession().close();
+//                VaadinSession.getCurrent().getSession().invalidate();
+//                Page.getCurrent().reload();
             }
         }
     }
@@ -268,7 +281,7 @@ public class ToolsHandler {
                 HashMap<String, Object> payLoadParamMap = new LinkedHashMap<>();
                 payLoadParamMap.put("deleted", Boolean.TRUE);
 //                if (purgeSupport) {
-//                    payLoadParamMap.put("purged", Boolean.TRUE);
+                payLoadParamMap.put("purged", Boolean.TRUE);
 //                }
                 String payload = mapper.writer().writeValueAsString(payLoadParamMap);
                 writer.write(payload);
@@ -282,7 +295,6 @@ public class ToolsHandler {
             }
             br.close();
             conn.disconnect();
-            System.out.println("com.uib.onlinepeptideshaker.model.GalaxyDataUtil.permanentDeleteHistory()");
 
         } catch (MalformedURLException ex) {
             ex.printStackTrace();
@@ -314,11 +326,10 @@ public class ToolsHandler {
                 input2 = new WorkflowInputs.WorkflowInput(mgfIdsList.iterator().next(), WorkflowInputs.InputSourceType.HDA);
             }
             String json = readWorkflowFile(file);
-
-            if (Boolean.valueOf(searchParameters.getFastaFile().getName().split("__")[2])) {
-                json = json.replace("\"create_decoy\\\\\\\": \\\\\\\"true\\\\\\\"", "\"create_decoy\\\\\\\": \\\\\\\"" + Boolean.FALSE + "\\\\\\\"");
-            }
-            json = json.replace("SearchGUI_Label",projectName+" (SearchGUI Results)").replace("CPS_Label",projectName+" (CPS)").replace("PSM_Label",projectName+" (PSM)").replace("Proteins_Label",projectName+" (Proteins)").replace("Peptides_Label",projectName+" (Peptides)");
+            json = json.replace("toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/search_gui/3.2.11", search_GUI_Tool_Id);
+            json = json.replace("toolshed.g2.bx.psu.edu/repos/galaxyp/peptideshaker/peptide_shaker/1.11.0", peptideShaker_Tool_Id);
+            json = json.replace("\"create_decoy\\\\\\\": \\\\\\\"true\\\\\\\"", "\"create_decoy\\\\\\\": \\\\\\\"" + (Boolean.valueOf(searchParameters.getFastaFile().getName().split("__")[2])) + "\\\\\\\"");
+            json = json.replace("SearchGUI_Label", projectName + " (SearchGUI Results)").replace("CPS_Label", projectName + " (CPS)").replace("PSM_Label", projectName + " (PSM)").replace("Proteins_Label", projectName + " (Proteins)").replace("Peptides_Label", projectName + " (Peptides)");
 
             selectedWf = galaxyWorkFlowClient.importWorkflow(json);
 
@@ -392,6 +403,36 @@ public class ToolsHandler {
             collectionDescription.addDatasetElement(element);
         }
         return galaxyHistoriesClient.createDatasetCollection(historyId, collectionDescription);
+    }
+
+    private boolean isFirmwareNewer(String testFW, String baseFW) {
+
+        int[] testVer = getVersionNumbers(testFW);
+        int[] baseVer = getVersionNumbers(baseFW);
+
+        for (int i = 0; i < testVer.length; i++) {
+            if (testVer[i] != baseVer[i]) {
+                return testVer[i] > baseVer[i];
+            }
+        }
+
+        return true;
+    }
+
+    private int[] getVersionNumbers(String ver) {
+        Matcher m = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)(beta(\\d*))?")
+                .matcher(ver);
+        if (!m.matches()) {
+            throw new IllegalArgumentException("Malformed FW version");
+        }
+
+        return new int[]{Integer.parseInt(m.group(1)), // major
+            Integer.parseInt(m.group(2)), // minor
+            Integer.parseInt(m.group(3)), // rev.
+            m.group(4) == null ? Integer.MAX_VALUE // no beta suffix
+            : m.group(5).isEmpty() ? 1 // "beta"
+            : Integer.parseInt(m.group(5)) // "beta3"
+    };
     }
 
 }

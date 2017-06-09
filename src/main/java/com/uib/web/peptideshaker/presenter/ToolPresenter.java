@@ -23,7 +23,7 @@ import java.util.Set;
  *
  * @author Yehia Farag
  */
-public abstract class ToolPresenter extends VerticalLayout implements PresenterViewable, LayoutEvents.LayoutClickListener {
+public abstract class ToolPresenter extends VerticalLayout implements ViewableFrame, LayoutEvents.LayoutClickListener {
 
     /**
      * The tools layout side button.

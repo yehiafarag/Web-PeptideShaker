@@ -162,7 +162,6 @@ public abstract class HistoryHandler {
             HistoriesClient galaxyHistoriesClient = Galaxy_Instance.getHistoriesClient();
             HistoriesClient loopGalaxyHistoriesClient = Galaxy_Instance.getHistoriesClient();
 
-            System.out.println("at get history 1");
             List<History> historiesList = galaxyHistoriesClient.getHistories();
 
             if (historiesList.isEmpty()) {
@@ -178,16 +177,10 @@ public abstract class HistoryHandler {
                     workingHistory = Galaxy_Instance.getHistoriesClient().create(new History("Online-PeptideShaker-Job-History"));
                 }
             }
-            System.out.println("at get history 2");
             historiesList = galaxyHistoriesClient.getHistories();
             Map<String, Map<String, Object>> workHistoryData = new LinkedHashMap<>();
-//
-//            System.out.println("at --- hList is updated ");
+
             for (History history : historiesList) {
-//                if (history.getId().equalsIgnoreCase(workingHistory.getId())) {
-//                    continue;
-//                }
-                System.out.println("at start query");
                 final String query = "select * from hda where history_id= '" + history.getId() + "'";
                 List<Map<String, Object>> results = Galaxy_Instance.getSearchClient().search(query).getResults();
 
@@ -258,44 +251,13 @@ public abstract class HistoryHandler {
                             GalaxyFile file = new GalaxyFile(userFolder, ds);
                             this.searchSetiingsFilesMap.put(ds.getGalaxyId(), file);
                         }
-
-//                    if(map.get("purged").)
-//                    for (String key : map.keySet()) {
-//                        System.err.println("searching resilts " + key);
-//                    }
                     }
-//                List<HistoryContents> contents = loopGalaxyHistoriesClient.showHistoryContents(history.getId());
-//                HistoriesClient loopGalaxyHistoriesClient2 = Galaxy_Instance.getHistoriesClient();
-//
-//                for (HistoryContents content : contents) {
-//                    if (content.isDeleted()) {
-//                        continue;
-//                    }
-//                    Dataset lDs = loopGalaxyHistoriesClient2.showDataset(history.getId(), content.getId());
-//                    DataSet ds = new DataSet();
-//                    ds.setName(lDs.getName());
-//                    ds.setHistoryId(history.getId());
-//                    ds.setGalaxyId(lDs.getId());
-//
-//                    if (lDs.getDataTypeExt().equalsIgnoreCase("fasta")) {
-//                        this.fastaFilesMap.put(ds.getGalaxyId(), ds);
-//                    } else if (lDs.getDataTypeExt().equalsIgnoreCase("mgf")) {
-//                        this.mgfFilesMap.put(ds.getGalaxyId(), ds);
-//                    }
-//
-//                }
+           
                 }
             }
-            System.out.println("at --- hList is stage 2 ");
 
             //if no search param file exist add default search param file 
-//            if (searchSetiingsFilesMap.isEmpty()) {
-//                DataSet ds = this.storeSearchParamfile(workingHistory.getId());
-//                 this.searchSetiingsFilesMap.put(ds.getGalaxyId(), ds);
-//            }
-//            // check Fasta and MGF files need re-indexing
-//
-            System.out.println("at --- hList is stage 3 ");
+           
             for (DataSet ds : fastaFilesMap.values()) {
                 if (workHistoryData.containsKey(ds.getGalaxyId())) {
                     ds.setReIndexedHistoryId(workingHistory.getId());
@@ -320,85 +282,8 @@ public abstract class HistoryHandler {
             }
 
 //
-//            loopGalaxyHistoriesClient = Galaxy_Instance.getHistoriesClient();
-////            
-//            for (HistoryContents content : contents) {
-//                if (content.isDeleted()) {
-//                    continue;
-//                }
-//                Dataset ds = fulldsMap.get(content.getId());// galaxyHistoriesClient.showDataset(workingHistory.getId(), content.getId());
-//                if (fastaFilesMap.containsKey(ds.getName())) {
-//                    fastaFilesMap.get(ds.getName()).setReIndexedHistoryId(workingHistory.getId());
-//                    fastaFilesMap.get(ds.getName()).setReIndexedId(ds.getId());
-//                } else if (mgfFilesMap.containsKey(ds.getName())) {
-//                    mgfFilesMap.get(ds.getName()).setReIndexedHistoryId(workingHistory.getId());
-//                    mgfFilesMap.get(ds.getName()).setReIndexedId(ds.getId());
-//
-//                } else if (ds.getDataTypeExt().equalsIgnoreCase("searchgui_archive")) {
-//                    HistoryContentsProvenance prov = loopGalaxyHistoriesClient.showProvenance(workingHistory.getId(), content.getId());
-//                    searchGUIFilesMap.put(ds.getId(), prov);
-//                } else if (ds.getDataTypeExt().equalsIgnoreCase("tabular") || ds.getDataTypeExt().equalsIgnoreCase("peptideshaker_archive")) {
-//                    HistoryContentsProvenance prov = loopGalaxyHistoriesClient.showProvenance(workingHistory.getId(), content.getId());
-//                    String jobId = prov.getJobId();
-//                    if (!peptideShakerVisualizationMap.containsKey(jobId)) {
-//                        PeptideShakerVisualizationDataset vDs = new PeptideShakerVisualizationDataset(jobId);
-//                        peptideShakerVisualizationMap.put(jobId, vDs);
-//                    }
-//                    PeptideShakerVisualizationDataset vDs = peptideShakerVisualizationMap.get(jobId);
-//                    if (ds.getName().endsWith("Protein Report")) {
-//                        vDs.setProteinFileId(ds.getId());
-//                    } else if (ds.getName().endsWith("Peptide Report")) {
-//                        vDs.setPeptideFileId(ds.getId());
-//                    } else if (ds.getName().endsWith("PSM Report")) {
-//                        vDs.setPsmFileId(ds.getId());
-//                    } else if (ds.getDataTypeExt().endsWith("peptideshaker_archive")) {
-//                        vDs.setCpsId(ds.getId());
-//                    }
-//                    vDs.setSearchGUIFileId(prov.getParameters().get("searchgui_input").toString().split(",")[0].split("id=")[1]);
-//
-//                }
-//
-//                System.out.println("at --- hList is stage 4 ");
-//
-//            }
-//            //re-index un indexed fasta and mgf files
-//
-            System.out.println("at --- hList is stage 5 ");
-//            for (String id : fastaFilesMap.keySet()) {
-//                if (fastaFilesMap.get(id).getReIndexedId() == null) {
-//                    String reIndexId = this.reIndexFile(fastaFilesMap.get(id).getGalaxyId(), fastaFilesMap.get(id).getHistoryId(), workingHistory.getId());
-//                    fastaFilesMap.get(id).setReIndexedHistoryId(workingHistory.getId());
-//                    fastaFilesMap.get(id).setReIndexedId(reIndexId);
-//                }
-//
-//            }
-//            for (String id : mgfFilesMap.keySet()) {
-//                if (mgfFilesMap.get(id).getReIndexedId() == null) {
-//                    String reIndexId = this.reIndexFile(mgfFilesMap.get(id).getGalaxyId(), mgfFilesMap.get(id).getHistoryId(), workingHistory.getId());
-//                    mgfFilesMap.get(id).setReIndexedHistoryId(workingHistory.getId());
-//                    mgfFilesMap.get(id).setReIndexedId(reIndexId);
-//                }
-//
-//            }
-//            for (PeptideShakerVisualizationDataset vDs : peptideShakerVisualizationMap.values()) {
-//                if (searchGUIFilesMap.containsKey(vDs.getSearchGUIFileId())) {
-//                    Map<String, Object> params = searchGUIFilesMap.get(vDs.getSearchGUIFileId()).getParameters();
-//                    vDs.setFastaFileId(fastaFilesMap.get(params.get("input_database").toString().split(",")[0].split("id=")[1]).getReIndexedId());
-//                    int mgfFileNumber = params.keySet().toString().split("peak_lists").length - 2;
-//                    for (int x = 1; x <= mgfFileNumber; x++) {
-//                        vDs.addMgfFiles(mgfFilesMap.get(params.get("peak_lists" + x).toString().split(",")[0].split("id=")[1]).getReIndexedId());
-//                    }
-//
-//                }
-//                System.out.println("at vds " + vDs.getJobId() + "   is valid " + vDs.isValidFile());
-//
-//            }
-//
-//            System.out.println("at --- hList is stage 6 ");
             systemIsBusy(true);
             checkNotReadyHistory();
-//
-//            System.out.println("at --- hList is stage 7 ---- done ! ");
 //
         } catch (Exception e) {
             if (e.toString().contains("Service Temporarily Unavailable")) {
@@ -462,7 +347,6 @@ public abstract class HistoryHandler {
                     REFRESHER.removeListener(this);
                     checkNotReadyHistory();
                 } else {
-//                    progressWindow.setVisible(false);
                     System.out.println("--------------------- at the history not ready --------------------- " + name+ "   ");
 
                 }
