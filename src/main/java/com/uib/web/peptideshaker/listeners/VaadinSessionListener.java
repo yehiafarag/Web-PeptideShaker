@@ -18,7 +18,7 @@ public class VaadinSessionListener implements HttpSessionListener {
 
     @Override
     public void sessionDestroyed(HttpSessionEvent hse) {
-        String  ApiKey = hse.getSession().getAttribute("ApiKey").toString();
+        String  ApiKey = hse.getSession().getAttribute("ApiKey")+"";
 
         File userFolder = new File(ApiKey);
         if (userFolder.exists()) {

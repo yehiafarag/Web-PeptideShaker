@@ -1,7 +1,7 @@
 package com.uib.web.peptideshaker.presenter;
 
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.uib.web.peptideshaker.galaxy.DataSet;
+import com.uib.web.peptideshaker.galaxy.SystemDataSet;
 import com.uib.web.peptideshaker.galaxy.GalaxyFile;
 import com.uib.web.peptideshaker.presenter.components.WorkFlowLayout;
 import com.uib.web.peptideshaker.presenter.core.BigSideBtn;
@@ -75,7 +75,7 @@ public abstract class ToolPresenter extends VerticalLayout implements ViewableFr
      * @param fastaFilesMap The main FASTA File Map (ID to Name).
      * @param mgfFilesMap The main MGF File Map (ID to Name).
      */
-    public void updateHistoryHandler(Map<String, GalaxyFile> searchSettingsMap, Map<String, DataSet> fastaFilesMap, Map<String, DataSet> mgfFilesMap) {
+    public void updateHistoryHandler(Map<String, GalaxyFile> searchSettingsMap, Map<String, SystemDataSet> fastaFilesMap, Map<String, SystemDataSet> mgfFilesMap) {
         workflowLayout.updateForm(searchSettingsMap, fastaFilesMap, mgfFilesMap);
     }
 

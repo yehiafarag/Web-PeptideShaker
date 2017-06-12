@@ -248,9 +248,22 @@ public abstract class GalaxyLayer {
      *
      * @return fastaFilesMap
      */
-    public Map<String, DataSet> getFastaFilesMap() {
+    public Map<String, SystemDataSet> getFastaFilesMap() {
         if (historyHandler != null) {
             return historyHandler.getFastaFilesMap();
+        } else {
+            return new HashMap<>();
+        }
+    }
+    
+    /**
+     * Get the main FASTA files Map
+     *
+     * @return fastaFilesMap
+     */
+    public Map<String, SystemDataSet> getHistoryFilesMap() {
+        if (historyHandler != null) {
+            return historyHandler.getHistoryFilesMap();
         } else {
             return new HashMap<>();
         }
@@ -267,7 +280,7 @@ public abstract class GalaxyLayer {
      * @return mgfFilesMap
      *
      */
-    public Map<String, DataSet> getMgfFilesMap() {
+    public Map<String, SystemDataSet> getMgfFilesMap() {
         if (historyHandler != null) {
             return historyHandler.getMgfFilesMap();
         } else {

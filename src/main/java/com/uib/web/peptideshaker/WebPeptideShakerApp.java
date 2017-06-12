@@ -1,7 +1,7 @@
 package com.uib.web.peptideshaker;
 
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.uib.web.peptideshaker.galaxy.DataSet;
+import com.uib.web.peptideshaker.galaxy.SystemDataSet;
 import com.uib.web.peptideshaker.galaxy.GalaxyFile;
 import com.uib.web.peptideshaker.galaxy.GalaxyLayer;
 import com.uib.web.peptideshaker.presenter.GalaxyFileSystemPresenter;
@@ -97,12 +97,14 @@ public class WebPeptideShakerApp extends VerticalLayout {
             toolsView.getRightView().setDescription("Click to view the tools layout");
             toolsView.getTopView().setDescription("Click to view the tools layout");
             toolsView.updateHistoryHandler(Galaxy_Layer.getSearchSettingsFilesMap(),Galaxy_Layer.getFastaFilesMap(), Galaxy_Layer.getMgfFilesMap());
+            
         } else {
             toolsView.getRightView().setDescription("Tools are not available");
             toolsView.getTopView().setDescription("Tools are not available");
             toolsView.getRightView().setEnabled(false);
             toolsView.getTopView().setEnabled(false);
         }
+      fileSystemView.updatePresenter(Galaxy_Layer.getHistoryFilesMap());
     }
 
 }

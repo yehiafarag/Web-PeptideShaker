@@ -7,7 +7,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Pt
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.preferences.DigestionPreferences;
-import com.uib.web.peptideshaker.galaxy.DataSet;
+import com.uib.web.peptideshaker.galaxy.SystemDataSet;
 import com.uib.web.peptideshaker.presenter.core.CloseButton;
 import com.uib.web.peptideshaker.presenter.core.DropDownList;
 import com.uib.web.peptideshaker.presenter.core.MultiSelectOptionGroup;
@@ -170,7 +170,7 @@ public abstract class SearchSettingsLayout extends VerticalLayout {
         return fastaFileList.getSelectedValue();
     }
 
-    public void updateFastaFileList(Map<String, DataSet> fastaFilesMap) {
+    public void updateFastaFileList(Map<String, SystemDataSet> fastaFilesMap) {
         fastaFileIdToNameMap = new LinkedHashMap<>();
         String selectedId = "";
         for (String id : fastaFilesMap.keySet()) {

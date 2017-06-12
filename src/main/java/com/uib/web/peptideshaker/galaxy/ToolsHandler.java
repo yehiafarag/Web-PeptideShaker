@@ -208,7 +208,7 @@ public class ToolsHandler {
         List<OutputDataset> excList = galaxyToolClient.upload(request).getOutputs();
         if (excList != null && !excList.isEmpty()) {
             OutputDataset oDs = excList.get(0);
-            DataSet ds = new DataSet();
+            SystemDataSet ds = new SystemDataSet();
             ds.setName(oDs.getName());
             ds.setHistoryId(workHistoryId);
             ds.setGalaxyId(oDs.getId());

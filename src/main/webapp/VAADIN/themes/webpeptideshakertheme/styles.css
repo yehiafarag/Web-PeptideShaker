@@ -13852,3 +13852,11 @@ div.v-layout.v-horizontal.v-widget {
 	overflow: hidden;
 	z-index: 2 !important;
 }
+
+.webpeptideshakertheme .disablescrolltable {
+	overflow: hidden !important;
+}
+
+.webpeptideshakertheme .v-textfield-pagedtable-pagefield {
+	min-width: 40px;
+}

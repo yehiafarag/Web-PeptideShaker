@@ -1,5 +1,6 @@
 package com.uib.web.peptideshaker.presenter;
 
+import com.uib.web.peptideshaker.galaxy.SystemDataSet;
 import com.uib.web.peptideshaker.presenter.components.DataViewLayout;
 import com.uib.web.peptideshaker.presenter.components.WorkFlowLayout;
 import com.uib.web.peptideshaker.presenter.core.BigSideBtn;
@@ -48,16 +49,16 @@ public class GalaxyFileSystemPresenter extends VerticalLayout implements Viewabl
         GalaxyFileSystemPresenter.this.setStyleName("activelayout");
         this.toolsBtn = new SmallSideBtn("img/jobs.png");
         this.toolsBtn.setData(GalaxyFileSystemPresenter.this.getViewId());
-        
+
         this.topToolsBtn = new SmallSideBtn("img/jobs.png");
         this.topToolsBtn.setData(GalaxyFileSystemPresenter.this.getViewId());
-        
+
         this.btnsLayoutMap = new LinkedHashMap<>();
         this.initLayout();
         GalaxyFileSystemPresenter.this.minimizeView();
-        
+
     }
-    
+
     public void setBusy(boolean busy) {
         if (busy) {
             toolsBtn.updateIconURL("img/loading.gif");
@@ -67,7 +68,7 @@ public class GalaxyFileSystemPresenter extends VerticalLayout implements Viewabl
             topToolsBtn.updateIconURL("img/jobs.png");
         }
     }
-    
+
     private void initLayout() {
         this.addStyleName("integratedframe");
         btnContainer = new VerticalLayout();
@@ -81,29 +82,29 @@ public class GalaxyFileSystemPresenter extends VerticalLayout implements Viewabl
         btnContainer.addComponent(viewDataBtn);
         btnContainer.setComponentAlignment(viewDataBtn, Alignment.TOP_CENTER);
         viewDataBtn.addLayoutClickListener(GalaxyFileSystemPresenter.this);
-        
+
         VerticalLayout dataContainerLayout = initDataViewLayout();
         btnsLayoutMap.put(viewDataBtn, dataContainerLayout);
-        
+
         VerticalLayout dataViewFrame = new VerticalLayout();
         dataViewFrame.setSizeFull();
         dataViewFrame.setStyleName("viewframe");
-        
+
         this.addComponent(dataViewFrame);
         this.setExpandRatio(dataViewFrame, 100);
-        AbsoluteLayout dataViewFrameContent = new AbsoluteLayout();
-        dataViewFrameContent.addStyleName("viewframecontent");
-        dataViewFrameContent.setSizeFull();
-        dataViewFrame.addComponent(dataViewFrameContent);
-        
-        dataViewFrameContent.addComponent(dataContainerLayout);
-        
+//        AbsoluteLayout dataViewFrameContent = new AbsoluteLayout();
+//        dataViewFrameContent.addStyleName("viewframecontent");
+//        dataViewFrameContent.setSizeFull();
+        dataViewFrame.addComponent(dataContainerLayout);
+//
+//        dataViewFrameContent.addComponent(dataContainerLayout);
+
         mobilebtnContainer = new HorizontalLayout();
         mobilebtnContainer.setHeight(100, Unit.PERCENTAGE);
         mobilebtnContainer.setWidthUndefined();
         mobilebtnContainer.setSpacing(true);
         mobilebtnContainer.setStyleName("bottomsidebtncontainer");
-        
+
         BigSideBtn viewDataBtnM = new BigSideBtn("img/jobs.png", "Show Data");
         viewDataBtnM.setData("datasetoverview");
         viewDataBtnM.addStyleName("zeropadding");
@@ -112,19 +113,19 @@ public class GalaxyFileSystemPresenter extends VerticalLayout implements Viewabl
         viewDataBtnM.addLayoutClickListener(GalaxyFileSystemPresenter.this);
         viewDataBtnM.setSelected(true);
         viewDataBtn.setSelected(true);
-        
+
     }
-    
+
     @Override
     public VerticalLayout getMainView() {
         return this;
     }
-    
+
     @Override
     public SmallSideBtn getRightView() {
         return toolsBtn;
     }
-    
+
     @Override
     public String getViewId() {
         return GalaxyFileSystemPresenter.class.getName();
@@ -140,7 +141,7 @@ public class GalaxyFileSystemPresenter extends VerticalLayout implements Viewabl
         this.addStyleName("hidepanel");
         this.btnContainer.removeStyleName("visible");
         this.mobilebtnContainer.addStyleName("hidepanel");
-        
+
     }
 
     /**
@@ -153,8 +154,11 @@ public class GalaxyFileSystemPresenter extends VerticalLayout implements Viewabl
         this.btnContainer.addStyleName("visible");
         this.mobilebtnContainer.removeStyleName("hidepanel");
         this.removeStyleName("hidepanel");
+        this.dataLayout.updateDS();
+      
+
     }
-    
+
     @Override
     public void layoutClick(LayoutEvents.LayoutClickEvent event) {
         BigSideBtn comp = (BigSideBtn) event.getComponent();
@@ -167,36 +171,46 @@ public class GalaxyFileSystemPresenter extends VerticalLayout implements Viewabl
                 btnsLayoutMap.get(bbt).addStyleName("hidepanel");
             }
         }
-        if (comp.getData().toString().equalsIgnoreCase("nels")) {
+        if (comp.getData().toString().equalsIgnoreCase("datasetoverview")) {
+            
         }
     }
-    
+
     @Override
     public VerticalLayout getLeftView() {
         return btnContainer;
     }
-    
+
     @Override
     public HorizontalLayout getBottomView() {
         return mobilebtnContainer;
     }
-    
+
     @Override
     public SmallSideBtn getTopView() {
         return topToolsBtn;
     }
-    
+
     private VerticalLayout initDataViewLayout() {
         VerticalLayout container = new VerticalLayout();
-        container.setWidth(100,Unit.PERCENTAGE);
-         container.setHeight(100,Unit.PERCENTAGE);
+        container.setWidth(100, Unit.PERCENTAGE);
+        container.setHeight(100, Unit.PERCENTAGE);
         container.setSpacing(true);
-        container.setStyleName("subframe");       
-       
+        container.setStyleName("subframe");
+
         dataLayout = new DataViewLayout();
         container.addComponent(dataLayout);
-        
+
         return container;
     }
+    public void updatePresenter(Map<String, SystemDataSet> historyFilesMap){
     
+      if (this.dataLayout != null) {
+            this.dataLayout.updateTable(historyFilesMap);
+        }
+    
+    
+    
+    }
+
 }

@@ -1,12 +1,13 @@
 package com.uib.web.peptideshaker.presenter.components;
 
-import com.jensjansson.pagedtable.PagedTable;
+import com.uib.web.peptideshaker.galaxy.SystemDataSet;
+import com.uib.web.peptideshaker.presenter.core.ActionLabel;
+import com.uib.web.peptideshaker.presenter.core.CustomizedPagedTable;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
+import java.util.Map;
 
 /**
  * This class represents the data view layout (equal to history in galaxy) the
@@ -18,94 +19,55 @@ import com.vaadin.ui.VerticalLayout;
 public class DataViewLayout extends VerticalLayout {
 
     private final VerticalLayout topPanelLayout;
-//    private final VerticalLayout bottomPanelLayout;
-
+    private CustomizedPagedTable table;
+   
     /**
      * Constructor to initialize the main layout and attributes.
      */
     public DataViewLayout() {
         DataViewLayout.this.setSizeFull();
-        DataViewLayout.this.setSpacing(true);
-
-//         Label titleLabel = new Label("Data on Galaxy");
-//        titleLabel.setStyleName("frametitle");
-//        DataViewLayout.this.addComponent(titleLabel);
-//        Panel topPanel = new Panel("Input Data");
-////        topPanel.setStyleName("panelframe");
-//        topPanel.addStyleName("subpanel");
-//        topPanel.setWidth(80, Unit.PERCENTAGE);
-//        topPanel.setHeight(100, Unit.PERCENTAGE);
-//        DataViewLayout.this.addComponent(topPanel);
+        DataViewLayout.this.setSpacing(true);     
         topPanelLayout = new VerticalLayout();
         topPanelLayout.setWidth(100, Unit.PERCENTAGE);
         topPanelLayout.setHeight(100, Unit.PERCENTAGE);
         topPanelLayout.setSpacing(true);
-         DataViewLayout.this.addComponent(topPanelLayout);
+        DataViewLayout.this.addComponent(topPanelLayout);
+        
+        table = new CustomizedPagedTable("Input Data");
+        topPanelLayout.addComponent(table);
+        topPanelLayout.setExpandRatio(table, 90);
+        HorizontalLayout controlBar = table.getControlBar();
+        controlBar.setSizeFull();
+        topPanelLayout.addComponent(controlBar);
+        topPanelLayout.setExpandRatio(controlBar, 10);
+    }
 
-//        topPanelLayout.setSpacing(true);
-//        topPanel.setContent(topPanelLayout);
-        IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty("Name", String.class, null);
+    public void updateTable(Map<String, SystemDataSet> historyFilesMap) {
+        table.setEnableVisibleRowsCounter(false);        
+        IndexedContainer container;
+        container = new IndexedContainer();
+        container.addContainerProperty("Name", ActionLabel.class, null);
         container.addContainerProperty("Type", String.class, null);
         container.addContainerProperty("Status", String.class, null);
         container.addContainerProperty("Download", String.class, null);
         container.addContainerProperty("Delete", String.class, null);
-        for (int i = 0; i < 50; i++) {
+        int i= 0;
+        
+        for (SystemDataSet ds: historyFilesMap.values()) {
+            
             Item item = container.addItem(i);
-            item.getItemProperty("Name").setValue("foo " + i);
-            item.getItemProperty("Type").setValue("bar");
-            item.getItemProperty("Status").setValue("baz");
-            item.getItemProperty("Download").setValue("baz");
-            item.getItemProperty("Delete").setValue("baz");
+            item.getItemProperty("Name").setValue(new ActionLabel(ds.getName()));
+            item.getItemProperty("Type").setValue(ds.getType());
+            item.getItemProperty("Status").setValue("progress");
+            item.getItemProperty("Download").setValue(ds.getDownloadUrl());
+            item.getItemProperty("Delete").setValue("Delete");
+            i++;
         }
-        PagedTable table = new PagedTable("Input Data");
         table.setContainerDataSource(container);
-        table.setHeight(100,Unit.PERCENTAGE);
-        table.setSizeFull();
-       
-       
-        table.commit();
         
-         topPanelLayout.addComponent(table);
-         HorizontalLayout controlBar = table.createControls();
-         controlBar.setSizeFull();
-        topPanelLayout.addComponent(controlBar);
-      
-        
-         HorizontalLayout pageSize = (HorizontalLayout)controlBar.getComponent(0);
-        HorizontalLayout pageManagement = (HorizontalLayout)controlBar.getComponent(1);        
-        controlBar.setComponentAlignment(pageManagement,Alignment.TOP_CENTER);
-        ComboBox itemsPerPageSelect = (ComboBox)pageSize.getComponent(1);  
-        itemsPerPageSelect.addItem("10");
-        itemsPerPageSelect.select("10");
-         table.setPageLength(10);
-        pageSize.setVisible(false);  
-        System.out.println("at get page count "+table.getTotalAmountOfPages()+ "   ");
-
-//        Panel bottomPanel = new Panel("Results Data");
-////        bottomPanel.setStyleName("panelframe");
-//        bottomPanel.setWidth(445, Unit.PIXELS);
-//        bottomPanel.setHeight(100, Unit.PERCENTAGE);
-//        bottomPanel.addStyleName("subpanel");
-//        DataViewLayout.this.addComponent(bottomPanel);
-//        bottomPanelLayout = new VerticalLayout();
-//        bottomPanelLayout.setWidth(100, Unit.PERCENTAGE);
-//        bottomPanelLayout.setSpacing(true);
-//        bottomPanel.setContent(bottomPanelLayout);
-//        DataViewLayout.this.updataDatasets();
     }
-
-    private void updataDatasets() {
-//        topPanelLayout.removeAllComponents();
-//        bottomPanelLayout.removeAllComponents();
-//        for (int x = 0; x < 20; x++) {
-//            DatasetView ds = new DatasetView();
-////        topPanelLayout.addComponent(ds);
-//            DatasetView ds1 = new DatasetView();
-////        bottomPanelLayout.addComponent(ds1);
-//
-//        }
-
+    public void updateDS(){
+        table.applyDS();
     }
 
 }

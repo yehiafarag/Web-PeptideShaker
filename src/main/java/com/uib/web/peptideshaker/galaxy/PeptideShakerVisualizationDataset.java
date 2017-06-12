@@ -11,7 +11,7 @@ import java.util.Set;
  *
  * @author Yehia Farag
  */
-public class PeptideShakerVisualizationDataset {
+public class PeptideShakerVisualizationDataset extends SystemDataSet{
 
     private String proteinFileId;
     private String peptideFileId;

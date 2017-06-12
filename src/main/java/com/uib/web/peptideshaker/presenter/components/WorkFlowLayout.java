@@ -1,7 +1,7 @@
 package com.uib.web.peptideshaker.presenter.components;
 
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.uib.web.peptideshaker.galaxy.DataSet;
+import com.uib.web.peptideshaker.galaxy.SystemDataSet;
 import com.uib.web.peptideshaker.galaxy.GalaxyFile;
 import com.uib.web.peptideshaker.presenter.core.DropDownList;
 import com.uib.web.peptideshaker.presenter.core.MultiSelectOptionGroup;
@@ -248,7 +248,7 @@ public abstract class WorkFlowLayout extends Panel {
      * @param fastaFilesMap FASTA files map
      * @param mgfFilesMap MGF file map
      */
-    public void updateForm(Map<String, GalaxyFile> searchSettingsMap, Map<String, DataSet> fastaFilesMap, Map<String, DataSet> mgfFilesMap) {
+    public void updateForm(Map<String, GalaxyFile> searchSettingsMap, Map<String, SystemDataSet> fastaFilesMap, Map<String, SystemDataSet> mgfFilesMap) {
 
         this.searchSettingsMap = searchSettingsMap;
         searchSettingsLayout.updateFastaFileList(fastaFilesMap);

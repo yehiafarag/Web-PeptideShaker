@@ -639,26 +639,26 @@
 
 
 
-.paddingleft-20 {	
-	margin-left: -20px;
-	}
+    .paddingleft-20 {	
+        margin-left: -20px;
+    }
 
-.smallfontlongtext{
-	overflow-y: auto;
-	overflow-x: hidden;
-	text-overflow: ellipsis;
-	font-size: 12px;
-	font-family: "Open Sans", sans-serif;
-}
+    .smallfontlongtext{
+        overflow-y: auto;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        font-size: 12px;
+        font-family: "Open Sans", sans-serif;
+    }
 
 
 
-.subpanelframe{
-	border:1px solid lightgray;
-	padding:5px;
-	border-radius:5px;
-	background-color:whitesmoke;
-}
+    .subpanelframe{
+        border:1px solid lightgray;
+        padding:5px;
+        border-radius:5px;
+        background-color:whitesmoke;
+    }
 
 
     /****mobile css**/
@@ -895,5 +895,10 @@
         z-index: 2 !important;
 
     }
-
+    .disablescrolltable{
+        overflow: hidden !important;
+    }
+    .v-textfield-pagedtable-pagefield{
+        min-width:40px;
+    }
 }

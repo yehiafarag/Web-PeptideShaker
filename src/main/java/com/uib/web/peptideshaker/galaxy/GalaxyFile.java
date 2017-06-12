@@ -22,16 +22,16 @@ import java.util.logging.Logger;
  */
 public class GalaxyFile {
 
-    private final DataSet dataset;
+    private final SystemDataSet dataset;
     private final File userFolder;
 
-    public GalaxyFile(File userFolder, DataSet dataset) {
+    public GalaxyFile(File userFolder, SystemDataSet dataset) {
         this.dataset = dataset;
         this.userFolder = userFolder;
 
     }
 
-    public DataSet getDataset() {
+    public SystemDataSet getDataset() {
         return dataset;
     }
 
