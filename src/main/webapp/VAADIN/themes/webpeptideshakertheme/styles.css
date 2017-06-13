@@ -13625,6 +13625,45 @@ div.v-layout.v-horizontal.v-widget {
 	background-color: whitesmoke;
 }
 
+.webpeptideshakertheme .padding25 {
+	padding-top: 25px;
+	padding-right: 25px;
+	padding-bottom: 25px;
+	padding-left: 25px;
+}
+
+.webpeptideshakertheme .row {
+	background-color: white;
+	padding-left: 10px;
+	font-size: 14px;
+	border: 2px solid lightgray;
+}
+
+.webpeptideshakertheme .row .v-label {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-family: "Open Sans", sans-serif;
+}
+
+.webpeptideshakertheme .header {
+	font-weight: bold;
+}
+
+.webpeptideshakertheme .actionlabel {
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.webpeptideshakertheme .actionlabel:hover {
+	cursor: pointer;
+	color: #1278ef !important;
+}
+
+.webpeptideshakertheme .textalignmiddle {
+	text-align: center !important;
+}
+
 .webpeptideshakertheme .horizontalcss .v-slot-leftsidebtncontainer {
 	width: 1% !important;
 	background-color: white;
@@ -13730,15 +13769,17 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .webpeptideshakertheme .horizontalcss .v-slot-topviewcontainer {
-	min-height: 60px;
-	visibility: visible !important;
+	min-height: 50px;
 	max-width: 220px;
 	position: relative !important;
-	top: 43px !important;
+	top: 35px !important;
 	float: right;
-	left: -40px !important;
+	left: -50px !important;
 	z-index: 2000000000 !important;
-	background-color: white;
+	background-color: #ffffff !important;
+	height: 50px !important;
+	overflow: visible;
+	visibility: visible !important;
 }
 
 .webpeptideshakertheme .v-slot-smallmenubtn {
@@ -13833,22 +13874,30 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .webpeptideshakertheme .horizontalcss .v-slot-smallmenubtn {
-	border: none;
-	background-color: white;
-	margin-top: 0px;
+	max-height: 40px !important;
+	border: 2px solid lightgray;
+	border-top: 2px solid rgba(211, 211, 211, 0);
+	background: whitesmoke;
 	border-radius: 5px;
+	border-top-right-radius: 0px;
+	border-top-left-radius: 0px;
 	overflow: visible !important;
 	z-index: 3 !important;
 	position: relative !important;
-	margin-top: 0px;
+	margin-top: -2px;
+	padding-top: 2px;
+	margin-left: -2px;
+	float: bottom;
 }
 
 .webpeptideshakertheme .horizontalcss .v-slot-smallmenubtn.v-slot-selectedsmallbtn {
-	border: none;
-	border-radius: 5px;
-	background: white;
-	background-size: 100%;
-	margin-left: 0px;
+	border-bottom-color: white !important;
+	background: white !important;
+	border-top-color: lightgray;
+	border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
+	border-bottom-right-radius: 0px;
+	border-bottom-left-radius: 0px;
 	overflow: hidden;
 	z-index: 2 !important;
 }

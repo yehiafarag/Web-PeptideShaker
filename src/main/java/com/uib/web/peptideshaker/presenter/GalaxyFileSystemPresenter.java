@@ -2,7 +2,6 @@ package com.uib.web.peptideshaker.presenter;
 
 import com.uib.web.peptideshaker.galaxy.SystemDataSet;
 import com.uib.web.peptideshaker.presenter.components.DataViewLayout;
-import com.uib.web.peptideshaker.presenter.components.WorkFlowLayout;
 import com.uib.web.peptideshaker.presenter.core.BigSideBtn;
 import com.uib.web.peptideshaker.presenter.core.SmallSideBtn;
 import com.vaadin.event.LayoutEvents;
@@ -11,12 +10,9 @@ import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * This class represent PeptideShaker view presenter which is responsible for
@@ -92,12 +88,12 @@ public class GalaxyFileSystemPresenter extends VerticalLayout implements Viewabl
 
         this.addComponent(dataViewFrame);
         this.setExpandRatio(dataViewFrame, 100);
-//        AbsoluteLayout dataViewFrameContent = new AbsoluteLayout();
-//        dataViewFrameContent.addStyleName("viewframecontent");
-//        dataViewFrameContent.setSizeFull();
-        dataViewFrame.addComponent(dataContainerLayout);
+        AbsoluteLayout dataViewFrameContent = new AbsoluteLayout();
+        dataViewFrameContent.addStyleName("viewframecontent");
+        dataViewFrameContent.setSizeFull();
+        dataViewFrame.addComponent(dataViewFrameContent);
 //
-//        dataViewFrameContent.addComponent(dataContainerLayout);
+        dataViewFrameContent.addComponent(dataContainerLayout);
 
         mobilebtnContainer = new HorizontalLayout();
         mobilebtnContainer.setHeight(100, Unit.PERCENTAGE);
@@ -154,8 +150,6 @@ public class GalaxyFileSystemPresenter extends VerticalLayout implements Viewabl
         this.btnContainer.addStyleName("visible");
         this.mobilebtnContainer.removeStyleName("hidepanel");
         this.removeStyleName("hidepanel");
-        this.dataLayout.updateDS();
-      
 
     }
 
@@ -172,7 +166,7 @@ public class GalaxyFileSystemPresenter extends VerticalLayout implements Viewabl
             }
         }
         if (comp.getData().toString().equalsIgnoreCase("datasetoverview")) {
-            
+
         }
     }
 
@@ -197,20 +191,21 @@ public class GalaxyFileSystemPresenter extends VerticalLayout implements Viewabl
         container.setHeight(100, Unit.PERCENTAGE);
         container.setSpacing(true);
         container.setStyleName("subframe");
-
+        container.addStyleName("padding25");
+//        container.setMargin(new MarginInfo(true, true, true, true));
         dataLayout = new DataViewLayout();
         container.addComponent(dataLayout);
+        container.setComponentAlignment(dataLayout, Alignment.MIDDLE_CENTER);
 
         return container;
     }
-    public void updatePresenter(Map<String, SystemDataSet> historyFilesMap){
-    
-      if (this.dataLayout != null) {
+
+    public void updatePresenter(Map<String, SystemDataSet> historyFilesMap) {
+
+        if (this.dataLayout != null) {
             this.dataLayout.updateTable(historyFilesMap);
         }
-    
-    
-    
+
     }
 
 }

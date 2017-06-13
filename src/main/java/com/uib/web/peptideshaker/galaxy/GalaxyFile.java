@@ -1,6 +1,5 @@
 package com.uib.web.peptideshaker.galaxy;
 
-import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,8 +10,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class represents usable files on galaxy the class allow downloading the
@@ -20,7 +17,7 @@ import java.util.logging.Logger;
  *
  * @author Yehia Farag
  */
-public class GalaxyFile {
+public class GalaxyFile extends SystemDataSet {
 
     private final SystemDataSet dataset;
     private final File userFolder;
@@ -28,6 +25,11 @@ public class GalaxyFile {
     public GalaxyFile(File userFolder, SystemDataSet dataset) {
         this.dataset = dataset;
         this.userFolder = userFolder;
+        super.setName(dataset.getName());
+        super.setType(dataset.getType());
+        super.setStatus(dataset.getStatus());
+        super.setDownloadUrl(dataset.getDownloadUrl());
+        super.setGalaxyId(dataset.getGalaxyId());
 
     }
 
@@ -39,12 +41,12 @@ public class GalaxyFile {
 
         File file = new File(userFolder, dataset.getGalaxyId());
         if (file.exists()) {
-             return file;
+            return file;
         }
 
         FileOutputStream fos = null;
         try {
-            URL downloadableFile = new URL(dataset.getDownloadUrl() );
+            URL downloadableFile = new URL(dataset.getDownloadUrl());
             System.err.println("at file path " + dataset.getDownloadUrl());
             URLConnection conn = downloadableFile.openConnection();
             conn.addRequestProperty("Cookie", VaadinSession.getCurrent().getSession().getAttribute("cookies") + "");

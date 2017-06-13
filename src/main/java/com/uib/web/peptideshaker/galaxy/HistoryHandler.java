@@ -71,7 +71,7 @@ public abstract class HistoryHandler {
      *
      */
     private final Refresher REFRESHER;
-
+    
     public Map<String, PeptideShakerVisualizationDataset> getPeptideShakerVisualizationMap() {
         return peptideShakerVisualizationMap;
     }
@@ -90,7 +90,7 @@ public abstract class HistoryHandler {
         this.peptideShakerVisualizationMap = new LinkedHashMap<>();
         this.searchGUIFilesMap = new LinkedHashMap<>();
         this.historyFilesMap = new LinkedHashMap<>();
-
+        
         REFRESHER = new Refresher();
         ((PeptidShakerUI) UI.getCurrent()).addExtension(REFRESHER);
 
@@ -120,7 +120,7 @@ public abstract class HistoryHandler {
 //        progressWindow.setVisible(false);
 //        UI.getCurrent().addWindow(progressWindow);
         this.updateHistoryDatastructure(userFolder);
-
+        
     }
 
     /**
@@ -149,7 +149,7 @@ public abstract class HistoryHandler {
     public Map<String, SystemDataSet> getMgfFilesMap() {
         return mgfFilesMap;
     }
-
+    
     public Map<String, SystemDataSet> getHistoryFilesMap() {
         return historyFilesMap;
     }
@@ -161,7 +161,7 @@ public abstract class HistoryHandler {
      */
     public final void updateHistoryDatastructure(File userFolder) {
         try {
-
+            
             fastaFilesMap.clear();
             mgfFilesMap.clear();
             searchGUIFilesMap.clear();
@@ -170,9 +170,9 @@ public abstract class HistoryHandler {
             searchSetiingsFilesMap.clear();
             HistoriesClient galaxyHistoriesClient = Galaxy_Instance.getHistoriesClient();
             HistoriesClient loopGalaxyHistoriesClient = Galaxy_Instance.getHistoriesClient();
-
+            
             List<History> historiesList = galaxyHistoriesClient.getHistories();
-
+            
             if (historiesList.isEmpty()) {
                 galaxyHistoriesClient.create(new History("Online-PeptideShaker-History"));
                 workingHistory = galaxyHistoriesClient.create(new History("Online-PeptideShaker-Job-History"));
@@ -188,11 +188,11 @@ public abstract class HistoryHandler {
             }
             historiesList = galaxyHistoriesClient.getHistories();
             Map<String, Map<String, Object>> workHistoryData = new LinkedHashMap<>();
-
+            
             for (History history : historiesList) {
                 final String query = "select * from hda where history_id= '" + history.getId() + "'";
                 List<Map<String, Object>> results = Galaxy_Instance.getSearchClient().search(query).getResults();
-
+                
                 if (history.getId().equalsIgnoreCase(workingHistory.getId())) {
                     for (Map<String, Object> map : results) {
                         if (map.get("purged").toString().equalsIgnoreCase("true") || map.get("deleted").toString().equalsIgnoreCase("true")) {
@@ -209,20 +209,25 @@ public abstract class HistoryHandler {
                                 peptideShakerVisualizationMap.put(jobId, vDs);
                             }
                             PeptideShakerVisualizationDataset vDs = peptideShakerVisualizationMap.get(jobId);
-                            if (map.get("name").toString().endsWith("Protein Report")) {
-                                vDs.setProteinFileId(map.get("id").toString());
-
+                            System.out.println("JobID "+ jobId);
+                          
+                            if (map.get("name").toString().endsWith("(Proteins)")) {
+                                  vDs.setName(map.get("name").toString().replace("(Proteins)", ""));
+                                  vDs.setGalaxyId(jobId);
+                                  vDs.setType("Web Peptide Shaker Dataset");
+                                  vDs.setProteinFileId(map.get("id").toString());
+                                
                                 vDs.setSearchGUIFileId(prov.getParameters().get("searchgui_input").toString().split(",")[0].split("id=")[1]);
-                            } else if (map.get("name").toString().endsWith("Peptide Report")) {
-                                vDs.setPeptideFileId(map.get("id").toString());
-
+                            } else if (map.get("name").toString().endsWith("(Peptide)")) {
+                                vDs.setPeptideFileId(map.get("id").toString());                                
                                 vDs.setSearchGUIFileId(prov.getParameters().get("searchgui_input").toString().split(",")[0].split("id=")[1]);
-                            } else if (map.get("name").toString().endsWith("PSM Report")) {
+                            } else if (map.get("name").toString().endsWith("(PSM)")) {
                                 vDs.setPsmFileId(map.get("id").toString());
-
+                                
                                 vDs.setSearchGUIFileId(prov.getParameters().get("searchgui_input").toString().split(",")[0].split("id=")[1]);
-                            } else if (map.get("data_type").toString().endsWith("peptideshaker_archive")) {
+                            } else if (map.get("data_type").toString().endsWith("(CPS)")) {
                                 vDs.setCpsId(map.get("id").toString());
+                                vDs.setDownloadUrl(Galaxy_Instance.getGalaxyUrl() + "/datasets/" + map.get("id").toString() + "/display");
                                 vDs.setSearchGUIFileId(prov.getParameters().get("searchgui_input").toString().split(",")[0].split("id=")[1]);
                             } else {
                                 workHistoryData.put(map.get("name").toString(), map);
@@ -230,6 +235,7 @@ public abstract class HistoryHandler {
                         } else if (map.get("data_type").toString().equalsIgnoreCase("galaxy.datatypes.text.Json") && map.get("name").toString().endsWith(".par")) {
                             SystemDataSet ds = new SystemDataSet();
                             ds.setName(map.get("name").toString());
+                            ds.setType("Search Paramerters File (JSON)");
                             ds.setHistoryId(history.getId());
                             ds.setGalaxyId(map.get("id").toString());
                             ds.setDownloadUrl(Galaxy_Instance.getGalaxyUrl() + "/datasets/" + ds.getGalaxyId() + "/display");
@@ -239,10 +245,10 @@ public abstract class HistoryHandler {
                         if (map.get("name").toString().endsWith(".par")) {
                             System.out.println("at the file bta3y " + map.get("data_type").toString());
                         }
-
+                        
                     }
                 } else {
-
+                    
                     for (Map<String, Object> map : results) {
                         if (map.get("purged").toString().equalsIgnoreCase("true") || map.get("deleted").toString().equalsIgnoreCase("true")) {
                             continue;
@@ -259,13 +265,13 @@ public abstract class HistoryHandler {
                             ds.setType("MGF");
                             this.mgfFilesMap.put(ds.getGalaxyId(), ds);
                         } else if (map.get("data_type").toString().equalsIgnoreCase("galaxy.datatypes.text.Json") && map.get("name").toString().endsWith(".par")) {
-                             ds.setType("Search Paramerters File");
+                            ds.setType("Search Paramerters File (JSON)");
                             ds.setDownloadUrl(Galaxy_Instance.getGalaxyUrl() + "/datasets/" + ds.getGalaxyId() + "/display");
                             GalaxyFile file = new GalaxyFile(userFolder, ds);
                             this.searchSetiingsFilesMap.put(ds.getGalaxyId(), file);
                         }
                     }
-
+                    
                 }
             }
 
@@ -279,7 +285,7 @@ public abstract class HistoryHandler {
                     ds.setReIndexedHistoryId(workingHistory.getId());
                     ds.setReIndexedId(reIndexId);
                 }
-
+                
             }
             for (SystemDataSet ds : mgfFilesMap.values()) {
                 if (workHistoryData.containsKey(ds.getGalaxyId())) {
@@ -290,10 +296,12 @@ public abstract class HistoryHandler {
                     ds.setReIndexedHistoryId(workingHistory.getId());
                     ds.setReIndexedId(reIndexId);
                 }
-
+                
             }
             historyFilesMap.putAll(mgfFilesMap);
             historyFilesMap.putAll(fastaFilesMap);
+            historyFilesMap.putAll(searchSetiingsFilesMap);
+            historyFilesMap.putAll(peptideShakerVisualizationMap);
 //
 
             systemIsBusy(true);
@@ -304,7 +312,7 @@ public abstract class HistoryHandler {
                 Notification.show("Service Temporarily Unavailable", Notification.Type.ERROR_MESSAGE);
                 UI.getCurrent().getSession().close();
                 VaadinSession.getCurrent().getSession().invalidate();
-
+                
             } else {
                 System.out.println("at error --- " + e.toString());
                 System.out.println("at history are not available");
@@ -313,9 +321,9 @@ public abstract class HistoryHandler {
                 Page.getCurrent().reload();
             }
         }
-
+        
     }
-
+    
     public String getWorkingHistoryId() {
         return workingHistory.getId();
     }
@@ -351,7 +359,7 @@ public abstract class HistoryHandler {
         }
 //        progressWindow.setVisible(true);
         REFRESHER.setRefreshInterval(30000);
-
+        
         HistoriesClient loopGalaxyHistoriesClient = Galaxy_Instance.getHistoriesClient();
         REFRESHER.addListener(new Refresher.RefreshListener() {
             @Override
@@ -362,15 +370,15 @@ public abstract class HistoryHandler {
                     checkNotReadyHistory();
                 } else {
                     System.out.println("--------------------- at the history not ready --------------------- " + name + "   ");
-
+                    
                 }
             }
         });
-
+        
     }
-
+    
     private void checkNotReadyHistory() {
-
+        
         HistoriesClient loopGalaxyHistoriesClient = Galaxy_Instance.getHistoriesClient();
         List<History> historiesList = Galaxy_Instance.getHistoriesClient().getHistories();
         for (History history : historiesList) {
@@ -379,10 +387,10 @@ public abstract class HistoryHandler {
                 notReadyHistory(history.getId());
                 return;
             }
-
+            
         }
         notReadyHistory(null);
     }
-
+    
     public abstract void systemIsBusy(boolean busy);
 }

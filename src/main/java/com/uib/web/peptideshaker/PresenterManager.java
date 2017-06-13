@@ -89,7 +89,7 @@ public class PresenterManager extends HorizontalLayout implements LayoutEvents.L
 
         this.topLayoutBtnsContainer = new HorizontalLayout();
         topLayoutBtnsContainer.setSizeFull();
-        topLayoutBtnsContainer.setSpacing(true);
+        topLayoutBtnsContainer.setSpacing(false);
         topLayoutContainer.addComponent(this.topLayoutBtnsContainer);
         topLayoutContainer.setComponentAlignment(this.topLayoutBtnsContainer, Alignment.TOP_RIGHT);
 
