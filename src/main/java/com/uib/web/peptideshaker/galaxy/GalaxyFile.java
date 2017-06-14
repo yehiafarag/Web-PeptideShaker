@@ -30,6 +30,7 @@ public class GalaxyFile extends SystemDataSet {
         super.setStatus(dataset.getStatus());
         super.setDownloadUrl(dataset.getDownloadUrl());
         super.setGalaxyId(dataset.getGalaxyId());
+        super.setHistoryId(dataset.getHistoryId());
 
     }
 
@@ -47,7 +48,6 @@ public class GalaxyFile extends SystemDataSet {
         FileOutputStream fos = null;
         try {
             URL downloadableFile = new URL(dataset.getDownloadUrl());
-            System.err.println("at file path " + dataset.getDownloadUrl());
             URLConnection conn = downloadableFile.openConnection();
             conn.addRequestProperty("Cookie", VaadinSession.getCurrent().getSession().getAttribute("cookies") + "");
             conn.addRequestProperty("Accept", "*/*");

@@ -183,9 +183,7 @@ public class ToolsHandler {
             fileId = searchParameters.getFastaFile().getName().split("__")[3];
             searchSetiingsFilesMap.remove(fileId);
             //delete the file and make new one 
-            String userAPIKey = VaadinSession.getCurrent().getSession().getAttribute("ApiKey") + "";
-            String cookies = VaadinSession.getCurrent().getSession().getAttribute("cookies") + "";
-            this.deleteDataset(galaxyURL, workHistoryId, fileId, userAPIKey, cookies);
+            this.deleteDataset(galaxyURL, workHistoryId, fileId);
 
         } else {
             fileId = fileName;
@@ -257,9 +255,13 @@ public class ToolsHandler {
         return json;
     }
 
-    private void deleteDataset(String galaxyURL, String historyId, String dsId, String userAPIKey, String cookiesRequestProperty) {
+    public void deleteDataset(String galaxyURL, String historyId, String dsId) {
         try {
-
+            if (dsId == null || historyId == null || galaxyURL == null) {
+                return;
+            }
+            String userAPIKey = VaadinSession.getCurrent().getSession().getAttribute("ApiKey") + "";
+            String cookiesRequestProperty = VaadinSession.getCurrent().getSession().getAttribute("cookies") + "";
             URL url = new URL(galaxyURL + "/api/histories/" + historyId + "/contents/datasets/" + dsId + "?key=" + userAPIKey);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.addRequestProperty("Cookie", cookiesRequestProperty);
@@ -312,8 +314,9 @@ public class ToolsHandler {
      * @param searchEnginesList List of selected search engine names
      * @param historyId galaxy history id that will store the results
      */
-    public void executeWorkFlow(String projectName, String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList, String historyId, SearchParameters searchParameters, Map<String, Boolean> otherSearchParameters) {
+    public PeptideShakerVisualizationDataset executeWorkFlow(String projectName, String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList, String historyId, SearchParameters searchParameters, Map<String, Boolean> otherSearchParameters) {
         try {
+
             Workflow selectedWf;
             String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
             File file;
@@ -359,13 +362,22 @@ public class ToolsHandler {
 //            ToolParameter searchGUISearchParam = new ToolParameter(basepath, basepath)
 //            workflowInputs.setToolParameter("1", input2);
             Thread t = new Thread(() -> {
-                System.out.println("at run workflow thread ");
                 galaxyWorkFlowClient.runWorkflow(workflowInputs);
+
             });
             t.start();
+            PeptideShakerVisualizationDataset tempWorkflowOutput = new PeptideShakerVisualizationDataset("tempID");
+            tempWorkflowOutput.setName(projectName);
+            tempWorkflowOutput.setGalaxyId("tempID");
+            tempWorkflowOutput.setDownloadUrl("tempID");
+            tempWorkflowOutput.setHistoryId(historyId);
+            tempWorkflowOutput.setStatus("new");
+            tempWorkflowOutput.setType("Web Peptide Shaker Dataset");
+            return tempWorkflowOutput;
 
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
 
     }

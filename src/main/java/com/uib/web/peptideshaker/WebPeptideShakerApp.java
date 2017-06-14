@@ -4,6 +4,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Se
 import com.uib.web.peptideshaker.galaxy.SystemDataSet;
 import com.uib.web.peptideshaker.galaxy.GalaxyFile;
 import com.uib.web.peptideshaker.galaxy.GalaxyLayer;
+import com.uib.web.peptideshaker.galaxy.PeptideShakerVisualizationDataset;
 import com.uib.web.peptideshaker.presenter.GalaxyFileSystemPresenter;
 import com.uib.web.peptideshaker.presenter.PeptideShakerViewPresenter;
 import com.uib.web.peptideshaker.presenter.ToolPresenter;
@@ -30,6 +31,8 @@ public class WebPeptideShakerApp extends VerticalLayout {
     private final ToolPresenter toolsView;
     
     private final  GalaxyFileSystemPresenter fileSystemView;
+    
+    private final PeptideShakerViewPresenter peptideShakerView;
 
     /**
      * Constructor to initialize the application.
@@ -55,8 +58,8 @@ public class WebPeptideShakerApp extends VerticalLayout {
             }
 
             @Override
-            public void jobsInProgress(boolean inprogress) {
-                fileSystemView.setBusy(inprogress);
+            public void jobsInProgress(boolean inprogress, Map<String, SystemDataSet> historyFilesMap) {
+                fileSystemView.setBusy(inprogress,historyFilesMap);
                 presentationManager.viewLayout(fileSystemView.getViewId());
                 
             }
@@ -82,10 +85,22 @@ public class WebPeptideShakerApp extends VerticalLayout {
         };
         presentationManager.registerView(toolsView);
 //         
-        fileSystemView = new GalaxyFileSystemPresenter();
+        fileSystemView = new GalaxyFileSystemPresenter(){
+            @Override
+            public void deleteDataset(SystemDataSet ds) {
+               Galaxy_Layer.deleteDataset(ds);
+            }
+
+            @Override
+            public void viewDataset(PeptideShakerVisualizationDataset ds) {
+                 presentationManager.viewLayout(peptideShakerView.getViewId());
+            }
+        
+        
+        };
         presentationManager.registerView(fileSystemView);
         
-        PeptideShakerViewPresenter peptideShakerView = new PeptideShakerViewPresenter();
+        peptideShakerView = new PeptideShakerViewPresenter();
         presentationManager.registerView(peptideShakerView);
 
     }

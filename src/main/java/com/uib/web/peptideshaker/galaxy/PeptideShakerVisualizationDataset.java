@@ -67,7 +67,9 @@ public class PeptideShakerVisualizationDataset extends SystemDataSet{
     }
 
     public boolean isValidFile() {
-        return !(proteinFileId == null || peptideFileId == null || searchGUIFileId == null || psmFileId == null || mgfFiles.isEmpty() || fastaFileId == null || fastaFileIndex == null || mgfFilesIndexes.isEmpty());
+        System.out.println((proteinFileId == null) +"||"+ (peptideFileId == null) +"||"+ (searchGUIFileId == null )+"||"+ (psmFileId == null )+"||"+ (mgfFiles.isEmpty() )+"||"+ (fastaFileId == null) +"||"+ (fastaFileIndex == null) +"||"+ (mgfFilesIndexes.isEmpty()));
+        
+        return !(proteinFileId == null || peptideFileId == null || searchGUIFileId == null || psmFileId == null );//|| mgfFiles.isEmpty() || fastaFileId == null || fastaFileIndex == null || mgfFilesIndexes.isEmpty());
     }
 
     public String getPsmFileId() {

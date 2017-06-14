@@ -13653,11 +13653,20 @@ div.v-layout.v-horizontal.v-widget {
 .webpeptideshakertheme .actionlabel {
 	cursor: pointer;
 	font-weight: bold;
+	padding-top: 2px;
 }
 
 .webpeptideshakertheme .actionlabel:hover {
 	cursor: pointer;
 	color: #1278ef !important;
+}
+
+.webpeptideshakertheme .v-disabled .v-slot-actionlabel {
+	color: lightgray;
+}
+
+.webpeptideshakertheme .v-disabled.actionlabel {
+	color: lightgray;
 }
 
 .webpeptideshakertheme .textalignmiddle {

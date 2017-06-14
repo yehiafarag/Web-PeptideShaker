@@ -1,5 +1,6 @@
 package com.uib.web.peptideshaker.presenter;
 
+import com.uib.web.peptideshaker.galaxy.PeptideShakerVisualizationDataset;
 import com.uib.web.peptideshaker.galaxy.SystemDataSet;
 import com.uib.web.peptideshaker.presenter.components.DataViewLayout;
 import com.uib.web.peptideshaker.presenter.core.BigSideBtn;
@@ -20,7 +21,7 @@ import java.util.Map;
  *
  * @author Yehia Farag
  */
-public class GalaxyFileSystemPresenter extends VerticalLayout implements ViewableFrame, LayoutEvents.LayoutClickListener {
+public abstract class GalaxyFileSystemPresenter extends VerticalLayout implements ViewableFrame, LayoutEvents.LayoutClickListener {
 
     /**
      * The small side button.
@@ -55,7 +56,7 @@ public class GalaxyFileSystemPresenter extends VerticalLayout implements Viewabl
 
     }
 
-    public void setBusy(boolean busy) {
+    public void setBusy(boolean busy,Map<String, SystemDataSet> historyFilesMap) {
         if (busy) {
             toolsBtn.updateIconURL("img/loading.gif");
             topToolsBtn.updateIconURL("img/loading.gif");
@@ -63,6 +64,7 @@ public class GalaxyFileSystemPresenter extends VerticalLayout implements Viewabl
             toolsBtn.updateIconURL("img/jobs.png");
             topToolsBtn.updateIconURL("img/jobs.png");
         }
+        this.dataLayout.updateDatasetsTable(historyFilesMap);
     }
 
     private void initLayout() {
@@ -193,7 +195,18 @@ public class GalaxyFileSystemPresenter extends VerticalLayout implements Viewabl
         container.setStyleName("subframe");
         container.addStyleName("padding25");
 //        container.setMargin(new MarginInfo(true, true, true, true));
-        dataLayout = new DataViewLayout();
+        dataLayout = new DataViewLayout(){
+            @Override
+            public void deleteDataset(SystemDataSet ds) {
+               GalaxyFileSystemPresenter.this.deleteDataset(ds);
+            }
+
+            @Override
+            public void viewDataset(PeptideShakerVisualizationDataset ds) {
+               GalaxyFileSystemPresenter.this.viewDataset(ds);
+            }
+        
+        };
         container.addComponent(dataLayout);
         container.setComponentAlignment(dataLayout, Alignment.MIDDLE_CENTER);
 
@@ -203,9 +216,12 @@ public class GalaxyFileSystemPresenter extends VerticalLayout implements Viewabl
     public void updatePresenter(Map<String, SystemDataSet> historyFilesMap) {
 
         if (this.dataLayout != null) {
-            this.dataLayout.updateTable(historyFilesMap);
+            this.dataLayout.updateDatasetsTable(historyFilesMap);
         }
 
     }
+    public abstract void deleteDataset(SystemDataSet ds);
+    
+    public abstract void viewDataset(PeptideShakerVisualizationDataset ds);
 
 }

@@ -1,12 +1,17 @@
 package com.uib.web.peptideshaker.presenter.components;
 
+import com.uib.web.peptideshaker.galaxy.PeptideShakerVisualizationDataset;
 import com.uib.web.peptideshaker.galaxy.SystemDataSet;
 import com.uib.web.peptideshaker.presenter.core.ActionLabel;
+import com.uib.web.peptideshaker.presenter.core.StatusLabel;
+import com.vaadin.event.LayoutEvents;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.Page;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
@@ -19,7 +24,7 @@ import java.util.Map;
  *
  * @author Yehia Farag
  */
-public class DataViewLayout extends Panel {
+public abstract class DataViewLayout extends Panel {
 
     private final VerticalLayout topPanelLayout;
     private final VerticalLayout dataTable;
@@ -46,11 +51,13 @@ public class DataViewLayout extends Panel {
         topPanelLayout.addComponent(dataTable);
     }
 
-    public void updateTable(Map<String, SystemDataSet> historyFilesMap) {
+    public void updateDatasetsTable(Map<String, SystemDataSet> historyFilesMap) {
 
+        dataTable.removeAllComponents();
         Label headerName = new Label("Name");
         Label headerType = new Label("Type");
         Label headerStatus = new Label("Status");
+        headerStatus.addStyleName("textalignmiddle");
         Label headerDownload = new Label("Download");
         headerDownload.addStyleName("textalignmiddle");
         Label headerDelete = new Label("Delete");
@@ -65,17 +72,57 @@ public class DataViewLayout extends Panel {
                 continue;
             }
             Component nameLabel;
+            StatusLabel statusLabel = new StatusLabel();
+            statusLabel.setStatus(ds.getStatus());
+            ActionLabel downloadLabel = new ActionLabel(VaadinIcons.DOWNLOAD_ALT, "Download File") {
+                @Override
+                public void layoutClick(LayoutEvents.LayoutClickEvent event) {
+                    Page.getCurrent().open(ds.getDownloadUrl(), "", false);
+                }
+
+            };
+            ActionLabel deleteLabel = new ActionLabel(VaadinIcons.TRASH, "Delete File") {
+                @Override
+                public void layoutClick(LayoutEvents.LayoutClickEvent event) {
+                    deleteDataset(ds);
+                }
+
+            };
+
             if (ds.getType().equalsIgnoreCase("Web Peptide Shaker Dataset")) {
-                nameLabel = new ActionLabel(VaadinIcons.EYE, ds.getName(), "View " + ds.getName());
+                nameLabel = new ActionLabel(VaadinIcons.EYE, ds.getName(), "View " + ds.getName()) {
+                    @Override
+                    public void layoutClick(LayoutEvents.LayoutClickEvent event) {
+                        Notification.show("View PeptideShaker Results");
+                        viewDataset((PeptideShakerVisualizationDataset) ds);
+                    }
+
+                };
+                if (statusLabel.getStatus() == 0 && !((PeptideShakerVisualizationDataset) ds).isValidFile()) {
+                    statusLabel.setStatus("Some files are missings or corrupted please re-run SearchGUI-PeptideShaker-WorkFlow");
+                }
             } else {
                 nameLabel = new Label(ds.getName());
+                ((Label)nameLabel).setDescription(ds.getName());
             }
-            HorizontalLayout rowLayout = initializeRowData(new Component[]{new Label(i + ""), nameLabel, new Label(ds.getType()), new Label("Status"), new ActionLabel(VaadinIcons.DOWNLOAD_ALT, "Download File"), new ActionLabel(VaadinIcons.TRASH, "Delete File")}, false);
+
+            HorizontalLayout rowLayout = initializeRowData(new Component[]{new Label(i + ""), nameLabel, new Label(ds.getType()), statusLabel, downloadLabel, deleteLabel}, false);
+            if (statusLabel.getStatus() == 1) {
+                rowLayout.setEnabled(false);
+            } else if (statusLabel.getStatus() == 2) {
+                rowLayout.getComponent(0).setEnabled(false);
+                rowLayout.getComponent(1).setEnabled(false);
+                rowLayout.getComponent(4).setEnabled(false);
+            }
+
+            rowLayout.setData(ds.getGalaxyId());
             dataTable.addComponent(rowLayout);
             i++;
         }
 
     }
+
+
 
     private HorizontalLayout initializeRowData(Component[] data, boolean header) {
         HorizontalLayout row = new HorizontalLayout();
@@ -100,4 +147,6 @@ public class DataViewLayout extends Panel {
         return row;
     }
 
+    public abstract void deleteDataset(SystemDataSet ds);
+    public abstract void viewDataset(PeptideShakerVisualizationDataset ds);
 }

@@ -54,9 +54,9 @@ public abstract class GalaxyLayer {
      *
      */
     private ToolsHandler toolsHandler;
-    
+
     private File userFolder;
-    
+
     private String galaxyURL;
 
     /**
@@ -113,7 +113,6 @@ public abstract class GalaxyLayer {
                     if (Galaxy_Instance != null) {
                         System.out.println("at not null galaxy");
 
-                        
                         if (VaadinSession.getCurrent().getSession().getAttribute("ApiKey") != null) {
                             String APIKey = VaadinSession.getCurrent().getSession().getAttribute("ApiKey").toString();
                             if (!APIKey.equalsIgnoreCase(Galaxy_Instance.getApiKey())) {
@@ -130,20 +129,20 @@ public abstract class GalaxyLayer {
                         userFolder = new File(Galaxy_Instance.getApiKey() + "");
                         userFolder.mkdir();
                         VaadinSession.getCurrent().getSession().setAttribute("ApiKey", Galaxy_Instance.getApiKey() + "");
-                        
-                        galaxyURL= Galaxy_Instance.getGalaxyUrl();
+
+                        galaxyURL = Galaxy_Instance.getGalaxyUrl();
 
                         toolsHandler = new ToolsHandler(Galaxy_Instance.getToolsClient(), Galaxy_Instance.getWorkflowsClient(), Galaxy_Instance.getHistoriesClient());
-                        historyHandler = new HistoryHandler(Galaxy_Instance,userFolder) {
+                        historyHandler = new HistoryHandler(Galaxy_Instance, userFolder) {
                             @Override
                             public String reIndexFile(String id, String historyId, String workHistoryId) {
                                 return GalaxyLayer.this.reIndexFile(id, historyId, workHistoryId);
                             }
 
                             @Override
-                            public void systemIsBusy(boolean busy) {
-                               //update history in the system 
-                                jobsInProgress(busy);
+                            public void systemIsBusy(boolean busy, Map<String, SystemDataSet> historyFilesMap) {
+                                //update history in the system 
+                                jobsInProgress(busy, historyFilesMap);
                             }
 
                         };//                        
@@ -161,6 +160,7 @@ public abstract class GalaxyLayer {
 //
                     connectionBtn.setEnabled(true);
                 } catch (Exception exp) {
+                    exp.printStackTrace();
                     System.out.println("at err .connectedToGalaxy()");
                     historyHandler = null;
                     toolsHandler = null;
@@ -255,7 +255,7 @@ public abstract class GalaxyLayer {
             return new HashMap<>();
         }
     }
-    
+
     /**
      * Get the main FASTA files Map
      *
@@ -314,10 +314,10 @@ public abstract class GalaxyLayer {
      * @param fileName search parameters file name
      * @param searchParameters searchParameters .par file
      */
-    public Map<String, GalaxyFile> saveSearchGUIParameters(SearchParameters searchParameters,boolean editMode) {
+    public Map<String, GalaxyFile> saveSearchGUIParameters(SearchParameters searchParameters, boolean editMode) {
 
         if (toolsHandler != null) {
-            return toolsHandler.saveSearchGUIParameters(galaxyURL, userFolder,historyHandler.getSearchSettingsFilesMap(), historyHandler.getWorkingHistoryId(), searchParameters,editMode);
+            return toolsHandler.saveSearchGUIParameters(galaxyURL, userFolder, historyHandler.getSearchSettingsFilesMap(), historyHandler.getWorkingHistoryId(), searchParameters, editMode);
         }
         return null;
 
@@ -331,12 +331,27 @@ public abstract class GalaxyLayer {
      * @param searchEnginesList List of selected search engine names
      * @param historyId galaxy history id that will store the results
      */
-    public void executeWorkFlow(String projectName,String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList, SearchParameters searchParameters,Map<String,Boolean>otherSearchParameters) {
-        toolsHandler.executeWorkFlow(projectName,fastaFileId, mgfIdsList, searchEnginesList, historyHandler.getWorkingHistoryId(),searchParameters,otherSearchParameters);
-        historyHandler.updateHistoryDatastructure(userFolder);
+    public void executeWorkFlow(String projectName, String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList, SearchParameters searchParameters, Map<String, Boolean> otherSearchParameters) {
+        PeptideShakerVisualizationDataset tempWorkflowOutput = toolsHandler.executeWorkFlow(projectName, fastaFileId, mgfIdsList, searchEnginesList, historyHandler.getWorkingHistoryId(), searchParameters, otherSearchParameters);
+        historyHandler.updateHistoryDatastructure(userFolder, tempWorkflowOutput);
     }
-    
-    
-    public abstract void jobsInProgress(boolean inprogress);
+
+    public void deleteDataset(SystemDataSet ds) {
+        if (ds.getType().equalsIgnoreCase("Web Peptide Shaker Dataset")) {
+            PeptideShakerVisualizationDataset vDs = (PeptideShakerVisualizationDataset) ds;            
+            toolsHandler.deleteDataset(galaxyURL, vDs.getHistoryId(), vDs.getCpsId());
+            toolsHandler.deleteDataset(galaxyURL, vDs.getHistoryId(), vDs.getProteinFileId());
+            toolsHandler.deleteDataset(galaxyURL, vDs.getHistoryId(), vDs.getPeptideFileId());
+            toolsHandler.deleteDataset(galaxyURL, vDs.getHistoryId(), vDs.getPsmFileId());
+            toolsHandler.deleteDataset(galaxyURL, vDs.getHistoryId(), vDs.getSearchGUIFileId());
+
+        } else {
+            toolsHandler.deleteDataset(galaxyURL, ds.getHistoryId(), ds.getGalaxyId());
+        }
+
+        historyHandler.updateHistoryDatastructure(userFolder, null);
+    }
+
+    public abstract void jobsInProgress(boolean inprogress, Map<String, SystemDataSet> historyFilesMap);
 
 }

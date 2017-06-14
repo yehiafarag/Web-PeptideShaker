@@ -48,7 +48,7 @@ public class CustomizedPagedTable extends PagedTable {
         container.addContainerProperty("Delete", String.class, null);
         for (int i = 0; i < 200; i++) {
             Item item = container.addItem(i);
-            item.getItemProperty("Name").setValue(new ActionLabel(i + ""));
+//            item.getItemProperty("Name").setValue(new ActionLabel(i + ""));
             item.getItemProperty("Type").setValue("bar");
             item.getItemProperty("Status").setValue("baz");
             item.getItemProperty("Download").setValue("baz");
