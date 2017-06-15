@@ -86,7 +86,7 @@ public class DropDownList extends VerticalLayout {
     public String getSelectedValue() {
         list.removeStyleName("error");
         if (list.isValid()) {
-            return list.getValue()+"";
+            return list.getValue() + "";
         }
         list.addStyleName("error");
         return null;
@@ -99,7 +99,7 @@ public class DropDownList extends VerticalLayout {
 
     public void setSelected(Object objectId) {
         list.select(objectId);
-          list.setData(list.getValue());
+        list.setData(list.getValue());
 
     }
 

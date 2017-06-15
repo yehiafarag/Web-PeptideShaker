@@ -13,6 +13,7 @@ import com.vaadin.ui.Notification;
 
 import com.vaadin.ui.UI;
 import java.io.File;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -209,12 +210,17 @@ public abstract class HistoryHandler {
                             HistoryContentsProvenance prov = galaxyHistoriesClient.showProvenance(workingHistory.getId(), map.get("id").toString());
 
                             String jobId = prov.getJobId();
+
                             if (!peptideShakerVisualizationMap.containsKey(jobId)) {
                                 PeptideShakerVisualizationDataset vDs = new PeptideShakerVisualizationDataset(jobId);
                                 peptideShakerVisualizationMap.put(jobId, vDs);
                             }
                             PeptideShakerVisualizationDataset vDs = peptideShakerVisualizationMap.get(jobId);
                             if (map.get("name").toString().endsWith("(Proteins)")) {
+                                if (!prov.getParameters().containsKey("searchgui_input")) {
+                                    continue;
+                                }
+                                vDs.setSearchGUIFileId(prov.getParameters().get("searchgui_input").toString().split(",")[0].replace("{id=", ""));
                                 vDs.setName(map.get("name").toString().replace("(Proteins)", ""));
                                 vDs.setGalaxyId(jobId);
                                 vDs.setHistoryId(history.getId());
@@ -229,7 +235,7 @@ public abstract class HistoryHandler {
                                 vDs.setSearchGUIFileId(prov.getParameters().get("searchgui_input").toString().split(",")[0].split("id=")[1]);
                             } else if (map.get("name").toString().endsWith("(CPS)")) {
                                 vDs.setCpsId(map.get("id").toString());
-                                vDs.setDownloadUrl("to_ext="+map.get("file_ext").toString());
+                                vDs.setDownloadUrl("to_ext=" + map.get("file_ext").toString());
                                 vDs.setSearchGUIFileId(prov.getParameters().get("searchgui_input").toString().split(",")[0].split("id=")[1]);
                             } else {
                                 workHistoryData.put(map.get("name").toString(), map);
@@ -242,7 +248,7 @@ public abstract class HistoryHandler {
                             ds.setGalaxyId(map.get("id").toString());
                             ds.setDownloadUrl(Galaxy_Instance.getGalaxyUrl() + "/datasets/" + ds.getGalaxyId() + "/display");
                             GalaxyFile file = new GalaxyFile(userFolder, ds);
-                            file.setDownloadUrl("to_ext="+map.get("file_ext").toString());
+                            file.setDownloadUrl("to_ext=" + map.get("file_ext").toString());
                             this.searchSetiingsFilesMap.put(ds.getGalaxyId(), file);
                         }
                     }
@@ -260,16 +266,16 @@ public abstract class HistoryHandler {
                         if (map.get("data_type").toString().equalsIgnoreCase("galaxy.datatypes.sequence.Fasta")) {
                             ds.setType("Fasta");
                             this.fastaFilesMap.put(ds.getGalaxyId(), ds);
-                            ds.setDownloadUrl("to_ext="+map.get("file_ext").toString());
+                            ds.setDownloadUrl("to_ext=" + map.get("file_ext").toString());
                         } else if (map.get("data_type").toString().equalsIgnoreCase("galaxy.datatypes.proteomics.Mgf")) {
                             ds.setType("MGF");
-                            ds.setDownloadUrl("to_ext="+map.get("file_ext").toString());
+                            ds.setDownloadUrl("to_ext=" + map.get("file_ext").toString());
                             this.mgfFilesMap.put(ds.getGalaxyId(), ds);
                         } else if (map.get("data_type").toString().equalsIgnoreCase("galaxy.datatypes.text.Json") && map.get("name").toString().endsWith(".par")) {
                             ds.setType("Search Paramerters File (JSON)");
                             ds.setDownloadUrl(Galaxy_Instance.getGalaxyUrl() + "/datasets/" + ds.getGalaxyId() + "/display");
                             GalaxyFile file = new GalaxyFile(userFolder, ds);
-                            file.setDownloadUrl("to_ext="+map.get("file_ext").toString());
+                            file.setDownloadUrl("to_ext=" + map.get("file_ext").toString());
                             this.searchSetiingsFilesMap.put(ds.getGalaxyId(), file);
                         }
                     }
@@ -280,27 +286,45 @@ public abstract class HistoryHandler {
 
             //if no search param file exist add default search param file 
             for (SystemDataSet ds : fastaFilesMap.values()) {
+                ds.setReIndexedHistoryId(workingHistory.getId());
                 if (workHistoryData.containsKey(ds.getGalaxyId())) {
-                    ds.setReIndexedHistoryId(workingHistory.getId());
                     ds.setReIndexedId(workHistoryData.get(ds.getGalaxyId()).get("id").toString());
                 } else {
                     String reIndexId = this.reIndexFile(ds.getGalaxyId(), ds.getHistoryId(), workingHistory.getId());
-                    ds.setReIndexedHistoryId(workingHistory.getId());
                     ds.setReIndexedId(reIndexId);
                 }
 
             }
             for (SystemDataSet ds : mgfFilesMap.values()) {
+                ds.setReIndexedHistoryId(workingHistory.getId());
                 if (workHistoryData.containsKey(ds.getGalaxyId())) {
-                    ds.setReIndexedHistoryId(workingHistory.getId());
                     ds.setReIndexedId(workHistoryData.get(ds.getGalaxyId()).get("id").toString());
                 } else {
                     String reIndexId = this.reIndexFile(ds.getGalaxyId(), ds.getHistoryId(), workingHistory.getId());
-                    ds.setReIndexedHistoryId(workingHistory.getId());
                     ds.setReIndexedId(reIndexId);
                 }
 
             }
+
+            for (String key : peptideShakerVisualizationMap.keySet()) {
+                PeptideShakerVisualizationDataset vDs = peptideShakerVisualizationMap.get(key);
+                if (vDs.getSearchGUIFileId() == null || !searchGUIFilesMap.containsKey(vDs.getSearchGUIFileId())) {
+                    continue;
+                }
+                Map<String, Object> parameters = searchGUIFilesMap.get(vDs.getSearchGUIFileId()).getParameters();
+                String fastaFileId = parameters.get("input_database").toString().split(",")[0].replace("{id=", "");
+                vDs.setFastaFileId(fastaFileId);
+                vDs.setFastaFileIndex(fastaFilesMap.get(fastaFileId).getReIndexedId());
+                for (String paramKey : parameters.keySet()) {
+                    if (paramKey.contains("peak_list")) {
+                        String mgfFileId = parameters.get(paramKey).toString().split(",")[0].replace("{id=", "");
+                        vDs.addMgfFiles(mgfFileId);
+                        vDs.addMGFFileIndex(mgfFileId, mgfFilesMap.get(mgfFileId).getReIndexedId());
+                    }
+                }
+
+            }
+
             historyFilesMap.putAll(mgfFilesMap);
             historyFilesMap.putAll(fastaFilesMap);
             historyFilesMap.putAll(searchSetiingsFilesMap);
@@ -417,11 +441,15 @@ public abstract class HistoryHandler {
                     if (ds.getType().equalsIgnoreCase("Web Peptide Shaker Dataset")) {
                         PeptideShakerVisualizationDataset vDs = (PeptideShakerVisualizationDataset) ds;
                         ds.setStatus(Galaxy_Instance.getJobsClient().showJob(vDs.getJobId()).getState());
-                        ds.setDownloadUrl(Galaxy_Instance.getGalaxyUrl() + "/api/histories/" + historyId + "/contents/" + vDs.getCpsId() + "/display?key=" + Galaxy_Instance.getApiKey()+"&"+ds.getDownloadUrl());
+                        ds.setDownloadUrl(Galaxy_Instance.getGalaxyUrl() + "/api/histories/" + historyId + "/contents/" + vDs.getCpsId() + "/display?key=" + Galaxy_Instance.getApiKey() + "&" + ds.getDownloadUrl());
+
+                    } else if (hc.getHistoryContentType().equalsIgnoreCase("dataset_collection")) {
+                        ds.setStatus("ok");
+                        ds.setDownloadUrl(Galaxy_Instance.getGalaxyUrl() + "/api/histories/" + historyId + "/contents/" + ds.getGalaxyId() + "/display?key=" + Galaxy_Instance.getApiKey() + "&" + ds.getDownloadUrl());
 
                     } else {
                         ds.setStatus(hc.getState());
-                        ds.setDownloadUrl(Galaxy_Instance.getGalaxyUrl() + "/api/histories/" + historyId + "/contents/" + ds.getGalaxyId() + "/display?key=" + Galaxy_Instance.getApiKey()+"&"+ds.getDownloadUrl());
+                        ds.setDownloadUrl(Galaxy_Instance.getGalaxyUrl() + "/api/histories/" + historyId + "/contents/" + ds.getGalaxyId() + "/display?key=" + Galaxy_Instance.getApiKey() + "&" + ds.getDownloadUrl());
 
                     }
                     historyFilesMap.replace(ds.getGalaxyId(), ds);
