@@ -11,6 +11,7 @@ import com.uib.web.peptideshaker.presenter.ToolPresenter;
 import com.uib.web.peptideshaker.presenter.WelcomePage;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.VerticalLayout;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,10 +30,12 @@ public class WebPeptideShakerApp extends VerticalLayout {
      * The tools view component.
      */
     private final ToolPresenter toolsView;
-    
-    private final  GalaxyFileSystemPresenter fileSystemView;
-    
+
+    private final GalaxyFileSystemPresenter fileSystemView;
+
     private final PeptideShakerViewPresenter peptideShakerView;
+
+    private final PresenterManager presentationManager;
 
     /**
      * Constructor to initialize the application.
@@ -42,9 +45,10 @@ public class WebPeptideShakerApp extends VerticalLayout {
         WebPeptideShakerApp.this.setMargin(new MarginInfo(true, true, true, true));
         WebPeptideShakerApp.this.addStyleName("autooverflow");
         WebPeptideShakerApp.this.addStyleName("frame");
-        PresenterManager presentationManager = new PresenterManager();
+        presentationManager = new PresenterManager();
         WebPeptideShakerApp.this.addComponent(presentationManager);
 
+        peptideShakerView = new PeptideShakerViewPresenter();
         Galaxy_Layer = new GalaxyLayer() {
             @Override
             public void systemConnected() {
@@ -59,9 +63,20 @@ public class WebPeptideShakerApp extends VerticalLayout {
 
             @Override
             public void jobsInProgress(boolean inprogress, Map<String, SystemDataSet> historyFilesMap) {
-                fileSystemView.setBusy(inprogress,historyFilesMap);
+                fileSystemView.setBusy(inprogress, historyFilesMap);
                 presentationManager.viewLayout(fileSystemView.getViewId());
-                
+                if (peptideShakerView != null) {
+                    Map<String, PeptideShakerVisualizationDataset> peptideShakerVisualizationMap = new LinkedHashMap<>();
+                    for (String key : historyFilesMap.keySet()) {
+                        SystemDataSet ds = historyFilesMap.get(key);
+                        if (ds.getType().equalsIgnoreCase("Web Peptide Shaker Dataset")) {
+                            peptideShakerVisualizationMap.put(key, (PeptideShakerVisualizationDataset) ds);
+                        }
+
+                    }
+                    peptideShakerView.updateData(peptideShakerVisualizationMap);
+                }
+
             }
 
         };
@@ -72,37 +87,35 @@ public class WebPeptideShakerApp extends VerticalLayout {
 
         toolsView = new ToolPresenter() {
             @Override
-            public void executeWorkFlow(String projectName,String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList,SearchParameters searchParameters,Map<String,Boolean>otherSearchParameters) {
-                Galaxy_Layer.executeWorkFlow(projectName,fastaFileId, mgfIdsList, searchEnginesList,searchParameters,otherSearchParameters);
+            public void executeWorkFlow(String projectName, String fastaFileId, Set<String> mgfIdsList, Set<String> searchEnginesList, SearchParameters searchParameters, Map<String, Boolean> otherSearchParameters) {
+                Galaxy_Layer.executeWorkFlow(projectName, fastaFileId, mgfIdsList, searchEnginesList, searchParameters, otherSearchParameters);
             }
 
             @Override
-            public Map<String, GalaxyFile>  saveSearchGUIParameters(SearchParameters searchParameters,boolean editMode) {
-                return Galaxy_Layer.saveSearchGUIParameters( searchParameters,editMode);
-                 
+            public Map<String, GalaxyFile> saveSearchGUIParameters(SearchParameters searchParameters, boolean editMode) {
+                return Galaxy_Layer.saveSearchGUIParameters(searchParameters, editMode);
+
             }
 
         };
         presentationManager.registerView(toolsView);
 //         
-        fileSystemView = new GalaxyFileSystemPresenter(){
+        fileSystemView = new GalaxyFileSystemPresenter() {
             @Override
             public void deleteDataset(SystemDataSet ds) {
-               Galaxy_Layer.deleteDataset(ds);
+                Galaxy_Layer.deleteDataset(ds);
             }
 
             @Override
             public void viewDataset(PeptideShakerVisualizationDataset ds) {
-                 presentationManager.viewLayout(peptideShakerView.getViewId());
+                peptideShakerView.setSelectedDataset(ds);
+                presentationManager.viewLayout(peptideShakerView.getViewId());
             }
-        
-        
+
         };
         presentationManager.registerView(fileSystemView);
-        
-        peptideShakerView = new PeptideShakerViewPresenter();
-        presentationManager.registerView(peptideShakerView);
 
+        presentationManager.registerView(peptideShakerView);
     }
 
     private void connectGalaxy() {
@@ -111,15 +124,17 @@ public class WebPeptideShakerApp extends VerticalLayout {
             toolsView.getTopView().setEnabled(true);
             toolsView.getRightView().setDescription("Click to view the tools layout");
             toolsView.getTopView().setDescription("Click to view the tools layout");
-            toolsView.updateHistoryHandler(Galaxy_Layer.getSearchSettingsFilesMap(),Galaxy_Layer.getFastaFilesMap(), Galaxy_Layer.getMgfFilesMap());
-            
+            toolsView.updateHistoryHandler(Galaxy_Layer.getSearchSettingsFilesMap(), Galaxy_Layer.getFastaFilesMap(), Galaxy_Layer.getMgfFilesMap());
+
         } else {
             toolsView.getRightView().setDescription("Tools are not available");
             toolsView.getTopView().setDescription("Tools are not available");
             toolsView.getRightView().setEnabled(false);
             toolsView.getTopView().setEnabled(false);
         }
-      fileSystemView.updatePresenter(Galaxy_Layer.getHistoryFilesMap());
+//        fileSystemView.updatePresenter(Galaxy_Layer.getHistoryFilesMap());
+//        peptideShakerView.updateData(Galaxy_Layer.getPeptideShakerVisualizationMap());
+
     }
 
 }

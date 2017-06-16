@@ -1,5 +1,8 @@
 package com.uib.web.peptideshaker.presenter;
 
+import com.uib.web.peptideshaker.galaxy.PeptideShakerVisualizationDataset;
+import com.uib.web.peptideshaker.presenter.components.peptideshakerview.PeptideShakerDatasesViewLayout;
+import com.uib.web.peptideshaker.presenter.components.peptideshakerview.SelectionManager;
 import com.uib.web.peptideshaker.presenter.core.BigSideBtn;
 import com.uib.web.peptideshaker.presenter.core.SmallSideBtn;
 import com.vaadin.event.LayoutEvents;
@@ -9,10 +12,8 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * This class represent PeptideShaker view presenter which is responsible for
@@ -32,7 +33,9 @@ public class PeptideShakerViewPresenter extends VerticalLayout implements Viewab
     private final SmallSideBtn topToolsBtn;
     private VerticalLayout btnContainer;
     private HorizontalLayout mobilebtnContainer;
-    private final Map<BigSideBtn, Component> btnsLayoutMap;
+    
+    private PeptideShakerDatasesViewLayout datasetOverviewLayout;
+    private final SelectionManager Selection_Manager;
 
     /**
      * Initialize the web tool main attributes
@@ -46,9 +49,8 @@ public class PeptideShakerViewPresenter extends VerticalLayout implements Viewab
         this.toolsBtn.setData(PeptideShakerViewPresenter.this.getViewId());
 
         this.topToolsBtn = new SmallSideBtn("img/cluster.svg");
-                this.topToolsBtn.setData(PeptideShakerViewPresenter.this.getViewId());
-
-        this.btnsLayoutMap = new LinkedHashMap<>();
+        this.topToolsBtn.setData(PeptideShakerViewPresenter.this.getViewId());        
+        this.Selection_Manager = new SelectionManager();
         this.initLayout();
         PeptideShakerViewPresenter.this.minimizeView();
 
@@ -68,8 +70,9 @@ public class PeptideShakerViewPresenter extends VerticalLayout implements Viewab
         btnContainer.setComponentAlignment(datasetsOverviewBtn, Alignment.TOP_CENTER);
         datasetsOverviewBtn.addLayoutClickListener(PeptideShakerViewPresenter.this);
 
-        VerticalLayout datasetOverviewLayout = new VerticalLayout();
-        btnsLayoutMap.put(datasetsOverviewBtn, datasetOverviewLayout);
+        datasetOverviewLayout = new PeptideShakerDatasesViewLayout();
+        datasetOverviewLayout.setSizeFull();
+        Selection_Manager.addBtnLayout(datasetsOverviewBtn, datasetOverviewLayout);
 
         BigSideBtn proteinsOverviewBtn = new BigSideBtn("img/proteins.png", "Get Data");
         proteinsOverviewBtn.setData("proteinoverview");
@@ -78,7 +81,7 @@ public class PeptideShakerViewPresenter extends VerticalLayout implements Viewab
         proteinsOverviewBtn.addLayoutClickListener(PeptideShakerViewPresenter.this);
 
         VerticalLayout proteinsOverviewLayout = new VerticalLayout();
-        btnsLayoutMap.put(proteinsOverviewBtn, proteinsOverviewLayout);
+        Selection_Manager.addBtnLayout(proteinsOverviewBtn, proteinsOverviewLayout);
 
         BigSideBtn peptidesOverviewBtn = new BigSideBtn("img/peptides.png", "Get Data");
         peptidesOverviewBtn.setData("peptidesoverview");
@@ -87,7 +90,7 @@ public class PeptideShakerViewPresenter extends VerticalLayout implements Viewab
         peptidesOverviewBtn.addLayoutClickListener(PeptideShakerViewPresenter.this);
 
         VerticalLayout peptidesOverviewLayout = new VerticalLayout();
-        btnsLayoutMap.put(peptidesOverviewBtn, peptidesOverviewLayout);
+        Selection_Manager.addBtnLayout(peptidesOverviewBtn, peptidesOverviewLayout);
 
         VerticalLayout toolViewFrame = new VerticalLayout();
         toolViewFrame.setSizeFull();
@@ -95,13 +98,16 @@ public class PeptideShakerViewPresenter extends VerticalLayout implements Viewab
 
         this.addComponent(toolViewFrame);
         this.setExpandRatio(toolViewFrame, 100);
+
         AbsoluteLayout toolViewFrameContent = new AbsoluteLayout();
         toolViewFrameContent.addStyleName("viewframecontent");
         toolViewFrameContent.setSizeFull();
-        toolViewFrame.addComponent(datasetOverviewLayout);
+        toolViewFrame.addComponent(toolViewFrameContent);
+
+        toolViewFrameContent.addComponent(datasetOverviewLayout);
         toolViewFrameContent.addComponent(proteinsOverviewLayout);
         toolViewFrameContent.addComponent(peptidesOverviewLayout);
-        
+
         mobilebtnContainer = new HorizontalLayout();
         mobilebtnContainer.setHeight(100, Unit.PERCENTAGE);
         mobilebtnContainer.setWidthUndefined();
@@ -115,22 +121,21 @@ public class PeptideShakerViewPresenter extends VerticalLayout implements Viewab
         mobilebtnContainer.setComponentAlignment(datasetsOverviewBtnM, Alignment.TOP_CENTER);
         datasetsOverviewBtnM.addLayoutClickListener(PeptideShakerViewPresenter.this);
         datasetsOverviewBtnM.setSelected(true);
-        
-         BigSideBtn proteinsOverviewBtnM = new BigSideBtn("img/proteins.png", "Work-Flow");
+        datasetsOverviewBtn.setSelected(true);
+
+        BigSideBtn proteinsOverviewBtnM = new BigSideBtn("img/proteins.png", "Work-Flow");
         datasetsOverviewBtnM.setData("proteinsoverview");
         datasetsOverviewBtnM.addStyleName("zeropadding");
         mobilebtnContainer.addComponent(proteinsOverviewBtnM);
         mobilebtnContainer.setComponentAlignment(proteinsOverviewBtnM, Alignment.TOP_CENTER);
         proteinsOverviewBtnM.addLayoutClickListener(PeptideShakerViewPresenter.this);
-        
-        
-         BigSideBtn peptidesOverviewBtnM = new BigSideBtn("img/peptides.png", "Work-Flow");
+
+        BigSideBtn peptidesOverviewBtnM = new BigSideBtn("img/peptides.png", "Work-Flow");
         peptidesOverviewBtnM.setData("peptidesoverview");
         peptidesOverviewBtnM.addStyleName("zeropadding");
         mobilebtnContainer.addComponent(peptidesOverviewBtnM);
         mobilebtnContainer.setComponentAlignment(peptidesOverviewBtnM, Alignment.TOP_CENTER);
         peptidesOverviewBtnM.addLayoutClickListener(PeptideShakerViewPresenter.this);
-        peptidesOverviewBtnM.setSelected(true);
 
     }
 
@@ -177,18 +182,11 @@ public class PeptideShakerViewPresenter extends VerticalLayout implements Viewab
     @Override
     public void layoutClick(LayoutEvents.LayoutClickEvent event) {
         BigSideBtn comp = (BigSideBtn) event.getComponent();
-        for (BigSideBtn bbt : btnsLayoutMap.keySet()) {
-            if (comp.getData().toString().equalsIgnoreCase(bbt.getData().toString())) {
-                bbt.setSelected(true);
-                btnsLayoutMap.get(bbt).removeStyleName("hidepanel");
-            } else {
-                bbt.setSelected(false);
-                btnsLayoutMap.get(bbt).addStyleName("hidepanel");
-            }
-        }
-        if (comp.getData().toString().equalsIgnoreCase("nels")) {
-        }
+        Selection_Manager.selectBtn(comp);
+
     }
+
+   
 
     @Override
     public VerticalLayout getLeftView() {
@@ -205,4 +203,19 @@ public class PeptideShakerViewPresenter extends VerticalLayout implements Viewab
         return topToolsBtn;
     }
 
+    /**
+     * Update the dataset overview layout.
+     *
+     * @param peptideShakerVisualizationMap map of visualization datasets
+     */
+    public void updateData(Map<String, PeptideShakerVisualizationDataset> peptideShakerVisualizationMap) {
+
+        datasetOverviewLayout.updateData(peptideShakerVisualizationMap);
+
+    }
+
+    public void setSelectedDataset(PeptideShakerVisualizationDataset ds) {
+         Selection_Manager.selectBtn(1);
+        datasetOverviewLayout.selectDataset(ds);
+    }
 }

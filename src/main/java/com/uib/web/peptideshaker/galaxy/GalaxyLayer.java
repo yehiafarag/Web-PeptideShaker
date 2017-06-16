@@ -242,6 +242,18 @@ public abstract class GalaxyLayer {
             return new HashMap<>();
         }
     }
+    /**
+     * Get the main search settings .par files Map
+     *
+     * @return searchSettingsFilesMap
+     */
+    public Map<String, PeptideShakerVisualizationDataset> getPeptideShakerVisualizationMap() {
+        if (historyHandler != null) {
+            return historyHandler.getPeptideShakerVisualizationMap();
+        } else {
+            return new HashMap<>();
+        }
+    }
 
     /**
      * Get the main FASTA files Map

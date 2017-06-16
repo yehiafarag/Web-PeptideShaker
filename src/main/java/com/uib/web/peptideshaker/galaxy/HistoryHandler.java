@@ -220,8 +220,12 @@ public abstract class HistoryHandler {
                                 if (!prov.getParameters().containsKey("searchgui_input")) {
                                     continue;
                                 }
+                                System.out.println("at int line number " + map.get("misc_blurb").toString() + "  " + map.get("name"));
                                 vDs.setSearchGUIFileId(prov.getParameters().get("searchgui_input").toString().split(",")[0].replace("{id=", ""));
                                 vDs.setName(map.get("name").toString().replace("(Proteins)", ""));
+                                if (!map.get("misc_blurb").toString().equalsIgnoreCase("error")) {
+                                    vDs.setProteinsNumber(Integer.valueOf(map.get("misc_blurb").toString().replace(" lines", "").replace(",", "")) - 1);
+                                }
                                 vDs.setGalaxyId(jobId);
                                 vDs.setHistoryId(history.getId());
                                 vDs.setType("Web Peptide Shaker Dataset");
@@ -331,8 +335,7 @@ public abstract class HistoryHandler {
             historyFilesMap.putAll(peptideShakerVisualizationMap);
             if (tempWorkflowOutput != null) {
                 historyFilesMap.put(tempWorkflowOutput.getJobId(), tempWorkflowOutput);
-            }
-//
+            }//
             updateDSStatus(false);
             systemIsBusy(true, historyFilesMap);
             checkNotReadyHistory();
@@ -344,7 +347,6 @@ public abstract class HistoryHandler {
                 VaadinSession.getCurrent().getSession().invalidate();
 
             } else {
-                System.out.println("at error --- " + e.toString());
                 System.out.println("at history are not available");
                 UI.getCurrent().getSession().close();
                 VaadinSession.getCurrent().getSession().invalidate();

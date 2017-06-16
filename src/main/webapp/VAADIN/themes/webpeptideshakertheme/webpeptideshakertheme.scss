@@ -700,6 +700,46 @@
     .textalignmiddle{
         text-align: center !important;
     }
+     .disablescrolltable{
+        overflow: hidden !important;
+    }
+    .v-textfield-pagedtable-pagefield{
+        min-width:40px;
+    }
+  .datasetcomponent {
+	max-height: 200px;
+	max-width: 200px;
+	background-color: whitesmoke;
+	border-radius: 50%;
+	border: 2px solid lightgray;
+	box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+	-webkit-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+	-moz-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px white;
+	border-radius: 50%;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	-webkit-transition: all 1.5s ease-in-out;
+	-moz-transition: all 1.5s ease-in-out;
+	-o-transition: all 1.5s ease-in-out;
+	transition: all 1.5s ease-in-out;
+	opacity:0.5;
+        cursor: pointer;
+}
+.datasetcomponent:hover {
+	opacity:1;
+	background-color:lightgray;
+	border-color:gray;
+}
+.datasetcomponent .v-label {
+	text-align:center;
+	text-transform:uppercase;
+	font-weight:bold;
+	font-size:14px;
+	overflow:hidden;
+	text-overflow:ellipsis;
+
+
+}
     /****mobile css**/
     .horizontalcss .mainlayout {
 
@@ -944,10 +984,5 @@
         z-index: 2 !important;
 
     }
-    .disablescrolltable{
-        overflow: hidden !important;
-    }
-    .v-textfield-pagedtable-pagefield{
-        min-width:40px;
-    }
+   
 }

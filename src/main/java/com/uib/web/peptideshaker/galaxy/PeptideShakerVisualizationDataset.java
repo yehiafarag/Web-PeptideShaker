@@ -23,6 +23,15 @@ public class PeptideShakerVisualizationDataset extends SystemDataSet{
     private String fastaFileId;
     private String fastaFileIndex;
     private final Map<String, String> mgfFilesIndexes;
+    private int proteinsNumber;
+
+    public int getProteinsNumber() {
+        return proteinsNumber;
+    }
+
+    public void setProteinsNumber(int proteinsNumber) {
+        this.proteinsNumber = proteinsNumber;
+    }
 
     public String getFastaFileIndex() {
         return fastaFileIndex;
