@@ -130,8 +130,8 @@ public abstract class GalaxyConnectionPanelLayout extends VerticalLayout impleme
         galaxyLink.setNullSelectionAllowed(false);
         galaxyLink.setTextInputAllowed(true);
         galaxyLink.setNewItemsAllowed(true);
-        galaxyLink.addItem("http://129.177.123.195/");
-        galaxyLink.setItemCaption("http://129.177.123.195/", "My Galaxy installation in Bergen");
+        galaxyLink.addItem("http://129.177.123.195:8080/");
+        galaxyLink.setItemCaption("http://129.177.123.195:8080/", "My Galaxy installation in Bergen");
         galaxyLink.addItem("https://usegalaxy.org/");
         galaxyLink.setItemCaption("https://usegalaxy.org/", "Use Galaxy Server");
         galaxyLink.addItem("https://test-fe.cbu.uib.no/galaxy");
@@ -164,7 +164,7 @@ public abstract class GalaxyConnectionPanelLayout extends VerticalLayout impleme
         userInputPanelLayout.setComponentAlignment(galaxyLinkContainer, Alignment.BOTTOM_CENTER);
         userInputPanelLayout.setExpandRatio(galaxyLinkContainer, 12);
 
-        galaxyLink.setValue("http://129.177.123.195/");//https://usegalaxyp.org
+        galaxyLink.setValue("http://129.177.123.195:8080/");//https://usegalaxyp.org
 
         inputTabSheet = new TabSheet();
         inputTabSheet.setWidth(100, Unit.PERCENTAGE);

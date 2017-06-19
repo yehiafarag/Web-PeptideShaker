@@ -106,7 +106,9 @@ public abstract class GalaxyLayer {
         galaxyConnectionBtnContainer.addComponent(settingBtn);
         galaxyConnectionBtnContainer.setComponentAlignment(settingBtn, Alignment.BOTTOM_RIGHT);
 
-        GalaxyConnectionPanelLayout galaxyConnectionSettingsPanel = new GalaxyConnectionPanelLayout() {
+         String userDataFolderUrl = VaadinSession.getCurrent().getSession().getAttribute("userDataFolderUrl")+"";
+                           System.out.println("----------------- user folder ---- "+userDataFolderUrl);
+         GalaxyConnectionPanelLayout galaxyConnectionSettingsPanel = new GalaxyConnectionPanelLayout() {
             @Override
             public void connectedToGalaxy(GalaxyInstance Galaxy_Instance) {
                 try {
@@ -117,7 +119,7 @@ public abstract class GalaxyLayer {
                             String APIKey = VaadinSession.getCurrent().getSession().getAttribute("ApiKey").toString();
                             if (!APIKey.equalsIgnoreCase(Galaxy_Instance.getApiKey())) {
                                 //clean history and create new folder
-                                userFolder = new File(APIKey);
+                                userFolder = new File(userDataFolderUrl,APIKey);
                                 if (userFolder.exists()) {
                                     for (File tFile : userFolder.listFiles()) {
                                         tFile.delete();
@@ -126,7 +128,7 @@ public abstract class GalaxyLayer {
                                 userFolder.delete();
                             }
                         }
-                        userFolder = new File(Galaxy_Instance.getApiKey() + "");
+                        userFolder = new File(userDataFolderUrl,Galaxy_Instance.getApiKey() + "");
                         userFolder.mkdir();
                         VaadinSession.getCurrent().getSession().setAttribute("ApiKey", Galaxy_Instance.getApiKey() + "");
 

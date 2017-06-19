@@ -92,11 +92,7 @@
             <artifactId>utilities</artifactId>
             <version>4.11.12</version>
         </dependency>
-        <dependency>
-            <groupId>org.vaadin.addons</groupId>
-            <artifactId>pagedtable</artifactId>
-            <version>0.6.5</version>
-        </dependency>
+      
     </dependencies>
 
     <build>

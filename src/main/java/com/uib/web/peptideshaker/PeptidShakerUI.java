@@ -11,6 +11,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 
 /**
@@ -27,6 +28,10 @@ public class PeptidShakerUI extends UI {
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
+        ServletContext scx = VaadinServlet.getCurrent().getServletContext();
+        String userDataFolderUrl = (scx.getInitParameter("filesURL"));
+        VaadinSession.getCurrent().getSession().setAttribute("userDataFolderUrl", userDataFolderUrl);
+
         if (VaadinSession.getCurrent().getAttribute("presessionid") != null) {
             UI.getCurrent().getSession().close();
             VaadinSession.getCurrent().getSession().invalidate();
@@ -34,6 +39,7 @@ public class PeptidShakerUI extends UI {
         }
         VaadinSession.getCurrent().setAttribute("presessionid", "it is exist session");
 
+        System.out.println("ay user data folder " + userDataFolderUrl);
         this.setSizeFull();
         WebPeptideShakerApp webPeptideShakerApp = new WebPeptideShakerApp();
         if ((Page.getCurrent().getBrowserWindowWidth() < Page.getCurrent().getBrowserWindowHeight()) || (Page.getCurrent().getBrowserWindowWidth() < 650) || (Page.getCurrent().getBrowserWindowHeight() < 600)) {

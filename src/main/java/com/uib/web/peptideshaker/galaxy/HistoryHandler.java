@@ -350,7 +350,7 @@ public abstract class HistoryHandler {
                 System.out.println("at history are not available");
                 UI.getCurrent().getSession().close();
                 VaadinSession.getCurrent().getSession().invalidate();
-                Page.getCurrent().reload();
+                Notification.show(e.getMessage(), Notification.Type.ERROR_MESSAGE);
             }
         }
 

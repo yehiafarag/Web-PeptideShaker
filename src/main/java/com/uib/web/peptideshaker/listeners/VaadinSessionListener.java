@@ -18,17 +18,18 @@ public class VaadinSessionListener implements HttpSessionListener {
 
     @Override
     public void sessionDestroyed(HttpSessionEvent hse) {
-        String  ApiKey = hse.getSession().getAttribute("ApiKey")+"";
+        String ApiKey = hse.getSession().getAttribute("ApiKey") + "";
+        String userDataFolderUrl = hse.getSession().getAttribute("userDataFolderUrl").toString();
 
-        File userFolder = new File(ApiKey);
+        File userFolder = new File(userDataFolderUrl,ApiKey);
         if (userFolder.exists()) {
             for (File tFile : userFolder.listFiles()) {
                 tFile.delete();
             }
         }
-        boolean cleaned = userFolder.delete(); 
+        boolean cleaned = userFolder.delete();
 //       galaxy.getHistoriesClient().deleteHistoryRequest(hse.getSession().getAttribute("tempHistoryID")+"");
-        System.err.println("at session is ready to distroy ..Good bye...folder ("+userFolder.getName()+" are cleaned ("+cleaned+") and folder exist ("+userFolder.exists()+")");
+        System.err.println("at session is ready to distroy ..Good bye...folder (" + userFolder.getName() + " are cleaned (" + cleaned + ") and folder exist (" + userFolder.exists() + ")");
 
     }
 
